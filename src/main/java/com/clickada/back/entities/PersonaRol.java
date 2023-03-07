@@ -1,13 +1,16 @@
 package com.clickada.back.entities;
 
 import com.clickada.back.valueObject.Rol;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class PersonaRol {
     public ArrayList<Rol> roles;
 
     public PersonaRol(Rol rol){
+        roles = new ArrayList<>();
         roles.add(rol);
     }
     public void cambiarRol(Rol nuevoRol){
