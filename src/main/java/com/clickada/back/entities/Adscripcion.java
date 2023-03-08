@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 @Slf4j
-public class PersonaDepartamento {
+public class Adscripcion {
     public ArrayList<Departamento> departamentos;
 
-    public PersonaDepartamento(Departamento departamento){
+    public Adscripcion(Departamento departamento){
         departamentos = new ArrayList<>();
         departamentos.add(departamento);
     }
@@ -21,5 +21,9 @@ public class PersonaDepartamento {
         } else {
             throw new Exception("Ya tiene maximo numero de departamentos");
         }
+    }
+
+    public void limpiarAdscripcion(){
+        this.departamentos.clear();
     }
 }

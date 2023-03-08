@@ -9,7 +9,7 @@ public class Persona {
     public String nombre;
     public String eMail;
     public PersonaRol personaRol;
-    public PersonaDepartamento personaDepartamento;
+    public Adscripcion adscripcion;
     private boolean departamentoDisponible;
 
     public Persona(String nombre, String eMail, Rol rol){
@@ -21,9 +21,13 @@ public class Persona {
     public void cambiarRol(Rol nuevoRol){
         personaRol.cambiarRol(nuevoRol);
         // gestionar el nuevo rol con los departamentos
-        /*if(departamentoDisponible || !optaADepartamento(nuevoRol)){
-
-        }*/
+        boolean optaADepartamento = optaADepartamento(nuevoRol);
+        if(departamentoDisponible && !optaADepartamento){
+            adscripcion.limpiarAdscripcion();
+        }
+        else if(!departamentoDisponible && optaADepartamento) {
+            departamentoDisponible = optaADepartamento;
+        }
     }
 
     public void anyadirRol() throws Exception {
