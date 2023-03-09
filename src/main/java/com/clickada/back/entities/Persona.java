@@ -3,9 +3,13 @@ package com.clickada.back.entities;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+import java.util.UUID;
 
 @Slf4j
 public class Persona {
+    public UUID idPersona;
     public String nombre;
     public String eMail;
     public PersonaRol personaRol;
@@ -13,6 +17,7 @@ public class Persona {
     private boolean departamentoDisponible;
 
     public Persona(String nombre, String eMail, Rol rol){
+        this.idPersona = UUID.randomUUID();
         this.nombre = nombre;
         this.eMail = eMail;
         this.departamentoDisponible = optaADepartamento(rol);
