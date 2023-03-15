@@ -1,6 +1,6 @@
 package com.clickada.back.requisitos;
 
-import com.clickada.back.repository.entities.aux.Adscripcion;
+import com.clickada.back.repository.entities.auxClasses.Adscripcion;
 import com.clickada.back.repository.entities.Persona;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
