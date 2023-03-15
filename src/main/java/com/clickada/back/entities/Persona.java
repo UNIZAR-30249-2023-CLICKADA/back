@@ -28,16 +28,26 @@ public class Persona {
         // gestionar el nuevo rol con los departamentos
         boolean optaADepartamento = optaADepartamento(nuevoRol);
         if(departamentoDisponible && !optaADepartamento){
-            adscripcion.limpiarAdscripcion();
+            departamentoDisponible = false;
         }
         else if(!departamentoDisponible && optaADepartamento) {
-            departamentoDisponible = optaADepartamento;
+            departamentoDisponible = true;
         }
     }
 
     public void anyadirRol() throws Exception {
         personaRol.anyadirRol();
         departamentoDisponible = true;
+    }
+
+    public void adscripcionADepartamento(Departamento departamento){
+        if(this.departamentoDisponible){
+            if(this.adscripcion == null){
+                this.adscripcion = new Adscripcion(departamento);
+            }else {
+                this.adscripcion.setDepartamento(departamento);
+            }
+        }
     }
     private boolean optaADepartamento(Rol rol){
         if(rol.equals(Rol.DOCENTE_INVESTIGADOR) ||
