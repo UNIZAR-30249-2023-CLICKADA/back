@@ -50,7 +50,8 @@ public class PersonaTest {
 
         persona.cambiarRol(Rol.ESTUDIANTE);
         assertEquals(1,persona.personaRol.roles.size());
-        persona.cambiarRol(Rol.GERENTE);
+        persona.cambiarRol(Rol.DOCENTE_INVESTIGADOR);
+        persona.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
         assertEquals(1,persona.personaRol.roles.size());
 
     }

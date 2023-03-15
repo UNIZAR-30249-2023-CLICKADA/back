@@ -23,14 +23,13 @@ public class Persona {
         this.departamentoDisponible = optaADepartamento(rol);
         this.personaRol = new PersonaRol(rol);
     }
-    public void cambiarRol(Rol nuevoRol){
+    public void cambiarRol(Rol nuevoRol) {
         personaRol.cambiarRol(nuevoRol);
         // gestionar el nuevo rol con los departamentos
         boolean optaADepartamento = optaADepartamento(nuevoRol);
-        if(departamentoDisponible && !optaADepartamento){
+        if (departamentoDisponible && !optaADepartamento) {
             departamentoDisponible = false;
-        }
-        else if(!departamentoDisponible && optaADepartamento) {
+        } else if (!departamentoDisponible && optaADepartamento) {
             departamentoDisponible = true;
         }
     }
