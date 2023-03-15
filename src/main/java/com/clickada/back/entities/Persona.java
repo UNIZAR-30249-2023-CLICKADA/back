@@ -2,18 +2,27 @@ package com.clickada.back.entities;
 
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.UUID;
 
 @Slf4j
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Persona {
-    public UUID idPersona;
-    public String nombre;
-    public String eMail;
-    public PersonaRol personaRol;
-    public Adscripcion adscripcion;
+    @Id
+    private UUID idPersona;
+    private String nombre;
+    private String eMail;
+    private PersonaRol personaRol;
+    private Adscripcion adscripcion;
     private boolean departamentoDisponible;
 
     public Persona(String nombre, String eMail, Rol rol){
