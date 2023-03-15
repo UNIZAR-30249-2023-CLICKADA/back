@@ -1,7 +1,7 @@
 package com.clickada.back.requisitos;
 
-import com.clickada.back.entities.Adscripcion;
-import com.clickada.back.entities.Persona;
+import com.clickada.back.repository.entities.aux.Adscripcion;
+import com.clickada.back.repository.entities.Persona;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class TestRequisitos {
     void requisito2(){
         Persona persona = new Persona("Pepe","pepe@gmail.com", Rol.CONSERJE);
 
-        Assert.state(persona.eMail.equals("pepe@gmail.com"),"Conserje");
+        Assert.state(persona.getEMail().equals("pepe@gmail.com"),"Conserje");
     }
     @Test
     public void testAnyadirDepartamento() {

@@ -1,29 +1,33 @@
-package com.clickada.back.entities;
+package com.clickada.back.repository.entities;
 
+import com.clickada.back.repository.entities.aux.Adscripcion;
+import com.clickada.back.repository.entities.aux.PersonaRol;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Slf4j
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "persona")
 public class Persona {
     @Id
     private UUID idPersona;
-    private String nombre;
-    private String eMail;
-    private PersonaRol personaRol;
-    private Adscripcion adscripcion;
-    private boolean departamentoDisponible;
+    String nombre;
+    String eMail;
+    PersonaRol personaRol;
+    Adscripcion adscripcion;
+    boolean departamentoDisponible;
 
     public Persona(String nombre, String eMail, Rol rol){
         this.idPersona = UUID.randomUUID();

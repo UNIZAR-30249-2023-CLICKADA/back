@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  edificio:
+    build: ../back
+    ports:
+      - "8080:8080"
+    environment:
+      - "edificio-db=edificio-db"
+    restart: always
+
+  edificio-db:
+    image: mysql:8.0.30
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_DATABASE=edificio-db"
+      - "MYSQL_ROOT_PASSWORD=root"

@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    activate:
+      on-profile: default
+  application:
+    name: edificio
+  datasource:
+    url: jdbc:mysql://${edificio-db:localhost}:3306/edificio-db
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update

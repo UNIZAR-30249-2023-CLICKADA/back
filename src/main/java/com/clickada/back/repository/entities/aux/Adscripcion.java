@@ -1,4 +1,4 @@
-package com.clickada.back.entities;
+package com.clickada.back.repository.entities.aux;
 
 import com.clickada.back.valueObject.Departamento;
 import lombok.extern.slf4j.Slf4j;

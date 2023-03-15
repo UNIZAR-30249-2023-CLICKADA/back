@@ -1,9 +1,11 @@
-package com.clickada.back.entities;
+package com.clickada.back.repository.entities;
 
+import com.clickada.back.repository.entities.aux.Edificio;
+import com.clickada.back.repository.entities.aux.Reservabilidad;
 import com.clickada.back.valueObject.CategoriaReserva;
 import com.clickada.back.valueObject.Rol;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.UUID;
+
 @Slf4j
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class EspacioReservable extends Edificio {
     @Id
     private UUID idEspacio; //o algo así intuyo
