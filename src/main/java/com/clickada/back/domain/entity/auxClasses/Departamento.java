@@ -1,4 +1,4 @@
-package com.clickada.back.valueObject;
+package com.clickada.back.domain.entity.auxClasses;
 
 public enum Departamento {
     INFORMATICA_E_INGENIERIA_DE_SISTEMAS,

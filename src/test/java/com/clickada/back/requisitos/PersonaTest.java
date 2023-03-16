@@ -1,8 +1,8 @@
 package com.clickada.back.requisitos;
 
-import com.clickada.back.domain.entities.Persona;
-import com.clickada.back.valueObject.Departamento;
-import com.clickada.back.valueObject.Rol;
+import com.clickada.back.domain.entity.Persona;
+import com.clickada.back.domain.entity.auxClasses.Departamento;
+import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com.clickada.back.domain.entities.auxClasses;
+package com.clickada.back.domain.entity.auxClasses;
 
 import lombok.extern.slf4j.Slf4j;
 

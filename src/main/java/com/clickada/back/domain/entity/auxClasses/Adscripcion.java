@@ -1,6 +1,5 @@
-package com.clickada.back.domain.entities.auxClasses;
+package com.clickada.back.domain.entity.auxClasses;
 
-import com.clickada.back.valueObject.Departamento;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

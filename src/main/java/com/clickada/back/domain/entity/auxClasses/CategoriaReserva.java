@@ -1,4 +1,4 @@
-package com.clickada.back.valueObject;
+package com.clickada.back.domain.entity.auxClasses;
 
 public enum CategoriaReserva {
     AULA,

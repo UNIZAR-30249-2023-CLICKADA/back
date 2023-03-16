@@ -1,43 +1,44 @@
-package com.clickada.back.domain.entities;
+package com.clickada.back.domain.entity;
 
-import com.clickada.back.domain.entities.auxClasses.Adscripcion;
-import com.clickada.back.domain.entities.auxClasses.PersonaRol;
-import com.clickada.back.valueObject.Departamento;
-import com.clickada.back.valueObject.Rol;
+import com.clickada.back.domain.entity.auxClasses.Adscripcion;
+import com.clickada.back.domain.entity.auxClasses.PersonaRol;
+import com.clickada.back.domain.entity.auxClasses.Departamento;
+import com.clickada.back.domain.entity.auxClasses.Rol;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.UUID;
 
-@Slf4j
 @Entity
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "persona")
+@NoArgsConstructor
 public class Persona {
     @Id
     private UUID idPersona;
     String nombre;
     String eMail;
-    PersonaRol personaRol;
+    @Transient
     Adscripcion adscripcion;
     boolean departamentoDisponible;
+    ArrayList<Rol> roles;
 
     public Persona(String nombre, String eMail, Rol rol){
         this.idPersona = UUID.randomUUID();
         this.nombre = nombre;
         this.eMail = eMail;
         this.departamentoDisponible = optaADepartamento(rol);
-        this.personaRol = new PersonaRol(rol);
+        this.roles = new ArrayList<>();
+        this.roles.add(rol);
     }
     public void cambiarRol(Rol nuevoRol) {
-        personaRol.cambiarRol(nuevoRol);
+        this.roles.clear();
+        this.roles.add(nuevoRol);
         // gestionar el nuevo rol con los departamentos
         boolean optaADepartamento = optaADepartamento(nuevoRol);
         if (departamentoDisponible && !optaADepartamento) {
@@ -48,7 +49,12 @@ public class Persona {
     }
 
     public void anyadirRol() throws Exception {
-        personaRol.anyadirRol();
+        if(this.roles.get(0).equals(Rol.GERENTE)){
+            this.roles.add(Rol.DOCENTE_INVESTIGADOR);
+        }
+        else {
+            throw new Exception("No es Gerente, no puede tener segundo Rol");
+        }
         departamentoDisponible = true;
     }
 

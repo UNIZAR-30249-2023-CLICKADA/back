@@ -1,4 +1,4 @@
-package com.clickada.back.domain.entities.auxClasses;
+package com.clickada.back.domain.entity.auxClasses;
 
 public class Edificio {
     //Horario disponible de reserva

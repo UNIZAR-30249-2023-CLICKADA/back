@@ -1,6 +1,4 @@
-package com.clickada.back.domain.entities.auxClasses;
-
-import com.clickada.back.valueObject.CategoriaReserva;
+package com.clickada.back.domain.entity.auxClasses;
 
 public class Reservabilidad {
     public CategoriaReserva categoriaReserva;
