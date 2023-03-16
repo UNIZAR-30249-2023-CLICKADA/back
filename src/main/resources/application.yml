@@ -8,9 +8,31 @@ spring:
   application:
     name: edificio
   datasource:
-    url: jdbc:mysql://${edificio-db:localhost}:3306/edificio-db
+    url: jdbc:postgresql://${edificio-db:localhost}:5432/edificio-db
     username: root
     password: root
   jpa:
     hibernate:
       ddl-auto: update
+
+--- # Testing configuration
+
+server:
+  port: ${random.int(5000,5100)}
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: edificio
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: root
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

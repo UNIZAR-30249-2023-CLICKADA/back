@@ -1,7 +1,7 @@
 package com.clickada.back.requisitos;
 
-import com.clickada.back.repository.entities.auxClasses.Adscripcion;
-import com.clickada.back.repository.entities.Persona;
+import com.clickada.back.domain.entities.auxClasses.Adscripcion;
+import com.clickada.back.domain.entities.Persona;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
 import org.junit.jupiter.api.Test;

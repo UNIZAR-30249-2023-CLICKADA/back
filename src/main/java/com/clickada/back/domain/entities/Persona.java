@@ -1,7 +1,7 @@
-package com.clickada.back.repository.entities;
+package com.clickada.back.domain.entities;
 
-import com.clickada.back.repository.entities.auxClasses.Adscripcion;
-import com.clickada.back.repository.entities.auxClasses.PersonaRol;
+import com.clickada.back.domain.entities.auxClasses.Adscripcion;
+import com.clickada.back.domain.entities.auxClasses.PersonaRol;
 import com.clickada.back.valueObject.Departamento;
 import com.clickada.back.valueObject.Rol;
 import lombok.*;

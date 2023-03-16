@@ -1,7 +1,7 @@
-package com.clickada.back.repository.entities;
+package com.clickada.back.domain.entities;
 
-import com.clickada.back.repository.entities.auxClasses.Edificio;
-import com.clickada.back.repository.entities.auxClasses.Reservabilidad;
+import com.clickada.back.domain.entities.auxClasses.Edificio;
+import com.clickada.back.domain.entities.auxClasses.Reservabilidad;
 import com.clickada.back.valueObject.CategoriaReserva;
 import com.clickada.back.valueObject.Rol;
 import lombok.Getter;

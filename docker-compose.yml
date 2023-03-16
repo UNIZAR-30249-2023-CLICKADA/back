@@ -11,9 +11,11 @@ services:
     restart: always
 
   edificio-db:
-    image: mysql:8.0.30
+    image: postgres:15.2
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      - "MYSQL_DATABASE=edificio-db"
-      - "MYSQL_ROOT_PASSWORD=root"
+      - "POSTGRES_USER=root"
+      - "POSTGRES_PASSWORD=root"
+      - "DEFAULT_ENCODING=UTF8"
+      - "POSTGRES_DB=edificio-db"

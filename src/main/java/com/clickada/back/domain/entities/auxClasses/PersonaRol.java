@@ -1,4 +1,4 @@
-package com.clickada.back.repository.entities.auxClasses;
+package com.clickada.back.domain.entities.auxClasses;
 
 import com.clickada.back.valueObject.Rol;
 import lombok.extern.slf4j.Slf4j;

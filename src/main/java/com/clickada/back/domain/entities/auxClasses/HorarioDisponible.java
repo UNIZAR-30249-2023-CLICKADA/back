@@ -1,4 +1,4 @@
-package com.clickada.back.repository.entities.auxClasses;
+package com.clickada.back.domain.entities.auxClasses;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
