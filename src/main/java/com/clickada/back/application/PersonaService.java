@@ -10,4 +10,6 @@ public interface PersonaService {
     boolean cambiarRol(UUID idPersona, String rol);
 
     List<Persona> todasPersonas();
+
+    boolean loginPersona(String email, String pass);
 }

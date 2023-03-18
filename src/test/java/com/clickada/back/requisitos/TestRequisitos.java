@@ -15,7 +15,7 @@ public class TestRequisitos {
 
     @Test
     void requisito2(){
-        Persona persona = new Persona("Pepe","pepe@gmail.com", Rol.CONSERJE);
+        Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE);
 
         Assert.state(persona.getEMail().equals("pepe@gmail.com"),"Conserje");
     }

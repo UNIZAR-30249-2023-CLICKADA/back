@@ -28,7 +28,7 @@ public class Reserva {
         this.idPersona = idPersona;
         this.tipoDeUso = tipoDeUso;
         this.numAsistentes = numAsistentes;
-        this.detallesReserva= detallesReserva;
+        this.detallesReserva = detallesReserva;
     }
 
     public LocalDate getFechaInicio() {

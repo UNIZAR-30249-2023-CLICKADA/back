@@ -6,7 +6,6 @@ import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,4 +35,10 @@ public class PersonaServiceImpl implements PersonaService {
         return personaRepository.findAll();
     }
 
+    @Override
+    public boolean loginPersona(String email, String pass){
+        Persona p = personaRepository.findByeMail(email);
+        if (p!=null) return p.getContrasenya().equals(pass);
+        else return false;
+    }
 }

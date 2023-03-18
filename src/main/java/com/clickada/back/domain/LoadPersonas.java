@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Base64;
 import java.util.UUID;
 
 @Configuration
@@ -19,8 +20,8 @@ public class LoadPersonas {
     @Bean
     CommandLineRunner initDatabase(PersonaRepository personaRepository) {
 
-        Persona persona = new Persona("Pepe Agustin","pepe@gmail.com",Rol.CONSERJE);
-        Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com",Rol.GERENTE);
+        Persona persona = new Persona("Pepe Agustin","pepe@gmail.com", "123", Rol.CONSERJE);
+        Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com","321",Rol.GERENTE);
 
         personaRepository.save(persona);
         personaRepository.save(persona1);
