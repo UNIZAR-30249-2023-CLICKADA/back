@@ -22,9 +22,12 @@ public class LoadPersonas {
 
         Persona persona = new Persona("Pepe Agustin","pepe@gmail.com", "123", Rol.CONSERJE);
         Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com","321",Rol.GERENTE);
-
+        personaRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
         personaRepository.save(persona);
         personaRepository.save(persona1);
+        Persona p3 = new Persona("Carlos Altea","unico@mail.com", "321", Rol.TECNICO_LABORATORIO);
+        personaRepository.save(p3);
+
         return null;
     }
 }

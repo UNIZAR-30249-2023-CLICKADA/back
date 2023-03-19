@@ -1,6 +1,7 @@
 package com.clickada.back.requisitos;
 
 import com.clickada.back.domain.LoadPersonas;
+import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
@@ -43,16 +44,23 @@ public class PersonaTest {
 
 
         persona.cambiarRol(rol2);
-        //assertEquals(rol2, persona.getPersonaRol().roles.get(0));
+        assertEquals(rol2, persona.getRoles().get(0));
 
         persona.anyadirRol();
-       // assertEquals(rol1, persona.getPersonaRol().roles.get(1));
+        assertEquals(rol1, persona.getRoles().get(1));
 
         persona.cambiarRol(Rol.ESTUDIANTE);
-        //assertEquals(1,persona.getPersonaRol().roles.size());
+        assertEquals(1,persona.getRoles().size());
         persona.cambiarRol(Rol.DOCENTE_INVESTIGADOR);
         persona.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        //assertEquals(1,persona.getPersonaRol().roles.size());
+        assertEquals(1,persona.getRoles().size());
+
+    }
+
+    @Test
+    void testLoginPersona() throws Exception{
+        Persona pmailRepe = new Persona("Señor Mail Repetido","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
+
 
     }
 }

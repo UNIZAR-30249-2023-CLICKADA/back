@@ -11,5 +11,7 @@ public interface PersonaService {
 
     List<Persona> todasPersonas();
 
+    public  Persona obtenerPersona(String email);
+
     boolean loginPersona(String email, String pass);
 }

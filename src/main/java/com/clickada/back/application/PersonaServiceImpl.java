@@ -36,6 +36,10 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
+    public  Persona obtenerPersona(String email){
+        return personaRepository.findByeMail(email);
+    }
+    @Override
     public boolean loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
         if (p!=null) return p.getContrasenya().equals(pass);

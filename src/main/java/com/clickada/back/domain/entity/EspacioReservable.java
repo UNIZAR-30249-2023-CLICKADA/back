@@ -1,9 +1,6 @@
 package com.clickada.back.domain.entity;
 
-import com.clickada.back.domain.entity.auxClasses.Edificio;
-import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
-import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
-import com.clickada.back.domain.entity.auxClasses.Rol;
+import com.clickada.back.domain.entity.auxClasses.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,15 +19,20 @@ import java.util.UUID;
 public class EspacioReservable extends Edificio {
     @Id
     UUID idEspacio; //o algo así intuyo
+
+    Long tamanyo; //Tamaño del espacio en m2
+
+    CategoriaEspacio categoria;
     @Transient
     Reservabilidad reservabilidad;
     //private HorarioDisponible horarioDisponible;
 
-    public EspacioReservable(Reservabilidad reservabilidad){
+    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo, CategoriaEspacio categoria){
         super();
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
-
+        this.tamanyo = tamanyo;
+        this.categoria = categoria;
     }
 
     public void modificarReservabilidad(Persona persona, boolean reservable, CategoriaReserva categoriaReserva) throws Exception {

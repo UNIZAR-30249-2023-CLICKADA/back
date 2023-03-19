@@ -6,10 +6,7 @@ import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
@@ -23,6 +20,7 @@ public class Persona {
     @Id
     private UUID idPersona;
     String nombre;
+    @Column (unique = true)
     String eMail;
     String contrasenya;
     @Transient
