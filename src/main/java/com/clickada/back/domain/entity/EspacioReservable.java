@@ -27,7 +27,7 @@ public class EspacioReservable extends Edificio {
     Reservabilidad reservabilidad;
     //private HorarioDisponible horarioDisponible;
 
-    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo, CategoriaEspacio categoria){
+    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo){
         super();
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;

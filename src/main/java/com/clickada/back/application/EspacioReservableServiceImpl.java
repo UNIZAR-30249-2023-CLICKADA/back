@@ -22,14 +22,16 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
 
     @Override
     public boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable) {
-        if(espacioRepository.existsById(idEspacio)){
+        if (espacioRepository.existsById(idEspacio)) {
             EspacioReservable espacioReservable = espacioRepository.getById(idEspacio);
-             Reservabilidad reservabilidad = espacioReservable.getReservabilidad();
-             Reservabilidad reservabilidadNueva = new Reservabilidad(reservable,reservabilidad.categoriaReserva);
-             espacioReservable.setReservabilidad(reservabilidadNueva);
-             espacioRepository.save(espacioReservable);
-             return true;
+            Reservabilidad reservabilidad = espacioReservable.getReservabilidad();
+            Reservabilidad reservabilidadNueva = new Reservabilidad(reservable, reservabilidad.categoriaReserva);
+            espacioReservable.setReservabilidad(reservabilidadNueva);
+            espacioRepository.save(espacioReservable);
+            return true;
         }
+        return false;
+    }
     @Override
     public boolean reservarEspacio() {
         return false;
