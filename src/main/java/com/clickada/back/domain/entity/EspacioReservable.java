@@ -22,7 +22,7 @@ import java.util.UUID;
 public class EspacioReservable extends Edificio {
     @Id
     UUID idEspacio; //o algo así intuyo
-    @Transient
+
     Reservabilidad reservabilidad;
     //private HorarioDisponible horarioDisponible;
 

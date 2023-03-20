@@ -1,6 +1,8 @@
 package com.clickada.back.infrastructure;
 
+import com.clickada.back.application.EspacioReservableService;
 import com.clickada.back.application.PersonaService;
+import com.clickada.back.domain.EspacioRepository;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,15 @@ import java.util.UUID;
 public class PersonaController {
 
     PersonaService personaService;
+    EspacioReservableService espacioReservableService;
+    private final EspacioRepository espacioRepository;
 
     @Autowired
-    public PersonaController(PersonaService personaService) {
+    public PersonaController(PersonaService personaService, EspacioReservableService espacioReservableService,
+                             EspacioRepository espacioRepository) {
         this.personaService = personaService;
+        this.espacioReservableService = espacioReservableService;
+        this.espacioRepository = espacioRepository;
     }
 
     @PutMapping("/cambiarRol")
@@ -31,6 +38,23 @@ public class PersonaController {
     @GetMapping("/todasPersonas")
     ResponseEntity<?> todasPersonas(){
         return new ResponseEntity<>(personaService.todasPersonas(),HttpStatus.OK);
+    }
+
+    @GetMapping("/todosEspacios")
+    ResponseEntity<?> todosEspacios(){
+        return new ResponseEntity<>(espacioReservableService.todosEspacios(),HttpStatus.OK);
+    }
+
+    @PutMapping("/cambiarReservabilidad")
+    ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio, @RequestParam boolean reservable){
+        if (personaService.aptoParaCambiar(idPersona)){
+            if(espacioReservableService.cambiarReservabilidadEspacio(idEspacio,reservable)){
+                return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("No existe el espacio para cambiar la reservabilidad",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("La persona no es apta para cambiar nada",HttpStatus.BAD_REQUEST);
     }
 
 }

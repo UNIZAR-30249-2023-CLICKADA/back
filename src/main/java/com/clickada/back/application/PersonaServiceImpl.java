@@ -6,7 +6,6 @@ import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +33,15 @@ public class PersonaServiceImpl implements PersonaService {
     @Override
     public List<Persona> todasPersonas(){
         return personaRepository.findAll();
+    }
+
+    @Override
+    public boolean aptoParaCambiar(UUID idPersona) {
+        if(personaRepository.existsById(idPersona)){
+            Persona persona = personaRepository.getById(idPersona);
+            return persona.getRoles().get(0).equals(Rol.GERENTE);
+        }
+        return false;
     }
 
 }
