@@ -7,10 +7,7 @@ import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -55,6 +52,12 @@ public class PersonaController {
         }
 
         return new ResponseEntity<>("La persona no es apta para cambiar nada",HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/loginPersona")
+    /* Las llamadas desde el frontend deben convertir a Base64 la contraseña antes de hacer el request */
+    ResponseEntity<?> loginPersona(@RequestParam String email, @RequestParam String pass){
+        return new ResponseEntity<>(personaService.loginPersona(email,pass),HttpStatus.OK);
     }
 
 }

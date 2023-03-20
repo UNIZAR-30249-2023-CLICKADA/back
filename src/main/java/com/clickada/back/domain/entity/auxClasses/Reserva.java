@@ -13,15 +13,22 @@ public class Reserva {
     private LocalDate fechaFin;
     private LocalTime horaFin;
     private UUID idPersona;
-
+    private TipoUso tipoDeUso;
+    private int numAsistentes;
+    private String detallesReserva;
     private UUID idEspacio;
 
-    public Reserva(LocalDate fechaInicio, LocalTime horaInicio, LocalDate fechaFin, LocalTime horaFin, UUID idPersona, UUID idEspacio) {
+
+    public Reserva(LocalDate fechaInicio, LocalTime horaInicio, LocalDate fechaFin, LocalTime horaFin, UUID idPersona,
+                   TipoUso tipoDeUso,UUID idEspacio, int numAsistentes, String detallesReserva) {
         this.fechaInicio = fechaInicio;
         this.horaInicio = horaInicio;
         this.fechaFin = fechaFin;
         this.horaFin = horaFin;
         this.idPersona = idPersona;
+        this.tipoDeUso = tipoDeUso;
+        this.numAsistentes = numAsistentes;
+        this.detallesReserva = detallesReserva;
     }
 
     public LocalDate getFechaInicio() {
@@ -40,8 +47,19 @@ public class Reserva {
         return horaFin;
     }
 
-    public UUID getIdPersona() {
-        return idPersona;
+    public UUID getIdPersona() { return idPersona;
+    }
+
+    public TipoUso getTipoDeUso() {
+        return tipoDeUso;
+    }
+
+    public int getNumAsistentes(){
+        return numAsistentes;
+    }
+
+    public String getDetallesReserva() {
+        return detallesReserva;
     }
 
     /*public boolean estaDentroDeHorario(HorarioDisponible horario) {

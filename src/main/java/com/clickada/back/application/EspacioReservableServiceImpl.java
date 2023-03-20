@@ -30,6 +30,8 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
              espacioRepository.save(espacioReservable);
              return true;
         }
+    @Override
+    public boolean reservarEspacio() {
         return false;
     }
 }

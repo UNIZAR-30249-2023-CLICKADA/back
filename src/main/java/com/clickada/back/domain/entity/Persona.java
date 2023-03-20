@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.UUID;
 
 @Entity
@@ -19,15 +20,19 @@ public class Persona {
     @Id
     private UUID idPersona;
     String nombre;
+    @Column (unique = true)
     String eMail;
+    String contrasenya;
+    @Transient
     Adscripcion adscripcion;
     boolean departamentoDisponible;
     ArrayList<Rol> roles;
 
-    public Persona(String nombre, String eMail, Rol rol){
+    public Persona(String nombre, String eMail, String pass, Rol rol){
         this.idPersona = UUID.randomUUID();
         this.nombre = nombre;
         this.eMail = eMail;
+        this.contrasenya = Base64.getEncoder().encodeToString(pass.getBytes());
         this.departamentoDisponible = optaADepartamento(rol);
         this.roles = new ArrayList<>();
         this.roles.add(rol);
