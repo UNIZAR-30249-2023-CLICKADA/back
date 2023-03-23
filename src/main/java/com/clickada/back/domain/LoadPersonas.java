@@ -21,13 +21,16 @@ public class LoadPersonas {
     CommandLineRunner initDatabase(PersonaRepository personaRepository) {
 
         Persona persona = new Persona("Pepe Agustin","pepe@gmail.com", "123", Rol.CONSERJE);
-        Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com","321",Rol.GERENTE);
+        Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com","321",Rol.DOCENTE_INVESTIGADOR);
         personaRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
         personaRepository.save(persona);
         personaRepository.save(persona1);
-        Persona p3 = new Persona("Carlos Altea","unico@mail.com", "321", Rol.TECNICO_LABORATORIO);
+        Persona p3 = new Persona("Carlos Altea","carl@mail.com", "321", Rol.TECNICO_LABORATORIO);
         personaRepository.save(p3);
-
+        Persona p4 = new Persona("Peasant Student","stud@mail.com", "321", Rol.TECNICO_LABORATORIO);
+        personaRepository.save(p4);
+        Persona p5 = new Persona("Gerente MasterRace","gerente@mail.com", "321", Rol.GERENTE);
+        personaRepository.save(p5);
         return null;
     }
 }

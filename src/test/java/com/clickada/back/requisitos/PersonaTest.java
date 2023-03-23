@@ -59,7 +59,7 @@ public class PersonaTest {
 
     @Test
     void testLoginPersona() throws Exception{
-        Persona pmailRepe = new Persona("Señor Mail Repetido","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
+        Persona per = new Persona("Señor Mail Repetido","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
 
 
     }

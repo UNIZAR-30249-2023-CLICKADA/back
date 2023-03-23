@@ -1,7 +1,10 @@
 package com.clickada.back.application;
 
 import com.clickada.back.domain.EspacioRepository;
+import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.EspacioReservable;
+import com.clickada.back.domain.entity.auxClasses.CategoriaEspacio;
+import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,4 +39,5 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     public boolean reservarEspacio() {
         return false;
     }
+
 }

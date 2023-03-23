@@ -57,7 +57,15 @@ public class PersonaController {
     @PutMapping("/loginPersona")
     /* Las llamadas desde el frontend deben convertir a Base64 la contraseña antes de hacer el request */
     ResponseEntity<?> loginPersona(@RequestParam String email, @RequestParam String pass){
-        return new ResponseEntity<>(personaService.loginPersona(email,pass),HttpStatus.OK);
+        if (personaService.loginPersona(email,pass)){
+            return new ResponseEntity<>("True",HttpStatus.OK);
+        }
+        else { return  new ResponseEntity<>("Login fallido",HttpStatus.BAD_REQUEST); }
+    }
+
+    @PutMapping("/permisosReserva")
+    ResponseEntity<?> permisosDeReserva(@RequestParam UUID id){
+        return new ResponseEntity<>(personaService.permisosDeReserva(id),HttpStatus.OK);
     }
 
 }

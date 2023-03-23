@@ -2,10 +2,12 @@ package com.clickada.back.application;
 
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.PersonaRepository;
+import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -55,4 +57,30 @@ public class PersonaServiceImpl implements PersonaService {
         if (p!=null) return p.getContrasenya().equals(pass);
         else return false;
     }
+
+    @Override
+    public List<CategoriaReserva> permisosDeReserva(UUID idPersona) {
+        List<CategoriaReserva> l = new ArrayList<>();
+        if (personaRepository.existsById(idPersona)) {
+            Persona p = personaRepository.getById(idPersona);
+            Rol rol = p.getRoles().get(0);
+            switch (rol) {
+                case ESTUDIANTE -> l.add(CategoriaReserva.SALA_COMUN);
+                case CONSERJE -> {
+                    l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
+                }
+                case DOCENTE_INVESTIGADOR, INVESTIGADOR_CONTRATADO -> {
+                    l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
+                    l.add(CategoriaReserva.LABORATORIO);
+                }
+                case TECNICO_LABORATORIO -> l.add(CategoriaReserva.SALA_COMUN);
+                case GERENTE -> {
+                    l.add(CategoriaReserva.SALA_COMUN); l.add(CategoriaReserva.LABORATORIO);
+                    l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SEMINARIO);
+                }
+            }
+        }
+        return l;
+    }
+
 }
