@@ -37,10 +37,6 @@ public class PersonaController {
         return new ResponseEntity<>(personaService.todasPersonas(),HttpStatus.OK);
     }
 
-    @GetMapping("/todosEspacios")
-    ResponseEntity<?> todosEspacios(){
-        return new ResponseEntity<>(espacioReservableService.todosEspacios(),HttpStatus.OK);
-    }
 
     @PutMapping("/cambiarReservabilidad")
     ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio, @RequestParam boolean reservable){
@@ -67,5 +63,4 @@ public class PersonaController {
     ResponseEntity<?> permisosDeReserva(@RequestParam UUID id){
         return new ResponseEntity<>(personaService.permisosDeReserva(id),HttpStatus.OK);
     }
-
 }

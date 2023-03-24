@@ -1,18 +1,28 @@
 package com.clickada.back.requisitos;
 
+import com.clickada.back.application.EspacioReservableService;
+import com.clickada.back.application.EspacioReservableServiceImpl;
+import com.clickada.back.application.PersonaService;
+import com.clickada.back.domain.entity.EspacioReservable;
 import com.clickada.back.domain.entity.auxClasses.Adscripcion;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
+import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 public class TestRequisitos {
 
+    PersonaService personaService;
     @Test
     void requisito2(){
         Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE);

@@ -1,16 +1,23 @@
 package com.clickada.back.domain.entity.auxClasses;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
 @Slf4j
+@Entity
+@NoArgsConstructor
 public class Reserva {
+    @Id
+    private UUID idReserva;
     private LocalDate fechaInicio;
     private LocalTime horaInicio;
-    private LocalDate fechaFin;
+    private LocalDate fechaFin;//Creo que esto se puede borrar, las reservas son sólo en un único día
     private LocalTime horaFin;
     private UUID idPersona;
     private TipoUso tipoDeUso;
@@ -21,6 +28,8 @@ public class Reserva {
 
     public Reserva(LocalDate fechaInicio, LocalTime horaInicio, LocalDate fechaFin, LocalTime horaFin, UUID idPersona,
                    TipoUso tipoDeUso,UUID idEspacio, int numAsistentes, String detallesReserva) {
+        this.idReserva = UUID.randomUUID();
+        this.idEspacio = idEspacio;
         this.fechaInicio = fechaInicio;
         this.horaInicio = horaInicio;
         this.fechaFin = fechaFin;
