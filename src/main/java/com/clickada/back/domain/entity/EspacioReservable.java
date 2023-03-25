@@ -20,6 +20,8 @@ public class EspacioReservable extends Edificio {
     @Id
     UUID idEspacio; //o algo así intuyo
 
+
+
     Long tamanyo; //Tamaño del espacio en m2
 
     @Transient

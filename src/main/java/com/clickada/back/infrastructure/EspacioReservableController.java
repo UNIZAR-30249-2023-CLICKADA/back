@@ -29,6 +29,12 @@ public class EspacioReservableController {
         return new ResponseEntity<>(espacioReservableService.todosEspacios(), HttpStatus.OK);
     }
 
+    @PutMapping("/reservasVivas")
+    /* Temp - habrá que decidir si unicamente del día actual  o de todos los dias posteriores */
+    ResponseEntity<?> obtenerReservasVivas(@RequestParam UUID idPersona){
+        return new ResponseEntity<>(espacioReservableService.obtenerReservasVivas(idPersona), HttpStatus.OK);
+    }
+
     @PutMapping("/reservarEspacioTest")
     ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam UUID idEspacio){
         if (espacioReservableService.todosEspacios().size()>0) {

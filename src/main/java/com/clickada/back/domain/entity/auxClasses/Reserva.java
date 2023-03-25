@@ -67,6 +67,8 @@ public class Reserva {
         return numAsistentes;
     }
 
+
+
     public String getDetallesReserva() {
         return detallesReserva;
     }

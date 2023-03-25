@@ -1,7 +1,6 @@
 package com.clickada.back.application;
 
 import com.clickada.back.domain.EspacioRepository;
-import com.clickada.back.domain.EspacioReservableRepository;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.EspacioReservable;
@@ -11,16 +10,21 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class EspacioReservableServiceImpl implements EspacioReservableService{
-    EspacioRepository espacioRepository;
-    ReservaRepository  reservaRepository;
+    private final EspacioRepository espacioRepository;
+    private final PersonaRepository personaRepository;
+    private final ReservaRepository  reservaRepository;
+
     @Autowired
-    public EspacioReservableServiceImpl(EspacioRepository espacioRepository, ReservaRepository reservaRepository){
+    public EspacioReservableServiceImpl(EspacioRepository espacioRepository, PersonaRepository personaRepository,
+                                        ReservaRepository reservaRepository){
         this.espacioRepository = espacioRepository;
+        this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
     }
 
@@ -46,8 +50,17 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
                                    LocalTime hasta, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
         Reserva r = new Reserva(fecha,desde,fecha,hasta,idPersona,uso,idEspacio,numAsistentes,detalles);
-
         reservaRepository.save(r);
         return true;
+    }
+
+    @Override
+    public List<Reserva> obtenerReservasVivas(UUID idPersona) {
+        List<Reserva> l = new ArrayList<>();
+        if(this.personaRepository.existsById(idPersona) &&
+                this.personaRepository.getById(idPersona).getRoles().get(0).equals(Rol.GERENTE)){
+            l.addAll(this.reservaRepository.findAllAfterTime()) ;
+        }
+        return l;
     }
 }
