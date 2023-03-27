@@ -18,4 +18,9 @@ public enum Rol {
         // Cualquier otro caso
         else {return null;}
     }
+    public boolean adscribible(Rol rol){
+        return rol.equals(Rol.DOCENTE_INVESTIGADOR) ||
+                rol.equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                rol.equals(Rol.TECNICO_LABORATORIO);
+    }
 }

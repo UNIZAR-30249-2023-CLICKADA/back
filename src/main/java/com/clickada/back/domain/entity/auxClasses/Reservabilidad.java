@@ -12,7 +12,7 @@ public class Reservabilidad {
     public CategoriaReserva categoriaReserva;
     public boolean reservable;
 
-    // Horario reserva disponibles
+    // porcentaje maximo de reserva
 
     public Reservabilidad(boolean reservable, CategoriaReserva categoriaReserva){
         this.reservable = reservable;

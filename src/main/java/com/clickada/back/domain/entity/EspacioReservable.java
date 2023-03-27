@@ -20,20 +20,22 @@ public class EspacioReservable extends Edificio {
     @Id
     UUID idEspacio; //o algo así intuyo
 
-
+    CategoriaEspacio categoriaEspacio;
 
     Long tamanyo; //Tamaño del espacio en m2
 
     @Transient
 
     Reservabilidad reservabilidad;
-    //private HorarioDisponible horarioDisponible;
+    //HorarioDisponible horarioDisponible;
+    //porcentaje uso maximo
 
-    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo){
+    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo, CategoriaEspacio categoriaEspacio){
         super();
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
+        this.categoriaEspacio = categoriaEspacio;
     }
 
     public void modificarReservabilidad(Persona persona, boolean reservable, CategoriaReserva categoriaReserva) throws Exception {

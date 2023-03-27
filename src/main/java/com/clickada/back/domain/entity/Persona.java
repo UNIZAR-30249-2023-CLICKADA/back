@@ -33,7 +33,7 @@ public class Persona {
         this.nombre = nombre;
         this.eMail = eMail;
         this.contrasenya = Base64.getEncoder().encodeToString(pass.getBytes());
-        this.departamentoDisponible = optaADepartamento(rol);
+        this.departamentoDisponible = rol.adscribible(rol);
         this.roles = new ArrayList<>();
         this.roles.add(rol);
     }
@@ -41,10 +41,10 @@ public class Persona {
         this.roles.clear();
         this.roles.add(nuevoRol);
         // gestionar el nuevo rol con los departamentos
-        boolean optaADepartamento = optaADepartamento(nuevoRol);
-        if (departamentoDisponible && !optaADepartamento) {
+        boolean adscribible = nuevoRol.adscribible(nuevoRol);
+        if (departamentoDisponible && !adscribible) {
             departamentoDisponible = false;
-        } else if (!departamentoDisponible && optaADepartamento) {
+        } else if (!departamentoDisponible && adscribible) {
             departamentoDisponible = true;
         }
     }
@@ -67,13 +67,5 @@ public class Persona {
                 this.adscripcion.setDepartamento(departamento);
             }
         }
-    }
-    private boolean optaADepartamento(Rol rol){
-        if(rol.equals(Rol.DOCENTE_INVESTIGADOR) ||
-                rol.equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                rol.equals(Rol.TECNICO_LABORATORIO)){
-            return true;
-        }
-        return false;
     }
 }
