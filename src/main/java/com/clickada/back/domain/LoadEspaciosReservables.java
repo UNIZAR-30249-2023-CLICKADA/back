@@ -2,6 +2,7 @@ package com.clickada.back.domain;
 
 import com.clickada.back.domain.entity.EspacioReservable;
 import com.clickada.back.domain.entity.Persona;
+import com.clickada.back.domain.entity.auxClasses.CategoriaEspacio;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import com.clickada.back.domain.entity.auxClasses.Rol;
@@ -18,8 +19,8 @@ public class LoadEspaciosReservables {
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository) {
 
-        EspacioReservable espacioReservable = new EspacioReservable(new Reservabilidad(true, CategoriaReserva.AULA), 20L);
-        EspacioReservable espacioReservable2 = new EspacioReservable(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L);
+        EspacioReservable espacioReservable = new EspacioReservable(new Reservabilidad(true, CategoriaReserva.AULA), 20L, CategoriaEspacio.AULA);
+        EspacioReservable espacioReservable2 = new EspacioReservable(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,CategoriaEspacio.DESPACHO);
 
         espacioRepository.save(espacioReservable);
         espacioRepository.save(espacioReservable2);
