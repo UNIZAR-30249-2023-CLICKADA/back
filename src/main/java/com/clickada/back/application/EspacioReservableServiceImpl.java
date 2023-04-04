@@ -18,9 +18,9 @@ import java.util.UUID;
 
 @Service
 public class EspacioReservableServiceImpl implements EspacioReservableService{
-    private final EspacioRepository espacioRepository;
-    private final PersonaRepository personaRepository;
-    private final ReservaRepository  reservaRepository;
+    EspacioRepository espacioRepository;
+    PersonaRepository personaRepository;
+    ReservaRepository  reservaRepository;
 
     @Autowired
     public EspacioReservableServiceImpl(EspacioRepository espacioRepository, PersonaRepository personaRepository,
@@ -48,7 +48,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         return false;
     }
     @Override
-    public boolean reservarEspacio(UUID idPersona, List<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
+    public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
         Reserva r = new Reserva(new PeridodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
@@ -72,7 +72,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         List<Reserva> l = new ArrayList<>();
         if(this.personaRepository.existsById(idPersona) &&
                 this.personaRepository.getById(idPersona).getRoles().get(0).equals(Rol.GERENTE)){
-            l.addAll(this.reservaRepository.findAllAfterTime()) ;
+            //l.addAll(this.reservaRepository.findAllAfterTime()) ;
         }
         return l;
     }

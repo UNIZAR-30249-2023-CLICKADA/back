@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,16 +22,18 @@ import java.util.UUID;
 public class Reserva {
     @Id
     private UUID idReserva;
+    @Transient
     private PeridodoReserva peridodoReserva;
     private UUID idPersona;
     private TipoUso tipoDeUso;
     private int numOcupantes;
     private String detallesReserva;
-    private List<UUID> idEspacios; // TODO pueden ser varios espacios reservados
+
+    private ArrayList<UUID> idEspacios;
 
 
     public Reserva(PeridodoReserva periodoReserva, UUID idPersona,
-                   TipoUso tipoDeUso,List<UUID> idEspacios, int numOcupantes, String detallesReserva) {
+                   TipoUso tipoDeUso,ArrayList<UUID> idEspacios, int numOcupantes, String detallesReserva) {
         this.idReserva = UUID.randomUUID();
         this.idEspacios = idEspacios;
         this.peridodoReserva = periodoReserva;

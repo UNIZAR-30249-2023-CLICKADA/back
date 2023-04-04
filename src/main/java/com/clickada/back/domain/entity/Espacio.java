@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,10 @@ public class Espacio extends Edificio {
     @Transient
     Reservabilidad reservabilidad;
     int numMaxOcupantes;
-    List<LocalDate> diasNoReservables;
+    @Transient
+    ArrayList<LocalDate> diasNoReservables;
     double porcentajeUsoPermitido;
+    @Transient
     PropietarioEspacio propietarioEspacio;
 
     //HorarioDisponible horarioDisponible;

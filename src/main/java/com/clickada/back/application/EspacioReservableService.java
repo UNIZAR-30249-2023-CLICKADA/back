@@ -6,12 +6,13 @@ import com.clickada.back.domain.entity.auxClasses.TipoUso;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public interface EspacioReservableService {
-    boolean reservarEspacio(UUID idPersona, List<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
-                            LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles);
+    boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
+                            LocalTime horaFinal, TipoUso uso, int numAsistentes, String detalles);
 
     List<Espacio> todosEspacios();
 

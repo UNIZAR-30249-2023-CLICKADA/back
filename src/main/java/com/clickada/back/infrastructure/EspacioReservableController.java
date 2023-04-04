@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,9 +38,9 @@ public class EspacioReservableController {
     }
 
     @PutMapping("/reservarEspacioTest")
-    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam UUID idEspacio){
+    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam ArrayList<UUID> idEspacios){
         if (espacioReservableService.todosEspacios().size()>0) {
-            espacioReservableService.reservarEspacio(idPersona, idEspacio,
+            espacioReservableService.reservarEspacio(idPersona, idEspacios,
                     LocalDate.of(2023, 3, 24), LocalTime.of(10, 30), LocalTime.of(14, 30),
                     TipoUso.DOCENCIA, 20, "Para dar clase bla bla bla");
         }

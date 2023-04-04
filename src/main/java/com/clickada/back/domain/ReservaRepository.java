@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, UUID> {
-    @Query("select r from Reserva r where r.fechaInicio = current_date and r.horaFin >= current_time ")
-    List<Reserva> findAllAfterTime();
+    //@Query("select r from Reserva r where r.fechaInicio = current_date and r.horaFin >= current_time ")
+    //List<Reserva> findAllAfterTime();
 }
