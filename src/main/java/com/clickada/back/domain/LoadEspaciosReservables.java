@@ -1,11 +1,9 @@
 package com.clickada.back.domain;
 
-import com.clickada.back.domain.entity.EspacioReservable;
-import com.clickada.back.domain.entity.Persona;
+import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.auxClasses.CategoriaEspacio;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
-import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -19,11 +17,11 @@ public class LoadEspaciosReservables {
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository) {
 
-        EspacioReservable espacioReservable = new EspacioReservable(new Reservabilidad(true, CategoriaReserva.AULA), 20L, CategoriaEspacio.AULA);
-        EspacioReservable espacioReservable2 = new EspacioReservable(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,CategoriaEspacio.DESPACHO);
+        Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L, CategoriaEspacio.AULA);
+        Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,CategoriaEspacio.DESPACHO);
 
-        espacioRepository.save(espacioReservable);
-        espacioRepository.save(espacioReservable2);
+        espacioRepository.save(espacio);
+        espacioRepository.save(espacio2);
         return null;
     }
 }

@@ -1,7 +1,6 @@
 package com.clickada.back.domain;
 
-import com.clickada.back.domain.entity.Persona;
-import com.clickada.back.domain.entity.auxClasses.Reserva;
+import com.clickada.back.domain.entity.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

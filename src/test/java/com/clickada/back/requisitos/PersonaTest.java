@@ -20,7 +20,7 @@ public class PersonaTest {
 
         assertEquals(nombre, persona.getNombre());
         assertEquals(eMail, persona.getEMail());
-        //assertEquals(rol, persona.getPersonaRol().roles.get(0));
+
         assertNotNull(persona.getIdPersona());
     }
 

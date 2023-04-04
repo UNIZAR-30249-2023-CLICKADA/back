@@ -1,7 +1,6 @@
 package com.clickada.back.domain;
 
 
-import com.clickada.back.domain.entity.auxClasses.PersonaRol;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.slf4j.Logger;
@@ -10,8 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Base64;
-import java.util.UUID;
 
 @Configuration
 public class LoadPersonas {

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -16,21 +18,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EspacioReservable extends Edificio {
+public class Espacio extends Edificio {
     @Id
     UUID idEspacio; //o algo así intuyo
 
     CategoriaEspacio categoriaEspacio;
 
-    Long tamanyo; //Tamaño del espacio en m2
+    double tamanyo; //Tamaño del espacio en m2
 
     @Transient
-
     Reservabilidad reservabilidad;
+    int numMaxOcupantes;
+    List<LocalDate> diasNoReservables;
+    double porcentajeUsoPermitido;
+    PropietarioEspacio propietarioEspacio;
+
     //HorarioDisponible horarioDisponible;
     //porcentaje uso maximo
 
-    public EspacioReservable(Reservabilidad reservabilidad, Long tamanyo, CategoriaEspacio categoriaEspacio){
+    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
         super();
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;

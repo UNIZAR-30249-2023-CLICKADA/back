@@ -3,7 +3,9 @@ package com.clickada.back.application;
 import com.clickada.back.domain.EspacioRepository;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
-import com.clickada.back.domain.entity.EspacioReservable;
+import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.Persona;
+import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,27 +31,38 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     }
 
     @Override
-    public List<EspacioReservable> todosEspacios() {
+    public List<Espacio> todosEspacios() {
         return this.espacioRepository.findAll();
     }
 
     @Override
     public boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable) {
         if (espacioRepository.existsById(idEspacio)) {
-            EspacioReservable espacioReservable = espacioRepository.getById(idEspacio);
-            Reservabilidad reservabilidad = espacioReservable.getReservabilidad();
+            Espacio espacio = espacioRepository.getById(idEspacio);
+            Reservabilidad reservabilidad = espacio.getReservabilidad();
             Reservabilidad reservabilidadNueva = new Reservabilidad(reservable, reservabilidad.categoriaReserva);
-            espacioReservable.setReservabilidad(reservabilidadNueva);
-            espacioRepository.save(espacioReservable);
+            espacio.setReservabilidad(reservabilidadNueva);
+            espacioRepository.save(espacio);
             return true;
         }
         return false;
     }
     @Override
-    public boolean reservarEspacio(UUID idPersona, UUID idEspacio, LocalDate fecha, LocalTime desde,
-                                   LocalTime hasta, TipoUso uso,int numAsistentes,String detalles) {
+    public boolean reservarEspacio(UUID idPersona, List<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
+                                   LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
-        Reserva r = new Reserva(fecha,desde,fecha,hasta,idPersona,uso,idEspacio,numAsistentes,detalles);
+        Reserva r = new Reserva(new PeridodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
+        Persona persona = personaRepository.getById(idPersona);
+        if(persona!= null){
+            if(persona.getRoles().get(0).equals(Rol.ESTUDIANTE)){
+                for(UUID idEspacio: idEspacios){
+                    Espacio espacio = espacioRepository.getById(idEspacio);
+                    if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)){
+                        return false;
+                    }
+                }
+            }
+        }
         reservaRepository.save(r);
         return true;
     }

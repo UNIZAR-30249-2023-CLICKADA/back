@@ -1,8 +1,7 @@
 package com.clickada.back.application;
 
-import com.clickada.back.domain.entity.EspacioReservable;
-import com.clickada.back.domain.entity.auxClasses.CategoriaEspacio;
-import com.clickada.back.domain.entity.auxClasses.Reserva;
+import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
 
 import java.time.LocalDate;
@@ -11,10 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EspacioReservableService {
-    boolean reservarEspacio(UUID idPersona, UUID idEspacio, LocalDate fecha, LocalTime desde,
-                            LocalTime hasta, TipoUso uso, int numAsistentes, String detalles);
+    boolean reservarEspacio(UUID idPersona, List<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
+                            LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles);
 
-    List<EspacioReservable> todosEspacios();
+    List<Espacio> todosEspacios();
 
     boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable);
 
