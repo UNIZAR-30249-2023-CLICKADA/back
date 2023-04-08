@@ -1,6 +1,6 @@
 package com.clickada.back.domain.entity;
 
-import com.clickada.back.domain.entity.auxClasses.PeridodoReserva;
+import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -23,7 +22,7 @@ public class Reserva {
     @Id
     private UUID idReserva;
     @Transient
-    private PeridodoReserva peridodoReserva;
+    private PeriodoReserva periodoReserva;
     private UUID idPersona;
     private TipoUso tipoDeUso;
     private int numOcupantes;
@@ -32,11 +31,11 @@ public class Reserva {
     private ArrayList<UUID> idEspacios;
 
 
-    public Reserva(PeridodoReserva periodoReserva, UUID idPersona,
-                   TipoUso tipoDeUso,ArrayList<UUID> idEspacios, int numOcupantes, String detallesReserva) {
+    public Reserva(PeriodoReserva periodoReserva, UUID idPersona,
+                   TipoUso tipoDeUso, ArrayList<UUID> idEspacios, int numOcupantes, String detallesReserva) {
         this.idReserva = UUID.randomUUID();
         this.idEspacios = idEspacios;
-        this.peridodoReserva = periodoReserva;
+        this.periodoReserva = periodoReserva;
         this.idPersona = idPersona;
         this.tipoDeUso = tipoDeUso;
         this.numOcupantes = numOcupantes;

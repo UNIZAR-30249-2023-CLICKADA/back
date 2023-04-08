@@ -58,9 +58,7 @@ public class PersonaTest {
     }
 
     @Test
-    void testLoginPersona() throws Exception{
-        Persona per = new Persona("Señor Mail Repetido","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
-
-
+    void testCambioReservabilidad() throws Exception{
+        Persona per = new Persona("Señor Tst","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
     }
 }

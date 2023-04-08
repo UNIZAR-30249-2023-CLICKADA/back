@@ -37,14 +37,16 @@ public class Persona {
         this.roles.add(rol);
     }
     public void cambiarRol(Rol nuevoRol) {
-        this.roles.clear();
-        this.roles.add(nuevoRol);
-        // gestionar el nuevo rol con los departamentos
-        boolean adscribible = nuevoRol.adscribible(nuevoRol);
-        if (departamentoDisponible && !adscribible) {
-            departamentoDisponible = false;
-        } else if (!departamentoDisponible && adscribible) {
-            departamentoDisponible = true;
+        if (nuevoRol!= null){
+            this.roles.clear();
+            this.roles.add(nuevoRol);
+            // gestionar el nuevo rol con los departamentos
+            boolean adscribible = nuevoRol.adscribible(nuevoRol);
+            if (departamentoDisponible && !adscribible) {
+                departamentoDisponible = false;
+            } else if (!departamentoDisponible && adscribible) {
+                departamentoDisponible = true;
+            }
         }
     }
 

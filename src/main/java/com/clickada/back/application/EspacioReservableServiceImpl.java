@@ -51,9 +51,10 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
-        Reserva r = new Reserva(new PeridodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
+        Reserva r = new Reserva(new PeriodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
         Persona persona = personaRepository.getById(idPersona);
-        if(persona!= null){
+
+        if(persona!= null){ // Comprueba permisos de ese rol
             if(persona.getRoles().get(0).equals(Rol.ESTUDIANTE)){
                 for(UUID idEspacio: idEspacios){
                     Espacio espacio = espacioRepository.getById(idEspacio);

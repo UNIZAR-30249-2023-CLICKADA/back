@@ -26,8 +26,8 @@ public class HorarioDisponible {
     }
 
     public void actualizarHorario(Reserva reserva) {
-        Duration duracionReserva = Duration.between(reserva.getPeridodoReserva().getHoraInicio(),reserva.getPeridodoReserva().getHoraFin());
-        horaInicio = reserva.getPeridodoReserva().getHoraInicio();
+        Duration duracionReserva = Duration.between(reserva.getPeriodoReserva().getHoraInicio(),reserva.getPeriodoReserva().getHoraFin());
+        horaInicio = reserva.getPeriodoReserva().getHoraInicio();
         horaFin = horaInicio.plus(getDuracion().minus(duracionReserva));
     }
 

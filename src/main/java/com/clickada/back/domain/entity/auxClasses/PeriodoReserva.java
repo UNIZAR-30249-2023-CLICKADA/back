@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PeridodoReserva {
+public class PeriodoReserva {
     private LocalDate fechaInicio;
     private LocalTime horaInicio;
     private LocalTime horaFin;
