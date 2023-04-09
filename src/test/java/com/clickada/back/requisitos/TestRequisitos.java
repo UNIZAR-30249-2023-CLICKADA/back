@@ -1,13 +1,18 @@
 package com.clickada.back.requisitos;
 
 import com.clickada.back.application.PersonaService;
-import com.clickada.back.domain.entity.auxClasses.Adscripcion;
+import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.Reserva;
+import com.clickada.back.domain.entity.auxClasses.*;
 import com.clickada.back.domain.entity.Persona;
-import com.clickada.back.domain.entity.auxClasses.Departamento;
-import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -58,6 +63,35 @@ public class TestRequisitos {
         per.cambiarRol(Rol.getRolByString("RolErroneo"));
         //Debe mantener el anterior
         assertEquals(Rol.GERENTE,per.getRoles().get(0));
+
+    }
+
+    @Test
+    public void testCambioReservabilidad() throws Exception {
+        Espacio e = new Espacio(new Reservabilidad(),150,
+                CategoriaEspacio.SALA_COMUN);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        e.modificarReservabilidad(gerente,false, CategoriaReserva.LABORATORIO);
+        assertEquals(false,e.getReservabilidad().reservable);
+
+        e.modificarReservabilidad(gerente,true,CategoriaReserva.AULA);
+        assertEquals(true,e.getReservabilidad().reservable);
+
+        assertEquals(CategoriaReserva.AULA,e.getReservabilidad().categoriaReserva);
+    }
+
+    @Test
+    public void testReservas() {
+        Reserva r1 = new Reserva();
+        Persona p = new Persona();
+        Espacio e1 = new Espacio(new Reservabilidad(),150,
+                CategoriaEspacio.SALA_COMUN);
+        ArrayList<UUID> esp = new ArrayList<>();
+        esp.add(e1.getIdEspacio());
+        Reserva r2 = new Reserva(new PeriodoReserva(LocalDate.now(), LocalTime.NOON,LocalTime.MIDNIGHT),p.getIdPersona(),
+                TipoUso.DOCENCIA,esp,20,"DD");
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+
 
     }
 

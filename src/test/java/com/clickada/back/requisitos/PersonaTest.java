@@ -3,6 +3,7 @@ package com.clickada.back.requisitos;
 import com.clickada.back.domain.LoadPersonas;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.Persona;
+import com.clickada.back.domain.entity.auxClasses.Adscripcion;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ public class PersonaTest {
         String eMail = "juan@clickada.com";
         Rol rol = Rol.DOCENTE_INVESTIGADOR;
         Persona persona = new Persona(nombre, eMail,"123", rol);
-
         assertEquals(nombre, persona.getNombre());
         assertEquals(eMail, persona.getEMail());
 
@@ -38,10 +38,8 @@ public class PersonaTest {
             assertEquals(e.getMessage(),"No es Gerente, no puede tener segundo Rol");
         }
 
-
+        persona.setAdscripcion(new Adscripcion());
         persona.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-
-
 
         persona.cambiarRol(rol2);
         assertEquals(rol2, persona.getRoles().get(0));
