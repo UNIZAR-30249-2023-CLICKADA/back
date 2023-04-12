@@ -75,6 +75,7 @@ public class PersonaTest {
         Persona investigador_contratrado = new Persona(nombre, eMail,"123",Rol.INVESTIGADOR_CONTRATADO);
         Persona docente_investigador = new Persona(nombre, eMail,"123",Rol.DOCENTE_INVESTIGADOR);
         Persona gerenteYdocente_investigador = new Persona(nombre, eMail,"123",Rol.GERENTE);
+        Persona personaNoValida =  new Persona(nombre, eMail,"123",Rol.TECNICO_LABORATORIO);
         gerenteYdocente_investigador.anyadirRol();
         //Propietarios
         PropietarioEspacio propietarioEina = new PropietarioEspacio(Eina.EINA);
@@ -92,12 +93,20 @@ public class PersonaTest {
         assertTrue(espacioDespacho.asignarAEspacio(propietarioPersonas));
         assertFalse(espacioDespacho.asignarAEspacio(propietarioEina));
 
+        try {
+            PropietarioEspacio propietarioPersonasNoValido = new PropietarioEspacio(List.of(personaNoValida));
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Para ser propietario de espacio se tiene que ser DOCENTE_INVESTIGADOR o " +
+                    "INVESTIGADOR_CONTRATADO");
+        }
+
         assertTrue(espacioSeminarios.asignarAEspacio(propietarioDepartamento));
         assertTrue(espacioSeminarios.asignarAEspacio(propietarioEina));
         assertTrue(espacioLaboratorios.asignarAEspacio(propietarioDepartamento));
         assertTrue(espacioLaboratorios.asignarAEspacio(propietarioEina));
         assertFalse(espacioSeminarios.asignarAEspacio(propietarioPersonas));
         assertFalse(espacioLaboratorios.asignarAEspacio(propietarioPersonas));
+
 
     }
 }
