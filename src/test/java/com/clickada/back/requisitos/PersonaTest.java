@@ -2,11 +2,12 @@ package com.clickada.back.requisitos;
 
 import com.clickada.back.domain.LoadPersonas;
 import com.clickada.back.domain.PersonaRepository;
+import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
-import com.clickada.back.domain.entity.auxClasses.Adscripcion;
-import com.clickada.back.domain.entity.auxClasses.Departamento;
-import com.clickada.back.domain.entity.auxClasses.Rol;
+import com.clickada.back.domain.entity.auxClasses.*;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,5 +59,45 @@ public class PersonaTest {
     @Test
     void testCambioReservabilidad() throws Exception{
         Persona per = new Persona("Señor Tst","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
+    }
+    @Test
+    void asignarCorrectoAEspacio() throws Exception { // RF-14
+        Reservabilidad reservabilidad = new Reservabilidad(true, CategoriaReserva.AULA);
+        Espacio espacioAula = new Espacio(reservabilidad,50,CategoriaEspacio.AULA);
+        Espacio espacioSalasComunes = new Espacio(reservabilidad,50,CategoriaEspacio.SALA_COMUN);
+        Espacio espacioDespacho = new Espacio(reservabilidad,50,CategoriaEspacio.DESPACHO);
+        Espacio espacioSeminarios = new Espacio(reservabilidad,50,CategoriaEspacio.SEMINARIO);
+        Espacio espacioLaboratorios = new Espacio(reservabilidad,50,CategoriaEspacio.LABORATORIO);
+        //Personas
+        String nombre = "Juan";
+        String eMail = "juan@clickada.com";
+
+        Persona investigador_contratrado = new Persona(nombre, eMail,"123",Rol.INVESTIGADOR_CONTRATADO);
+        Persona docente_investigador = new Persona(nombre, eMail,"123",Rol.DOCENTE_INVESTIGADOR);
+        Persona gerenteYdocente_investigador = new Persona(nombre, eMail,"123",Rol.GERENTE);
+        gerenteYdocente_investigador.anyadirRol();
+        //Propietarios
+        PropietarioEspacio propietarioEina = new PropietarioEspacio(Eina.EINA);
+        PropietarioEspacio propietarioDepartamento = new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        PropietarioEspacio propietarioPersonas = new PropietarioEspacio(List.of(investigador_contratrado,docente_investigador,gerenteYdocente_investigador));
+
+        assertTrue(espacioAula.asignarAEspacio(propietarioEina));
+        assertTrue(espacioSalasComunes.asignarAEspacio(propietarioEina));
+        assertFalse(espacioAula.asignarAEspacio(propietarioDepartamento));
+        assertFalse(espacioAula.asignarAEspacio(propietarioPersonas));
+        assertFalse(espacioSalasComunes.asignarAEspacio(propietarioDepartamento));
+        assertFalse(espacioSalasComunes.asignarAEspacio(propietarioPersonas));
+
+        assertTrue(espacioDespacho.asignarAEspacio(propietarioDepartamento));
+        assertTrue(espacioDespacho.asignarAEspacio(propietarioPersonas));
+        assertFalse(espacioDespacho.asignarAEspacio(propietarioEina));
+
+        assertTrue(espacioSeminarios.asignarAEspacio(propietarioDepartamento));
+        assertTrue(espacioSeminarios.asignarAEspacio(propietarioEina));
+        assertTrue(espacioLaboratorios.asignarAEspacio(propietarioDepartamento));
+        assertTrue(espacioLaboratorios.asignarAEspacio(propietarioEina));
+        assertFalse(espacioSeminarios.asignarAEspacio(propietarioPersonas));
+        assertFalse(espacioLaboratorios.asignarAEspacio(propietarioPersonas));
+
     }
 }

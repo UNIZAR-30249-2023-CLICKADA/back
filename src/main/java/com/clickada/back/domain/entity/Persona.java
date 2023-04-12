@@ -69,4 +69,9 @@ public class Persona {
             }
         }
     }
+    public boolean asignable(){
+        return this.getRoles().get(0).equals(Rol.DOCENTE_INVESTIGADOR) ||
+                this.getRoles().get(0).equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                (this.getRoles().get(0).equals(Rol.GERENTE) && this.getRoles().get(1)!=null);
+    }
 }

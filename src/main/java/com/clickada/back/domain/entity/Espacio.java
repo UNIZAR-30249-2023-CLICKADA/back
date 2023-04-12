@@ -21,7 +21,7 @@ import java.util.UUID;
 @Setter
 public class Espacio extends Edificio {
     @Id
-    UUID idEspacio; //o algo así intuyo
+    UUID idEspacio;
 
     CategoriaEspacio categoriaEspacio;
 
@@ -29,15 +29,18 @@ public class Espacio extends Edificio {
 
     @Transient
     Reservabilidad reservabilidad;
+
     int numMaxOcupantes;
+
     @Transient
     ArrayList<LocalDate> diasNoReservables;
+
     double porcentajeUsoPermitido;
+
     @Transient
     PropietarioEspacio propietarioEspacio;
 
     //HorarioDisponible horarioDisponible;
-    //porcentaje uso maximo
 
     public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
         super();
@@ -56,6 +59,32 @@ public class Espacio extends Edificio {
             this.reservabilidad.categoriaReserva = categoriaReserva;
         }
     }
+    public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
+        if((this.categoriaEspacio.equals(CategoriaEspacio.AULA) ||
+                this.categoriaEspacio.equals(CategoriaEspacio.SALA_COMUN) ||
+        this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) ||
+        this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO))
+         && propietarioEspacio.getIndexPropietario()==0){ // EINA
+            this.propietarioEspacio = propietarioEspacio;
+            return true;
+        }else if(propietarioEspacio.getIndexPropietario()==1 &&
+                (this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO) ||
+                this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) ||
+                this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO))){ // Departamento
+            this.propietarioEspacio = propietarioEspacio;
+            return true;
+        } else if(propietarioEspacio.getIndexPropietario() == 2 &&
+                this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO)){
 
+            for(Persona persona : propietarioEspacio.personas){
+                if(!persona.asignable()){
+                    return false;
+                }
+            }
+            this.propietarioEspacio = propietarioEspacio;
+            return true;
+        }
+        return false;
+    }
 
 }
