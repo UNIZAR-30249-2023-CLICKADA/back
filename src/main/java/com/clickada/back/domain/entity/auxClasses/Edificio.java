@@ -7,5 +7,5 @@ public class Edificio {
     private LocalTime horaInicio;
     private LocalTime horaFin;
     //calendario -> lista dias cerrados
-    //porcentaje uso maximo
+    protected int porcentajeUsoEdificio = 100;
 }

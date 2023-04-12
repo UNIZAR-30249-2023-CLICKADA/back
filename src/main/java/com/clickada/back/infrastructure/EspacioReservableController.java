@@ -46,4 +46,12 @@ public class EspacioReservableController {
         }
         return new ResponseEntity<>(espacioReservableService.todosEspacios(), HttpStatus.OK);
     }
+
+    @PutMapping("/cambiarPorcentajeUso")
+    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
+        if (!espacioReservableService.modificarPorcentajeOcupacion(idPersona,idEspacio,porcentaje)){
+            return  new ResponseEntity<>("Sin permisos",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 }

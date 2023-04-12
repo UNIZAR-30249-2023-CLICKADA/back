@@ -16,7 +16,7 @@ public class LoadPersonas {
 
     @Bean
     CommandLineRunner initDatabase(PersonaRepository personaRepository) {
-
+        /*
         Persona persona = new Persona("Pepe Agustin","pepe@gmail.com", "123", Rol.CONSERJE);
         Persona persona1 = new Persona("Amanda Garcia","amanda@gmail.com","321",Rol.DOCENTE_INVESTIGADOR);
         personaRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
@@ -27,7 +27,7 @@ public class LoadPersonas {
         Persona p4 = new Persona("Peasant Student","stud@mail.com", "321", Rol.TECNICO_LABORATORIO);
         personaRepository.save(p4);
         Persona p5 = new Persona("Gerente MasterRace","gerente@mail.com", "321", Rol.GERENTE);
-        personaRepository.save(p5);
+        personaRepository.save(p5);*/
         return null;
     }
 }

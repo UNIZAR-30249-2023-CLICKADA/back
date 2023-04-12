@@ -42,12 +42,14 @@ public class Espacio extends Edificio {
 
     //HorarioDisponible horarioDisponible;
 
-    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
+    public Espacio(Reservabilidad reservabilidad, double tamanyo, int maxOcupantes, CategoriaEspacio categoriaEspacio){
         super();
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
         this.categoriaEspacio = categoriaEspacio;
+        this.porcentajeUsoPermitido = porcentajeUsoEdificio;
+        this.numMaxOcupantes = maxOcupantes;
     }
 
     public void modificarReservabilidad(Persona persona, boolean reservable, CategoriaReserva categoriaReserva) throws Exception {
@@ -82,6 +84,14 @@ public class Espacio extends Edificio {
                 }
             }
             this.propietarioEspacio = propietarioEspacio;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean modificarPorcentajeOcupacion(Persona persona, int porcentaje){
+        if(persona.getRoles().get(0).equals(Rol.GERENTE)){
+            this.porcentajeUsoPermitido = porcentaje;
             return true;
         }
         return false;

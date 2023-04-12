@@ -54,7 +54,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         Reserva r = new Reserva(new PeriodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
         Persona persona = personaRepository.getById(idPersona);
 
-        if(persona!= null){ // Comprueba permisos de ese rol
+        if(persona.getIdPersona()!= null){ // Comprueba permisos de ese rol
             if(persona.getRoles().get(0).equals(Rol.ESTUDIANTE)){
                 for(UUID idEspacio: idEspacios){
                     Espacio espacio = espacioRepository.getById(idEspacio);
@@ -76,5 +76,29 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
             //l.addAll(this.reservaRepository.findAllAfterTime()) ;
         }
         return l;
+    }
+
+    @Override
+    public boolean modificarPorcentajeOcupacion(UUID idPersona, UUID idEspacio, int porcentaje){
+        if(this.espacioRepository.existsById(idEspacio) && this.personaRepository.existsById(idPersona)) {
+            Espacio e = this.espacioRepository.getById(idEspacio);
+            Persona p = this.personaRepository.getById(idPersona);
+            if(e.modificarPorcentajeOcupacion(p,porcentaje)) {
+                this.espacioRepository.save(e);
+                //Si había reservas de este espacio, hay que comprobar si ahora son inválidas y avisar al usuario
+                List<UUID> esp = new ArrayList<>();
+                esp.add(idEspacio);
+                List<Reserva> reservas = this.reservaRepository.findAll();
+                for (Reserva reserva : reservas) {
+                    if (reserva.getIdEspacios().contains(idEspacio) && reserva.getNumOcupantes() >
+                            e.getNumMaxOcupantes() * (e.getPorcentajeUsoPermitido()/100)){
+                        //Se borrará reserva, hay que avisar.
+                        reservaRepository.delete(reserva);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

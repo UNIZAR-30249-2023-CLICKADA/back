@@ -1,6 +1,8 @@
 package com.clickada.back.requisitos;
 
+import com.clickada.back.application.EspacioReservableService;
 import com.clickada.back.application.PersonaService;
+import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
@@ -68,7 +70,7 @@ public class TestRequisitos {
 
     @Test
     public void testCambioReservabilidad() throws Exception {
-        Espacio e = new Espacio(new Reservabilidad(),150,
+        Espacio e = new Espacio(new Reservabilidad(),150,100,
                 CategoriaEspacio.SALA_COMUN);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         e.modificarReservabilidad(gerente,false, CategoriaReserva.LABORATORIO);
@@ -84,7 +86,7 @@ public class TestRequisitos {
     public void testReservas() {
         Reserva r1 = new Reserva();
         Persona p = new Persona();
-        Espacio e1 = new Espacio(new Reservabilidad(),150,
+        Espacio e1 = new Espacio(new Reservabilidad(),150,100,
                 CategoriaEspacio.SALA_COMUN);
         ArrayList<UUID> esp = new ArrayList<>();
         esp.add(e1.getIdEspacio());

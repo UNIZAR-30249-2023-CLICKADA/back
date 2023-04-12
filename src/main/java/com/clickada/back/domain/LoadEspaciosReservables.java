@@ -17,8 +17,8 @@ public class LoadEspaciosReservables {
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository) {
 
-        Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L, CategoriaEspacio.AULA);
-        Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,CategoriaEspacio.DESPACHO);
+        Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L,40, CategoriaEspacio.AULA);
+        Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,40,CategoriaEspacio.DESPACHO);
 
         espacioRepository.save(espacio);
         espacioRepository.save(espacio2);

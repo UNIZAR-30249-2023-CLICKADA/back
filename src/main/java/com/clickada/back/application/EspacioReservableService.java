@@ -18,6 +18,8 @@ public interface EspacioReservableService {
 
     boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable);
 
+    boolean modificarPorcentajeOcupacion(UUID idPersona, UUID idEspacio, int porcentaje);
+
     public List<Reserva> obtenerReservasVivas(UUID idPersona);
 
 }
