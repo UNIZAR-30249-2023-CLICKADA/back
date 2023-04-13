@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class Reserva {
     @Id
     private UUID idReserva;
-    @Transient
+    @Embedded
     private PeriodoReserva periodoReserva;
     private UUID idPersona;
     private TipoUso tipoDeUso;

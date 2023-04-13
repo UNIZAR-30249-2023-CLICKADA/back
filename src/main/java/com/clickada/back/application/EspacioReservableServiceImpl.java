@@ -7,6 +7,7 @@ import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
+import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,15 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     PersonaRepository personaRepository;
     ReservaRepository  reservaRepository;
 
+    EnviaMail servicioCorreo;
+
     @Autowired
     public EspacioReservableServiceImpl(EspacioRepository espacioRepository, PersonaRepository personaRepository,
                                         ReservaRepository reservaRepository){
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
+        this.servicioCorreo = new EnviaMail();
     }
 
     @Override
@@ -93,6 +97,8 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
                     if (reserva.getIdEspacios().contains(idEspacio) && reserva.getNumOcupantes() >
                             e.getNumMaxOcupantes() * (e.getPorcentajeUsoPermitido()/100)){
                         //Se borrará reserva, hay que avisar.
+                        String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
+                        servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString());
                         reservaRepository.delete(reserva);
                     }
                 }

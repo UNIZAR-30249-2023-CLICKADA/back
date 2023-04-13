@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Embeddable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Embeddable
 public class PeriodoReserva {
     private LocalDate fechaInicio;
     private LocalTime horaInicio;

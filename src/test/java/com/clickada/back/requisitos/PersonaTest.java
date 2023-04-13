@@ -63,11 +63,11 @@ public class PersonaTest {
     @Test
     void asignarCorrectoAEspacio() throws Exception { // RF-14
         Reservabilidad reservabilidad = new Reservabilidad(true, CategoriaReserva.AULA);
-        Espacio espacioAula = new Espacio(reservabilidad,50,CategoriaEspacio.AULA);
-        Espacio espacioSalasComunes = new Espacio(reservabilidad,50,CategoriaEspacio.SALA_COMUN);
-        Espacio espacioDespacho = new Espacio(reservabilidad,50,CategoriaEspacio.DESPACHO);
-        Espacio espacioSeminarios = new Espacio(reservabilidad,50,CategoriaEspacio.SEMINARIO);
-        Espacio espacioLaboratorios = new Espacio(reservabilidad,50,CategoriaEspacio.LABORATORIO);
+        Espacio espacioAula = new Espacio(reservabilidad,50,25,CategoriaEspacio.AULA);
+        Espacio espacioSalasComunes = new Espacio(reservabilidad,50,25,CategoriaEspacio.SALA_COMUN);
+        Espacio espacioDespacho = new Espacio(reservabilidad,50,25,CategoriaEspacio.DESPACHO);
+        Espacio espacioSeminarios = new Espacio(reservabilidad,50,25,CategoriaEspacio.SEMINARIO);
+        Espacio espacioLaboratorios = new Espacio(reservabilidad,50,25,CategoriaEspacio.LABORATORIO);
         //Personas
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
