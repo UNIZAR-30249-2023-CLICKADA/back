@@ -42,7 +42,7 @@ public class PersonaServiceImpl implements PersonaService {
     public boolean aptoParaCambiar(UUID idPersona) {
         if(personaRepository.existsById(idPersona)){
             Persona persona = personaRepository.getById(idPersona);
-            return persona.getRoles().get(0).equals(Rol.GERENTE);
+            return persona.rolPrincipal().equals(Rol.GERENTE);
         }
         return false;
     }
@@ -63,7 +63,7 @@ public class PersonaServiceImpl implements PersonaService {
         List<CategoriaReserva> l = new ArrayList<>();
         if (personaRepository.existsById(idPersona)) {
             Persona p = personaRepository.getById(idPersona);
-            Rol rol = p.getRoles().get(0);
+            Rol rol = p.rolPrincipal();
             switch (rol) {
                 case ESTUDIANTE -> l.add(CategoriaReserva.SALA_COMUN);
                 case CONSERJE -> {

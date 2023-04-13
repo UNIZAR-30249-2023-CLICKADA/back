@@ -43,26 +43,26 @@ public class TestRequisitos {
     public void testStringRol(){
         Persona per = new Persona("Señor Tst","unico@mail.com", "123",
                 Rol.getRolByString("Estudiante")) ;
-        assertEquals(Rol.ESTUDIANTE,per.getRoles().get(0));
+        assertEquals(Rol.ESTUDIANTE,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("Conserje"));
-        assertEquals(Rol.CONSERJE,per.getRoles().get(0));
+        assertEquals(Rol.CONSERJE,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("Investigador"));
-        assertEquals(Rol.INVESTIGADOR_CONTRATADO,per.getRoles().get(0));
+        assertEquals(Rol.INVESTIGADOR_CONTRATADO,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("Docente"));
-        assertEquals(Rol.DOCENTE_INVESTIGADOR,per.getRoles().get(0));
+        assertEquals(Rol.DOCENTE_INVESTIGADOR,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("Tecnico"));
-        assertEquals(Rol.TECNICO_LABORATORIO,per.getRoles().get(0));
+        assertEquals(Rol.TECNICO_LABORATORIO,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("Gerente"));
-        assertEquals(Rol.GERENTE,per.getRoles().get(0));
+        assertEquals(Rol.GERENTE,per.rolPrincipal());
 
         per.cambiarRol(Rol.getRolByString("RolErroneo"));
         //Debe mantener el anterior
-        assertEquals(Rol.GERENTE,per.getRoles().get(0));
+        assertEquals(Rol.GERENTE,per.rolPrincipal());
 
     }
 

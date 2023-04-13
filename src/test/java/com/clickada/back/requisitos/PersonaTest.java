@@ -43,10 +43,10 @@ public class PersonaTest {
         persona.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
 
         persona.cambiarRol(rol2);
-        assertEquals(rol2, persona.getRoles().get(0));
+        assertEquals(rol2, persona.rolPrincipal());
 
         persona.anyadirRol();
-        assertEquals(rol1, persona.getRoles().get(1));
+        assertEquals(rol1, persona.rolSecundario());
 
         persona.cambiarRol(Rol.ESTUDIANTE);
         assertEquals(1,persona.getRoles().size());

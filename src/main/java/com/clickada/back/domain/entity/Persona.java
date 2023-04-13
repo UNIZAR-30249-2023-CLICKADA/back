@@ -51,7 +51,7 @@ public class Persona {
     }
 
     public void anyadirRol() throws Exception {
-        if(this.roles.get(0).equals(Rol.GERENTE)){
+        if(this.rolPrincipal().equals(Rol.GERENTE)){
             this.roles.add(Rol.DOCENTE_INVESTIGADOR);
         }
         else {
@@ -70,8 +70,15 @@ public class Persona {
         }
     }
     public boolean asignable(){
-        return this.getRoles().get(0).equals(Rol.DOCENTE_INVESTIGADOR) ||
-                this.getRoles().get(0).equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                (this.getRoles().get(0).equals(Rol.GERENTE) && this.getRoles().get(1)!=null);
+        return this.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR) ||
+                this.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                (this.rolPrincipal().equals(Rol.GERENTE) && this.rolSecundario()!=null);
+    }
+
+    public Rol rolPrincipal(){
+        return this.roles.get(0);
+    }
+    public Rol rolSecundario(){
+        return this.roles.get(1);
     }
 }

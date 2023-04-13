@@ -55,7 +55,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         Persona persona = personaRepository.getById(idPersona);
 
         if(persona!= null){ // Comprueba permisos de ese rol
-            if(persona.getRoles().get(0).equals(Rol.ESTUDIANTE)){
+            if(persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                 for(UUID idEspacio: idEspacios){
                     Espacio espacio = espacioRepository.getById(idEspacio);
                     if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)){
@@ -72,7 +72,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     public List<Reserva> obtenerReservasVivas(UUID idPersona) {
         List<Reserva> l = new ArrayList<>();
         if(this.personaRepository.existsById(idPersona) &&
-                this.personaRepository.getById(idPersona).getRoles().get(0).equals(Rol.GERENTE)){
+                this.personaRepository.getById(idPersona).rolPrincipal().equals(Rol.GERENTE)){
             //l.addAll(this.reservaRepository.findAllAfterTime()) ;
         }
         return l;
