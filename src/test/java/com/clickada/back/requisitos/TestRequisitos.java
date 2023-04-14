@@ -88,8 +88,8 @@ public class TestRequisitos {
                 CategoriaEspacio.SALA_COMUN);
         ArrayList<UUID> esp = new ArrayList<>();
         esp.add(e1.getIdEspacio());
-        Reserva r2 = new Reserva(new PeriodoReserva(LocalDate.now(), LocalTime.NOON,LocalTime.MIDNIGHT),p.getIdPersona(),
-                TipoUso.DOCENCIA,esp,20,"DD");
+        Reserva r2 = new Reserva(new PeriodoReserva(LocalTime.NOON,LocalTime.MIDNIGHT),p.getIdPersona(),
+                TipoUso.DOCENCIA,esp,20,"DD",LocalDate.now());
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
 
 

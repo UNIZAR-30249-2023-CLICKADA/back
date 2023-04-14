@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EspacioReservableServiceImpl implements EspacioReservableService{
@@ -51,9 +52,11 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
-        Reserva r = new Reserva(new PeriodoReserva(fecha,horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles);
+        Reserva reserva = new Reserva(new PeriodoReserva(horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles,fecha);
         Persona persona = personaRepository.getById(idPersona);
-
+        //ver si esta dispponible reservar el espacio ese dia y esas horas
+        List<Reserva> reservaList = new ArrayList<>();
+        List<Reserva> reservasTodas = reservaRepository.findByFecha(fecha);
         if(persona!= null){ // Comprueba permisos de ese rol
             if(persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                 for(UUID idEspacio: idEspacios){
@@ -61,10 +64,29 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
                     if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)){
                         return false;
                     }
+                    List<Reserva> contienenEspacio = reservasTodas.stream()
+                            .filter(reserva1 -> reserva1.getIdEspacios().stream()
+                                    .anyMatch(idEspacios::contains))
+                            .toList();
+                    reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
                 }
             }
         }
-        reservaRepository.save(r);
+        if(!reservaCorrecta(reservaList,reserva)) return false;
+        reservaRepository.save(reserva);
+        return true;
+    }
+
+    private boolean reservaCorrecta(List<Reserva> reservaList,Reserva reservaNueva){
+        for(UUID idEspacio: reservaNueva.getIdEspacios()){
+            for(Reserva reserva: reservaList){
+                if(reserva.getIdEspacios().contains(idEspacio)){//si este espacio esta reservado ese mismo dia tambien
+                    if(!reserva.getPeriodoReserva().periodosCompatibles(reservaNueva.getPeriodoReserva())){
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
 
