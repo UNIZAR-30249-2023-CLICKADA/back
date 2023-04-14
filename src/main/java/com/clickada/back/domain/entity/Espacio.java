@@ -50,14 +50,11 @@ public class Espacio extends Edificio {
         this.categoriaEspacio = categoriaEspacio;
     }
 
-    public void modificarReservabilidad(Persona persona, boolean reservable, CategoriaReserva categoriaReserva) throws Exception {
+    public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {
         if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
             throw new Exception("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio");
         }
-        this.reservabilidad.reservable = reservable;
-        if(reservable){
-            this.reservabilidad.categoriaReserva = categoriaReserva;
-        }
+        this.reservabilidad = nuevaReservabilidad;
     }
     public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
         if((this.categoriaEspacio.equals(CategoriaEspacio.AULA) ||

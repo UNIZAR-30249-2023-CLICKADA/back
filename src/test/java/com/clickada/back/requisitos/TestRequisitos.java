@@ -71,10 +71,12 @@ public class TestRequisitos {
         Espacio e = new Espacio(new Reservabilidad(),150,
                 CategoriaEspacio.SALA_COMUN);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        e.modificarReservabilidad(gerente,false, CategoriaReserva.LABORATORIO);
+        Reservabilidad reservabilidad1 = new Reservabilidad(false, CategoriaReserva.LABORATORIO);
+        Reservabilidad reservabilidad2 = new Reservabilidad(true,CategoriaReserva.AULA);
+        e.modificarReservabilidad(gerente,reservabilidad1);
         assertEquals(false,e.getReservabilidad().reservable);
 
-        e.modificarReservabilidad(gerente,true,CategoriaReserva.AULA);
+        e.modificarReservabilidad(gerente,reservabilidad2);
         assertEquals(true,e.getReservabilidad().reservable);
 
         assertEquals(CategoriaReserva.AULA,e.getReservabilidad().categoriaReserva);

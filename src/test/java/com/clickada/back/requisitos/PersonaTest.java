@@ -59,6 +59,18 @@ public class PersonaTest {
     @Test
     void testCambioReservabilidad() throws Exception{
         Persona per = new Persona("Señor Tst","unico@mail.com", "123", Rol.TECNICO_LABORATORIO);
+        Reservabilidad reservabilidad = new Reservabilidad(true, CategoriaReserva.AULA);
+        Reservabilidad reservabilidad2 = new Reservabilidad(false, CategoriaReserva.LABORATORIO);
+        Espacio espacioAula = new Espacio(reservabilidad,50,CategoriaEspacio.AULA);
+        try {
+            espacioAula.modificarReservabilidad(per,reservabilidad2);
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Si no es GERENTE no puede Modificar la Reservabilidad del Espacio");
+        }
+       per.cambiarRol(Rol.GERENTE);
+        espacioAula.modificarReservabilidad(per,reservabilidad2);
+        assertFalse(espacioAula.getReservabilidad().reservable);
+
     }
     @Test
     void asignarCorrectoAEspacio() throws Exception { // RF-14
