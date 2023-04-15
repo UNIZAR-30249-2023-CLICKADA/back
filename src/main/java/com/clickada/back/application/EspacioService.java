@@ -15,28 +15,25 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
-public class EspacioReservableServiceImpl implements EspacioReservableService{
+public class EspacioService {
     EspacioRepository espacioRepository;
     PersonaRepository personaRepository;
     ReservaRepository  reservaRepository;
 
     @Autowired
-    public EspacioReservableServiceImpl(EspacioRepository espacioRepository, PersonaRepository personaRepository,
-                                        ReservaRepository reservaRepository){
+    public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
+                          ReservaRepository reservaRepository){
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
     }
 
-    @Override
     public List<Espacio> todosEspacios() {
         return this.espacioRepository.findAll();
     }
 
-    @Override
     public boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable) {
         if (espacioRepository.existsById(idEspacio)) {
             Espacio espacio = espacioRepository.getById(idEspacio);
@@ -48,7 +45,7 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         }
         return false;
     }
-    @Override
+
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
         //Habrá que controlar todas las restricciones
@@ -90,7 +87,6 @@ public class EspacioReservableServiceImpl implements EspacioReservableService{
         return true;
     }
 
-    @Override
     public List<Reserva> obtenerReservasVivas(UUID idPersona) {
         List<Reserva> l = new ArrayList<>();
         if(this.personaRepository.existsById(idPersona) &&
