@@ -47,7 +47,7 @@ public class EspacioService {
     }
 
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
-                                   LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) {
+                                   LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) throws Exception {
         //Habrá que controlar todas las restricciones
         Reserva reserva = new Reserva(new PeriodoReserva(horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles,fecha);
         Persona persona = personaRepository.getById(idPersona);
@@ -59,7 +59,7 @@ public class EspacioService {
                 for(UUID idEspacio: idEspacios){
                     Espacio espacio = espacioRepository.getById(idEspacio);
                     if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)){
-                        return false;
+                        throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
                     }
                     List<Reserva> contienenEspacio = reservasTodas.stream()
                             .filter(reserva1 -> reserva1.getIdEspacios().stream()
@@ -69,7 +69,9 @@ public class EspacioService {
                 }
             }
         }
-        if(!reservaCorrecta(reservaList,reserva)) return false;
+        if(!reservaCorrecta(reservaList,reserva)){
+            throw new Exception("Ya existe una reserva en el horario introducido");
+        }
         reservaRepository.save(reserva);
         return true;
     }

@@ -35,12 +35,16 @@ public class EspacioController {
     }
 
     @PutMapping("/reservarEspacioTest")
-    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam ArrayList<UUID> idEspacios){
+    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam ArrayList<UUID> idEspacios) throws Exception {
         if (espacioService.todosEspacios().size()>0) {
-            espacioService.reservarEspacio(idPersona, idEspacios,
-                    LocalDate.of(2023, 3, 24), LocalTime.of(10, 30), LocalTime.of(14, 30),
-                    TipoUso.DOCENCIA, 20, "Para dar clase bla bla bla");
-        }
+            try {
+                espacioService.reservarEspacio(idPersona, idEspacios,
+                        LocalDate.of(2023, 3, 24), LocalTime.of(10, 30), LocalTime.of(14, 30),
+                        TipoUso.DOCENCIA, 20, "Para dar clase bla bla bla");
+            }catch (Exception e){
+                return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            }
+            }
         return new ResponseEntity<>(espacioService.todosEspacios(), HttpStatus.OK);
     }
 }

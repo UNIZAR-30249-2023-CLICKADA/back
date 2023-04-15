@@ -1,13 +1,25 @@
 package com.clickada.back.requisitos;
 
+import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
+import com.clickada.back.domain.EspacioRepository;
+import com.clickada.back.domain.PersonaRepository;
+import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
 import com.clickada.back.domain.entity.Persona;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -17,11 +29,21 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TestRequisitos {
 
     PersonaService personaService;
+    @Mock
+    ReservaRepository reservaRepository;
+    @Mock
+    PersonaRepository personaRepository;
+    @Mock
+    EspacioRepository espacioRepository;
+    @InjectMocks
+    EspacioService espacioService;
     @Test
     void requisito2(){
         Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE);
@@ -175,6 +197,50 @@ public class TestRequisitos {
 
     }
 
+    @Test
+    void requisito11() throws Exception{
+        Espacio sala_comun = new Espacio(new Reservabilidad(),150,
+                CategoriaEspacio.SALA_COMUN);
+        Espacio laboratorio = new Espacio(new Reservabilidad(),150,
+                CategoriaEspacio.LABORATORIO);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
+        ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+
+        when(personaRepository.getById(any())).thenReturn(estudiante);
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
+        when(espacioRepository.getById(any())).thenReturn(sala_comun);
+
+        boolean reservaCorrecta = espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(reservaCorrecta);
+
+        //si intentamos reservar donde ya hay una reserva en el mismo horario dara error
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva)));
+
+        try{
+            espacioService.reservarEspacio(estudiante.getIdPersona(), idEspacios,
+                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
+                    20, "DD");
+        }catch (Exception e){
+            assertEquals("Ya existe una reserva en el horario introducido",e.getMessage());
+        }
+        //Si el estudiante intenta reservar un laboratorio dara error
+        idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
+        when(espacioRepository.getById(any())).thenReturn(laboratorio);
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
+        try {
+            espacioService.reservarEspacio(estudiante.getIdPersona(), idEspacios,
+                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
+                    20, "DD");
+        }catch (Exception e){
+            assertEquals("Un estudiante solo puede reservar SALAS COMUNES",e.getMessage());
+        }
+
+
+    }
 
     @Test
     public void testReservas() {
