@@ -13,8 +13,8 @@ public class ReservaDto {
     ArrayList<UUID> idEspacios;
     String stringTipoUso;
     int numMaxPersonas;
-    LocalDate fecha;
-    LocalTime horaInicio;
-    LocalTime horaFinal;
+    String fecha;
+    String horaInicio;
+    String horaFinal;
     String detalles;
 }

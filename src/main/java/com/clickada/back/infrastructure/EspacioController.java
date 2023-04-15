@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -39,14 +40,20 @@ public class EspacioController {
         return new ResponseEntity<>(reservaService.listarTodasReservas() ,HttpStatus.OK);
     }
     @PostMapping("/reservarEspacio")
-    ResponseEntity<?> reservar(@RequestParam ReservaDto reservaDto) throws Exception {
+    ResponseEntity<?> reservar(@RequestBody ReservaDto reservaDto) throws Exception {
+        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        //convert String to LocalDate
+        LocalDate fecha = LocalDate.parse(reservaDto.getFecha(), formatterDay);
+        LocalTime horaInicio = LocalTime.parse(reservaDto.getHoraInicio(), formatterTime);
+        LocalTime horaFinal = LocalTime.parse(reservaDto.getHoraFinal(), formatterTime);
         TipoUso tipoUso = TipoUso.getTipoUsoByString(reservaDto.getStringTipoUso());
         if(tipoUso==null) {
             return new ResponseEntity<>("Ese tipo de uso no existe, pruebe con otro",HttpStatus.BAD_REQUEST);
         }
         try {
             espacioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
-                    reservaDto.getFecha(), reservaDto.getHoraInicio(), reservaDto.getHoraFinal(),
+                    fecha,horaInicio,horaFinal,
                     tipoUso, reservaDto.getNumMaxPersonas(), reservaDto.getDetalles());
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
