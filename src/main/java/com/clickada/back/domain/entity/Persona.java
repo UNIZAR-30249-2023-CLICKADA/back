@@ -22,7 +22,6 @@ public class Persona {
     @Column (unique = true)
     String eMail;
     String contrasenya;
-    @Transient
     Adscripcion adscripcion;
     boolean departamentoDisponible;
     ArrayList<Rol> roles;
