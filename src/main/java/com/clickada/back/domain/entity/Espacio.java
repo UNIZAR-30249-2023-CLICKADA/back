@@ -10,15 +10,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 public class Espacio extends Edificio {
     @Id
     UUID idEspacio;
@@ -32,18 +33,20 @@ public class Espacio extends Edificio {
 
     int numMaxOcupantes;
 
-    @Transient
-    ArrayList<LocalDate> diasNoReservables;
-
     double porcentajeUsoPermitido;
 
     @Transient
     PropietarioEspacio propietarioEspacio;
 
-    //HorarioDisponible horarioDisponible;
-
     public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
         super();
+        idEspacio = UUID.randomUUID();
+        this.reservabilidad = reservabilidad;
+        this.tamanyo = tamanyo;
+        this.categoriaEspacio = categoriaEspacio;
+    }
+    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio, Edificio edificio){
+        super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables());
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
@@ -55,6 +58,16 @@ public class Espacio extends Edificio {
             throw new Exception("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio");
         }
         this.reservabilidad = nuevaReservabilidad;
+    }
+    public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {
+        if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
+            throw new Exception("Si no es GERENTE no puede Modificar el horario de reserva del Espacio");
+        }
+        if(this.horaInicio.isAfter(horaInicioNueva) || this.horaFin.isBefore(horaFinNueva)){
+            throw new Exception("Las horas nuevas de reserva tienen que estar dentro del periodo de reseerva del Edificio");
+        }
+        this.horaFin=horaFinNueva;
+        this.horaInicio = horaInicioNueva;
     }
     public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
         if((this.categoriaEspacio.equals(CategoriaEspacio.AULA) ||
