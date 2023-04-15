@@ -22,7 +22,6 @@ import java.util.UUID;
 public class Reserva {
     @Id
     private UUID idReserva;
-    @Transient
     private PeriodoReserva periodoReserva;
     private UUID idPersona;
     private TipoUso tipoDeUso;
