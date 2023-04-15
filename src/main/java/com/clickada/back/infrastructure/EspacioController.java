@@ -1,14 +1,13 @@
 package com.clickada.back.infrastructure;
 
 import com.clickada.back.application.EspacioService;
+import com.clickada.back.application.ReservaService;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
+import com.clickada.back.dtos.ReservaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,10 +17,12 @@ import java.util.UUID;
 @RestController
 public class EspacioController {
     EspacioService espacioService;
+    ReservaService reservaService;
 
     @Autowired
-    public EspacioController(EspacioService espacioService) {
+    public EspacioController(EspacioService espacioService,ReservaService reservaService) {
         this.espacioService = espacioService;
+        this.reservaService = reservaService;
     }
     @GetMapping("/todosEspacios")
     ResponseEntity<?> todosEspacios(){
@@ -33,18 +34,24 @@ public class EspacioController {
     ResponseEntity<?> obtenerReservasVivas(@RequestParam UUID idPersona){
         return new ResponseEntity<>(espacioService.obtenerReservasVivas(idPersona), HttpStatus.OK);
     }
+    @GetMapping("/todasReservas")
+    ResponseEntity<?> todasReservas() throws Exception {
+        return new ResponseEntity<>(reservaService.listarTodasReservas() ,HttpStatus.OK);
+    }
+    @PostMapping("/reservarEspacio")
+    ResponseEntity<?> reservar(@RequestParam ReservaDto reservaDto) throws Exception {
+        TipoUso tipoUso = TipoUso.getTipoUsoByString(reservaDto.getStringTipoUso());
+        if(tipoUso==null) {
+            return new ResponseEntity<>("Ese tipo de uso no existe, pruebe con otro",HttpStatus.BAD_REQUEST);
+        }
+        try {
+            espacioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
+                    reservaDto.getFecha(), reservaDto.getHoraInicio(), reservaDto.getHoraFinal(),
+                    tipoUso, reservaDto.getNumMaxPersonas(), reservaDto.getDetalles());
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
 
-    @PutMapping("/reservarEspacioTest")
-    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam ArrayList<UUID> idEspacios) throws Exception {
-        if (espacioService.todosEspacios().size()>0) {
-            try {
-                espacioService.reservarEspacio(idPersona, idEspacios,
-                        LocalDate.of(2023, 3, 24), LocalTime.of(10, 30), LocalTime.of(14, 30),
-                        TipoUso.DOCENCIA, 20, "Para dar clase bla bla bla");
-            }catch (Exception e){
-                return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-            }
-            }
-        return new ResponseEntity<>(espacioService.todosEspacios(), HttpStatus.OK);
+        return new ResponseEntity<>("Reserva realizada correctamente", HttpStatus.OK);
     }
 }

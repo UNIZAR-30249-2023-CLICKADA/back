@@ -7,12 +7,12 @@ public enum CategoriaEspacio {
     DESPACHO,
     SALA_COMUN;
 
-    public static CategoriaEspacio getCategoriaByString(String rol){
-        if(rol.equals("Aula")) {return CategoriaEspacio.AULA;}
-        if(rol.equals("Seminario")) {return CategoriaEspacio.SEMINARIO;}
-        if(rol.equals("Laboratorio")) {return CategoriaEspacio.LABORATORIO;}
-        if(rol.equals("Despacho")) {return CategoriaEspacio.DESPACHO;}
-        if(rol.equals("Sala Comun")) {return CategoriaEspacio.SALA_COMUN;}
+    public static CategoriaEspacio getCategoriaByString(String categoria){
+        if(categoria.equals("Aula")) {return CategoriaEspacio.AULA;}
+        if(categoria.equals("Seminario")) {return CategoriaEspacio.SEMINARIO;}
+        if(categoria.equals("Laboratorio")) {return CategoriaEspacio.LABORATORIO;}
+        if(categoria.equals("Despacho")) {return CategoriaEspacio.DESPACHO;}
+        if(categoria.equals("Sala Comun")) {return CategoriaEspacio.SALA_COMUN;}
         // Cualquier otro caso
         else {return null;}
     }

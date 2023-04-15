@@ -259,10 +259,18 @@ public class TestRequisitos {
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,
                 CategoriaEspacio.SALA_COMUN);
-        assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
+        assertEquals(CategoriaReserva.SALA_COMUN,sala_comun.getReservabilidad().categoriaReserva);
         sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
         assertEquals(CategoriaReserva.DESPACHO,sala_comun.getReservabilidad().categoriaReserva);
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
+    }
+    //Test 14 y 15 son de porcentaje de uso maximo
+
+    @Test
+    void requisito16() throws Exception{
+        //yyyy-mm-dd
+        //hh:mm
+        assertEquals(LocalTime.of(8,30),"2020");
     }
     @Test
     public void testReservas() {
