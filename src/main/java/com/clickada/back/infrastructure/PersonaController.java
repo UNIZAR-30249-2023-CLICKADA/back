@@ -3,6 +3,7 @@ package com.clickada.back.infrastructure;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.EspacioRepository;
+import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +37,18 @@ public class PersonaController {
 
 
     @PutMapping("/cambiarReservabilidad")
-    ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio, @RequestParam boolean reservable){
+    ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio,
+                                            @RequestParam boolean reservable, @RequestParam String categoriaReserva) throws Exception {
         if (personaService.aptoParaCambiar(idPersona)){
-            if(espacioService.cambiarReservabilidadEspacio(idEspacio,reservable)){
-                return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
+            try{
+                if(espacioService.cambiarReservabilidadEspacio(idEspacio,new Reservabilidad(reservable,categoriaReserva),idPersona)){
+                    return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
+                }
+                return new ResponseEntity<>("No existe el espacio para cambiar la reservabilidad",HttpStatus.BAD_REQUEST);
+            }catch (Exception e){
+                return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("No existe el espacio para cambiar la reservabilidad",HttpStatus.BAD_REQUEST);
+
         }
 
         return new ResponseEntity<>("La persona no es apta para cambiar nada",HttpStatus.BAD_REQUEST);

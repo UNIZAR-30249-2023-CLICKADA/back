@@ -199,11 +199,12 @@ public class TestRequisitos {
 
     @Test
     void requisito11() throws Exception{
-        Espacio sala_comun = new Espacio(new Reservabilidad(),150,
+        Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150,
                 CategoriaEspacio.SALA_COMUN);
-        Espacio laboratorio = new Espacio(new Reservabilidad(),150,
+        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150,
                 CategoriaEspacio.LABORATORIO);
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
@@ -239,9 +240,30 @@ public class TestRequisitos {
             assertEquals("Un estudiante solo puede reservar SALAS COMUNES",e.getMessage());
         }
 
-
+        laboratorio.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.SALA_COMUN));
+        //cambiamos la reservabilidad del laboratiorio poniendolo como sala comun -> nos tendria que dejar
+        reservaCorrecta = espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(reservaCorrecta);
     }
 
+    @Test
+    void requisito12(){
+        Espacio sala_comun = new Espacio(new Reservabilidad(),150,
+                CategoriaEspacio.SALA_COMUN);
+        assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
+    }
+    @Test
+    void requisito13() throws Exception {
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,
+                CategoriaEspacio.SALA_COMUN);
+        assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
+        sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
+        assertEquals(CategoriaReserva.DESPACHO,sala_comun.getReservabilidad().categoriaReserva);
+        assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
+    }
     @Test
     public void testReservas() {
         Reserva r1 = new Reserva();

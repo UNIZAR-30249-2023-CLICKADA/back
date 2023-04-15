@@ -20,5 +20,15 @@ public class Reservabilidad {
             this.categoriaReserva = categoriaReserva;
         }
     }
+    public Reservabilidad(boolean reservable, String categoriaReserva) throws Exception {
+        CategoriaReserva categoriaReserva1 = CategoriaReserva.getCategoriaByString(categoriaReserva);
+        if(categoriaReserva1==null) {
+            throw new Exception("No existe esa Categoria de Reserva");
+        }
+        this.reservable = reservable;
+        if(reservable){
+            this.categoriaReserva = categoriaReserva1;
+        }
+    }
 
 }

@@ -18,7 +18,6 @@ import java.util.UUID;
 @Slf4j
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Espacio extends Edificio {
     @Id

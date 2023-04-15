@@ -34,12 +34,11 @@ public class EspacioService {
         return this.espacioRepository.findAll();
     }
 
-    public boolean cambiarReservabilidadEspacio(UUID idEspacio, boolean reservable) {
-        if (espacioRepository.existsById(idEspacio)) {
+    public boolean cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
+        if (espacioRepository.existsById(idEspacio) && personaRepository.existsById(idPersona)) {
             Espacio espacio = espacioRepository.getById(idEspacio);
-            Reservabilidad reservabilidad = espacio.getReservabilidad();
-            Reservabilidad reservabilidadNueva = new Reservabilidad(reservable, reservabilidad.categoriaReserva);
-            espacio.setReservabilidad(reservabilidadNueva);
+            Persona persona = personaRepository.getById(idPersona);
+            espacio.modificarReservabilidad(persona,reservabilidad);
             espacioRepository.save(espacio);
             return true;
         }
@@ -58,8 +57,14 @@ public class EspacioService {
             if(persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                 for(UUID idEspacio: idEspacios){
                     Espacio espacio = espacioRepository.getById(idEspacio);
-                    if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)){
+                    if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
+                            espacio.getReservabilidad() !=null &&
+                    !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN)){
                         throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
+                    }
+                    if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
+                        throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
+                                "Espere a que un gerente lo habilite");
                     }
                     List<Reserva> contienenEspacio = reservasTodas.stream()
                             .filter(reserva1 -> reserva1.getIdEspacios().stream()
