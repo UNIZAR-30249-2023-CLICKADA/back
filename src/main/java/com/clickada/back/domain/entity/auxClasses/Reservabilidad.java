@@ -4,11 +4,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-@Embeddable
 @Slf4j
 @NoArgsConstructor
-public class Reservabilidad {
+public class Reservabilidad implements Serializable {
     public CategoriaReserva categoriaReserva;
     public boolean reservable;
 

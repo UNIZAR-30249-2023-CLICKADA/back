@@ -19,4 +19,8 @@ public class ReservaService {
     public List<Reserva> listarTodasReservas(){
         return reservaRepository.findAll();
     }
+
+    public void eliminarTodas() {
+        this.reservaRepository.deleteAll();
+    }
 }

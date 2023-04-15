@@ -54,4 +54,12 @@ public class EspacioController {
 
         return new ResponseEntity<>("Reserva realizada correctamente", HttpStatus.OK);
     }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<?> eliminar(){
+        espacioService.eliminarTodos();
+        reservaService.eliminarTodas();
+        return new ResponseEntity<>("Eliminados datos de las bases de datos", HttpStatus.OK);
+    }
+
 }

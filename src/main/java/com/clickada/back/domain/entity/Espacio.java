@@ -27,14 +27,15 @@ public class Espacio extends Edificio {
 
     double tamanyo; //Tamaño del espacio en m2
 
-    @Transient
+
     Reservabilidad reservabilidad;
 
     int numMaxOcupantes;
 
     double porcentajeUsoPermitido;
+    LocalTime horaInicio;
+    LocalTime horaFin;
 
-    @Transient
     PropietarioEspacio propietarioEspacio;
 
     public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
@@ -44,12 +45,17 @@ public class Espacio extends Edificio {
         this.tamanyo = tamanyo;
         this.categoriaEspacio = categoriaEspacio;
     }
-    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio, Edificio edificio){
-        super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables());
+    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio, Edificio edificio)
+            throws Exception {
+        super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables(),
+                edificio.getPorcentajeUsoPermitido());
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
         this.categoriaEspacio = categoriaEspacio;
+        this.porcentajeUsoPermitido = edificio.getPorcentajeUsoPermitido();
+        this.horaInicio = edificio.getHoraInicio();
+        this.horaFin = edificio.getHoraFin();
     }
 
     public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {

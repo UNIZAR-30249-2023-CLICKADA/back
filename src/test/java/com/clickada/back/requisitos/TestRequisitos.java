@@ -158,7 +158,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)));
+                List.of(LocalDate.of(2023,1,1)),100);
         Espacio espacio = new Espacio(new Reservabilidad(),150,
                 CategoriaEspacio.SALA_COMUN,edificio);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);

@@ -102,4 +102,9 @@ public class EspacioService {
         }
         return l;
     }
+
+    public void eliminarTodos() {
+        this.espacioRepository.deleteAll();
+        this.personaRepository.deleteAll();
+    }
 }

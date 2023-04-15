@@ -4,13 +4,11 @@ import com.clickada.back.domain.entity.Persona;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.List;
 @Getter
-@Embeddable
 @NoArgsConstructor
-public class PropietarioEspacio {
+public class PropietarioEspacio implements Serializable {
     public Eina eina;
     public Departamento departamento;
 
