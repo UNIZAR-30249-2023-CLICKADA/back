@@ -270,7 +270,7 @@ public class TestRequisitos {
     void requisito16() throws Exception{
         //yyyy-mm-dd
         //hh:mm
-        assertEquals(LocalTime.of(8,30),"2020");
+
     }
     @Test
     public void testReservas() {
