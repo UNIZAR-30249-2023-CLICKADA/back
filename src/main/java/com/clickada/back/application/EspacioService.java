@@ -61,6 +61,12 @@ public class EspacioService {
                         persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                     throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
                 }
+                if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.AULA) &&
+                        espacio.getReservabilidad() !=null &&
+                        !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
+                        persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
+                    throw new Exception("Un Tecnico de laboratorio no puede reservar aulas");
+                }
                 if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
                     throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
                             "Espere a que un gerente lo habilite");

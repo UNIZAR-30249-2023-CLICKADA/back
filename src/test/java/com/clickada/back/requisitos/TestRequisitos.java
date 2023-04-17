@@ -336,7 +336,38 @@ public class TestRequisitos {
     @Test
     void requisito18() throws Exception{
         //true reservar AULA perona no estuiante ni tecnico de laboratiorio
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+        Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
+                CategoriaEspacio.AULA,edificio);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
+        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO);
 
+        ArrayList<UUID> idEspacios = new ArrayList<>(List.of(aula.getIdEspacio()));
+        when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante).thenReturn(tecnico_laboratorio);
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
+        when(espacioRepository.getById(any())).thenReturn(aula);
+        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(reservaCorrecta);
+        try{
+            espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                    20,"DD");
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Un estudiante solo puede reservar SALAS COMUNES");
+        }
+        try{
+            espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                    20,"DD");
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Un Tecnico de laboratorio no puede reservar aulas");
+        }
         //false reservar AULA siendo un estudiante
 
         // false reservar AULA siendo un tecnico de laboratorio
