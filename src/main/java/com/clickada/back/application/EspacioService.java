@@ -53,29 +53,35 @@ public class EspacioService {
         //ver si esta dispponible reservar el espacio ese dia y esas horas
         List<Reserva> reservaList = new ArrayList<>();
         List<Reserva> reservasTodas = reservaRepository.findByFecha(fecha);
+        int totalAsistentesPermitidos = 0;
         if(persona!= null){ // Comprueba permisos de ese rol
-            if(persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
-                for(UUID idEspacio: idEspacios){
-                    Espacio espacio = espacioRepository.getById(idEspacio);
-                    if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
-                            espacio.getReservabilidad() !=null &&
-                    !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN)){
-                        throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
-                    }
-                    if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
-                        throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
-                                "Espere a que un gerente lo habilite");
-                    }
-                    List<Reserva> contienenEspacio = reservasTodas.stream()
-                            .filter(reserva1 -> reserva1.getIdEspacios().stream()
-                                    .anyMatch(idEspacios::contains))
-                            .toList();
-                    reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
+            for(UUID idEspacio: idEspacios){
+                Espacio espacio = espacioRepository.getById(idEspacio);
+                if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
+                        espacio.getReservabilidad() !=null &&
+                !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
+                        persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
+                    throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
                 }
+                if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
+                    throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
+                            "Espere a que un gerente lo habilite");
+                }
+                totalAsistentesPermitidos+=espacio.getTotalAsistentesPermitidos();
+                List<Reserva> contienenEspacio = reservasTodas.stream()
+                        .filter(reserva1 -> reserva1.getIdEspacios().stream()
+                                .anyMatch(idEspacios::contains))
+                        .toList();
+                reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
             }
         }
         if(!reservaCorrecta(reservaList,reserva)){
             throw new Exception("Ya existe una reserva en el horario introducido");
+        }
+        if(totalAsistentesPermitidos<numAsistentes){
+            throw new Exception("Se supera el numero máximo de asistentes de los espacios seleccionados siendo "+
+                    totalAsistentesPermitidos + " el total de asistentes permitidos y "+numAsistentes
+                    +" el numero de asistentes de la reserva.");
         }
         reservaRepository.save(reserva);
         return true;

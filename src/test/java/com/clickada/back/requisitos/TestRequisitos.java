@@ -159,7 +159,7 @@ public class TestRequisitos {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
-        Espacio espacio = new Espacio(new Reservabilidad(),150,
+        Espacio espacio = new Espacio(new Reservabilidad(),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
@@ -270,6 +270,37 @@ public class TestRequisitos {
     void requisito16() throws Exception{
         //yyyy-mm-dd
         //hh:mm
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
+                CategoriaEspacio.LABORATORIO,edificio);
+        Espacio laboratorio2 = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),100, 60,
+                CategoriaEspacio.LABORATORIO,edificio);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+
+        when(personaRepository.getById(any())).thenReturn(gerente);
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
+        when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
+
+        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                100,"DD");
+        assertTrue(reservaCorrecta);
+        try {
+            espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(19,0),LocalTime.of(20,0),TipoUso.DOCENCIA,
+                300,"DD");
+        }catch (Exception e){
+            assertEquals("Se supera el numero máximo de asistentes de los espacios seleccionados siendo "+
+                    120 + " el total de asistentes permitidos y "+300
+                    +" el numero de asistentes de la reserva.",e.getMessage());
+        }
+        //Ahoras la reserva con menos parametros semi-automatica
 
     }
     @Test

@@ -23,8 +23,8 @@ public class LoadEspacios {
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository) throws Exception {
         espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
         Edificio edificio = new Edificio(LocalTime.of(8,0), LocalTime.of(22,0), List.of(),100);
-        Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L, CategoriaEspacio.AULA,edificio);
-        Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L,CategoriaEspacio.DESPACHO,edificio);
+        Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L,60, CategoriaEspacio.AULA,edificio);
+        Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L, 60,CategoriaEspacio.DESPACHO,edificio);
 
         espacioRepository.save(espacio);
         espacioRepository.save(espacio2);

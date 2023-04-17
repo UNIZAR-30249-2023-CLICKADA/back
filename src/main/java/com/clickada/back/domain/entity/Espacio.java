@@ -45,7 +45,7 @@ public class Espacio extends Edificio {
         this.tamanyo = tamanyo;
         this.categoriaEspacio = categoriaEspacio;
     }
-    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio, Edificio edificio)
+    public Espacio(Reservabilidad reservabilidad, double tamanyo,int numMaxOcupantes, CategoriaEspacio categoriaEspacio, Edificio edificio)
             throws Exception {
         super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables(),
                 edificio.getPorcentajeUsoPermitido());
@@ -56,6 +56,7 @@ public class Espacio extends Edificio {
         this.porcentajeUsoPermitido = edificio.getPorcentajeUsoPermitido();
         this.horaInicio = edificio.getHoraInicio();
         this.horaFin = edificio.getHoraFin();
+        this.numMaxOcupantes = numMaxOcupantes;
     }
 
     public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {
@@ -102,4 +103,7 @@ public class Espacio extends Edificio {
         return false;
     }
 
+    public int getTotalAsistentesPermitidos (){
+        return (int) (this.numMaxOcupantes * this.porcentajeUsoPermitido/100);
+    }
 }
