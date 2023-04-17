@@ -14,7 +14,10 @@ public class Reservabilidad implements Serializable {
 
     // porcentaje maximo de reserva
 
-    public Reservabilidad(boolean reservable, CategoriaReserva categoriaReserva){
+    public Reservabilidad(boolean reservable, CategoriaReserva categoriaReserva) throws Exception {
+        if(categoriaReserva.equals(CategoriaReserva.DESPACHO) && reservable){
+            throw new Exception("Los despachos no pueden ser reservables");
+        }
         this.reservable = reservable;
         if(reservable){
             this.categoriaReserva = categoriaReserva;

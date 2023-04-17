@@ -330,6 +330,52 @@ public class TestRequisitos {
 
     }
     @Test
+    void requisito17() throws Exception{
+        //Reservas puntuales y empiezan un dia y acaban el mismo dia
+    }
+    @Test
+    void requisito18() throws Exception{
+        //true reservar AULA perona no estuiante ni tecnico de laboratiorio
+
+        //false reservar AULA siendo un estudiante
+
+        // false reservar AULA siendo un tecnico de laboratorio
+    }
+
+    @Test
+    void requisito19() throws Exception{
+        //true reservar LABORATORIOS cualqueira menos estudiantes
+
+        //false reservar LABORATORIO siendo un estudiante
+
+        // true reservar LABORATORIO siendo tecnico, investigador,docente solo pueden reservar
+        //laboratiorios de su mismo departamento
+    }
+    @Test
+    void requisito20() throws Exception{
+        // despachos no pueden ser reservables
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+        try{
+            Espacio despacho = new Espacio(new Reservabilidad(true, CategoriaReserva.DESPACHO),150, 60,
+                    CategoriaEspacio.DESPACHO,edificio);
+            assertNull(despacho);
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Los despachos no pueden ser reservables");
+        }
+        Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        try{
+            despacho.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Los despachos no pueden ser reservables");
+        }
+        assertFalse(despacho.getReservabilidad().reservable);
+    }
+    @Test
     public void testReservas() {
         Reserva r1 = new Reserva();
         Persona p = new Persona();
