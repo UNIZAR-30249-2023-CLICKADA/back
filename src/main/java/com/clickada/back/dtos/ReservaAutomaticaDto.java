@@ -1,5 +1,6 @@
 package com.clickada.back.dtos;
 
+import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -15,4 +16,5 @@ public class ReservaAutomaticaDto {
     String horaInicio;
     String horaFinal;
     String detalles;
+    TipoUso tipoUso;
 }

@@ -73,7 +73,7 @@ public class EspacioController {
         LocalTime horaFinal = LocalTime.parse(reservaAutomaticaDto.getHoraFinal(), formatterTime);
         try {
             List<UUID> listEspacios = espacioService.buscarEspacios(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
-                    fecha,horaInicio,horaFinal, reservaAutomaticaDto.getNumMaxPersonas(), reservaAutomaticaDto.getDetalles());
+                    fecha,horaInicio,horaFinal, reservaAutomaticaDto.getNumMaxPersonas(),reservaAutomaticaDto.getTipoUso(), reservaAutomaticaDto.getDetalles());
 
             return new ResponseEntity<>(listEspacios, HttpStatus.OK);
         }catch (Exception e){

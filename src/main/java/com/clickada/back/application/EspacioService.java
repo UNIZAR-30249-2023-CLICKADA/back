@@ -110,7 +110,7 @@ public class EspacioService {
         this.espacioRepository.deleteAll();
         this.personaRepository.deleteAll();
     }
-    public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas, String detalles) throws Exception {
+    public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas,TipoUso tipoDeUso, String detalles) throws Exception {
         if(numEspacios>3){
             throw new Exception("Demasiados espacios para la reserva automatica");
         }
@@ -137,7 +137,7 @@ public class EspacioService {
         List<Reserva> reservaList = new ArrayList<>();
         reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
         List<Espacio> espaciosCorrectos = espaciosDisponibles(reservaList,espaciosFiltrados,new PeriodoReserva(horaInicio,horaFinal));
-        List<UUID> listaAdevolver = new ArrayList<>();
+        ArrayList<UUID> listaAdevolver = new ArrayList<>();
         List<Integer> listaMaxOcupantes = new ArrayList<>();
 
         if (espaciosCorrectos.size() < numEspacios) {
@@ -162,6 +162,11 @@ public class EspacioService {
         if(suma<numMaxPersonas){
             throw new Exception("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
         }
+        for (int i = 0; i < numEspacios; i++) {
+            reservaRepository.save(new Reserva((new PeriodoReserva(horaInicio,horaFinal)),idPersona,
+                    tipoDeUso, listaAdevolver, numMaxPersonas, detalles,fecha));
+        }
+
         return listaAdevolver;
     }
     private List<Espacio> espaciosDisponibles(List<Reserva> reservaList,List<UUID> espacioList, PeriodoReserva periodoReserva){

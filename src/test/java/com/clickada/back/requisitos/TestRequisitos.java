@@ -307,16 +307,16 @@ public class TestRequisitos {
         when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
         List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente.getIdPersona(),3,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,"DD");
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
         listaBusqueda.forEach(idEspacio -> {assertEquals(idEspacio,idEspacios.get(listaBusqueda.indexOf(idEspacio)));});
 
         List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,"DD");
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
         assertEquals(2,listaBusqueda2.size());
 
         try{
             List<UUID> listaBusqueda3 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),130,"DD");
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),130,TipoUso.DOCENCIA,"DD");
         }catch (Exception e){
             assertEquals(e.getMessage(),"La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
 
