@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EspacioService {
@@ -99,7 +97,6 @@ public class EspacioService {
         }
         return true;
     }
-
     public List<Reserva> obtenerReservasVivas(UUID idPersona) {
         List<Reserva> l = new ArrayList<>();
         if(this.personaRepository.existsById(idPersona) &&
@@ -112,5 +109,79 @@ public class EspacioService {
     public void eliminarTodos() {
         this.espacioRepository.deleteAll();
         this.personaRepository.deleteAll();
+    }
+    public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas, String detalles) throws Exception {
+        if(numEspacios>3){
+            throw new Exception("Demasiados espacios para la reserva automatica");
+        }
+        Persona persona = personaRepository.getById(idPersona);
+        List<Reserva> reservasTodas = reservaRepository.findByFecha(fecha);
+        List<Espacio> listaEspacios = espacioRepository.findAll();
+        List<UUID> espaciosFiltrados = new ArrayList<>();
+        int totalAsistentesPermitidos = 0;
+        if(persona!= null){ // Comprueba permisos de ese rol
+            for(Espacio espacio: listaEspacios) {
+                if ((espacio != null && espacio.getReservabilidad() != null) && (
+                        (espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
+                                espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
+                                persona.rolPrincipal().equals(Rol.ESTUDIANTE)) || !persona.rolPrincipal().equals(Rol.ESTUDIANTE))
+                        && espacio.getReservabilidad().reservable) {
+                espaciosFiltrados.add(espacio.getIdEspacio());
+            }
+            }
+        }
+        List<Reserva> contienenEspacio = reservasTodas.stream()
+                .filter(reserva1 -> reserva1.getIdEspacios().stream()
+                        .anyMatch(espaciosFiltrados::contains))
+                .toList();
+        List<Reserva> reservaList = new ArrayList<>();
+        reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
+        List<Espacio> espaciosCorrectos = espaciosDisponibles(reservaList,espaciosFiltrados,new PeriodoReserva(horaInicio,horaFinal));
+        List<UUID> listaAdevolver = new ArrayList<>();
+        List<Integer> listaMaxOcupantes = new ArrayList<>();
+
+        if (espaciosCorrectos.size() < numEspacios) {
+            throw new Exception("No existen esapcios suficientes disponibles con esas caracteristicas");
+        }
+        Comparator<Espacio> comparador = new Comparator<Espacio>() {
+            @Override
+            public int compare(Espacio num1, Espacio num2) {
+                Integer n1 = num1.getNumMaxOcupantes();
+                Integer n2 = num2.getNumMaxOcupantes();
+                return n2.compareTo(n1);
+            }
+        };
+
+        Collections.sort(espaciosCorrectos, comparador);
+
+        int suma = 0;
+        for (int i = 0; i < numEspacios; i++) {
+            suma += espaciosCorrectos.get(i).getNumMaxOcupantes();
+            listaAdevolver.add(espaciosCorrectos.get(i).getIdEspacio());
+        }
+        if(suma<numMaxPersonas){
+            throw new Exception("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
+        }
+        return listaAdevolver;
+    }
+    private List<Espacio> espaciosDisponibles(List<Reserva> reservaList,List<UUID> espacioList, PeriodoReserva periodoReserva){
+        List<Espacio> espacioListDisponible = new ArrayList<>();
+        if(reservaList!=null) {
+            for (UUID idEspacio : espacioList) {
+                espacioListDisponible.add(espacioRepository.getById(idEspacio));
+                for (Reserva reserva : reservaList) {
+                    if (reserva.getIdEspacios().contains(idEspacio)) {//si esteidEspacio espacio esta reservado ese mismo dia tambien
+                        if (!reserva.getPeriodoReserva().periodosCompatibles(periodoReserva)) {
+                            espacioListDisponible.remove(espacioList.indexOf(espacioRepository.getById(idEspacio)));
+                        }
+                    }
+                }
+            }
+        }else{
+            for (UUID idEspacio : espacioList) {
+                espacioList.add(idEspacio);
+            }
+        }
+        return espacioListDisponible;
     }
 }

@@ -278,6 +278,8 @@ public class TestRequisitos {
                 CategoriaEspacio.LABORATORIO,edificio);
         Espacio laboratorio2 = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),100, 60,
                 CategoriaEspacio.LABORATORIO,edificio);
+        Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150, 60,
+                CategoriaEspacio.SALA_COMUN,edificio);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
@@ -300,7 +302,25 @@ public class TestRequisitos {
                     120 + " el total de asistentes permitidos y "+300
                     +" el numero de asistentes de la reserva.",e.getMessage());
         }
+        idEspacios.add(sala_comun.getIdEspacio());
+        when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2).thenReturn(sala_comun);
+        when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
+        List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente.getIdPersona(),3,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,"DD");
+        listaBusqueda.forEach(idEspacio -> {assertEquals(idEspacio,idEspacios.get(listaBusqueda.indexOf(idEspacio)));});
+
+        List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,"DD");
+        assertEquals(2,listaBusqueda2.size());
+
+        try{
+            List<UUID> listaBusqueda3 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),130,"DD");
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
+
+        }
 
     }
     @Test

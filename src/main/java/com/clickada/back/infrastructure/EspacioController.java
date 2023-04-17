@@ -3,6 +3,7 @@ package com.clickada.back.infrastructure;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.ReservaService;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
+import com.clickada.back.dtos.ReservaAutomaticaDto;
 import com.clickada.back.dtos.ReservaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -61,7 +63,23 @@ public class EspacioController {
 
         return new ResponseEntity<>("Reserva realizada correctamente", HttpStatus.OK);
     }
+    @PostMapping("/reservarAutomatica")
+    ResponseEntity<?> reservarAutomatica(@RequestBody ReservaAutomaticaDto reservaAutomaticaDto) throws Exception {
+        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        //convert String to LocalDate
+        LocalDate fecha = LocalDate.parse(reservaAutomaticaDto.getFecha(), formatterDay);
+        LocalTime horaInicio = LocalTime.parse(reservaAutomaticaDto.getHoraInicio(), formatterTime);
+        LocalTime horaFinal = LocalTime.parse(reservaAutomaticaDto.getHoraFinal(), formatterTime);
+        try {
+            List<UUID> listEspacios = espacioService.buscarEspacios(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
+                    fecha,horaInicio,horaFinal, reservaAutomaticaDto.getNumMaxPersonas(), reservaAutomaticaDto.getDetalles());
 
+            return new ResponseEntity<>(listEspacios, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
     @DeleteMapping("/eliminar")
     public ResponseEntity<?> eliminar(){
         espacioService.eliminarTodos();
