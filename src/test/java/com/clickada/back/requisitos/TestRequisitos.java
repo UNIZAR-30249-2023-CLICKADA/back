@@ -266,8 +266,8 @@ public class TestRequisitos {
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,
                 CategoriaEspacio.SALA_COMUN);
         assertEquals(CategoriaReserva.SALA_COMUN,sala_comun.getReservabilidad().categoriaReserva);
-        sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
-        assertEquals(CategoriaReserva.DESPACHO,sala_comun.getReservabilidad().categoriaReserva);
+        sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.LABORATORIO));
+        assertEquals(CategoriaReserva.LABORATORIO,sala_comun.getReservabilidad().categoriaReserva);
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
     }
     //Test 14 y 15 son de porcentaje de uso maximo
