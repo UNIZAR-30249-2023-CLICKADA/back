@@ -414,17 +414,41 @@ public class TestRequisitos {
                 LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
                 20,"DD");
         assertTrue(reservaCorrecta);
-        //false reservar AULA siendo un estudiante
-        try{
-            espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                    20,"DD");
-        }catch (Exception e){
-            assertEquals(e.getMessage(),"Un estudiante solo puede reservar SALAS COMUNES");
-        }
+        //false reservar LABORATORIO siendo un estudiante
+        Exception thrown = assertThrows(Exception.class,()-> {
+                    espacioService.reservarEspacio(estudiante.getIdPersona(), idEspacios,
+                            LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
+                            20, "DD");
+        });
+        assertEquals("Un estudiante solo puede reservar SALAS COMUNES",thrown.getMessage());
+
         // true reservar LABORATORIO siendo tecnico, investigador,docente solo pueden reservar
         //laboratiorios de su mismo departamento
 
+        thrown =  assertThrows(Exception.class,()->{
+            espacioService.reservarEspacio(docente.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        });
+
+        assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                "laboratiorios que esten adscritos a un departamento",thrown.getMessage());
+
+        laboratorio.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
+        investigador.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        thrown = assertThrows(Exception.class,()->{
+            espacioService.reservarEspacio(investigador.getIdPersona(),idEspacios,
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                    20,"DD");
+        });
+        assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                "laboratorios de su mismo departamento",thrown.getMessage());
+
+        tecnico_laboratorio.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        boolean resultado = espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(resultado);
     }
     @Test
     void requisito20() throws Exception{

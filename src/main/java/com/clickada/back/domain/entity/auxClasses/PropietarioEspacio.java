@@ -33,4 +33,13 @@ public class PropietarioEspacio implements Serializable {
         this.personas = personas;
         this.indexPropietario = 2;
     }
+    public boolean esDepartamento(){
+        return this.indexPropietario==1;
+    }
+    public boolean esEina(){
+        return this.indexPropietario==0;
+    }
+    public boolean esPersonas(){
+        return this.indexPropietario==2;
+    }
 }

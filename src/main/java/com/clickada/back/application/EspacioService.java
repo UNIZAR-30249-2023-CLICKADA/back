@@ -61,11 +61,28 @@ public class EspacioService {
                         persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                     throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
                 }
-                if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.AULA) &&
+                if(espacio != null && espacio.getCategoriaEspacio().equals(CategoriaEspacio.AULA) &&
                         espacio.getReservabilidad() !=null &&
-                        !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
+                        espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
                         persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
                     throw new Exception("Un Tecnico de laboratorio no puede reservar aulas");
+                }
+                if(espacio != null && espacio.getCategoriaEspacio().equals(CategoriaEspacio.LABORATORIO) &&
+                        espacio.getReservabilidad() !=null &&
+                        espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
+                        (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
+                            persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                            persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR)
+                        )){
+                    if(!espacio.getPropietarioEspacio().esDepartamento()){
+                        throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                                "laboratiorios que esten adscritos a un departamento");
+                    }
+                    if(!espacio.getPropietarioEspacio().departamento.equals(persona.getAdscripcion().departamento)){
+                        throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                                "laboratorios de su mismo departamento");
+                    }
+
                 }
                 if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
                     throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
