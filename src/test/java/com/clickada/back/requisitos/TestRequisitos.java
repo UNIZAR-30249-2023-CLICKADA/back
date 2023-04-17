@@ -199,10 +199,16 @@ public class TestRequisitos {
 
     @Test
     void requisito11() throws Exception{
-        Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150,
-                CategoriaEspacio.SALA_COMUN);
-        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150,
-                CategoriaEspacio.LABORATORIO);
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+
+        Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+                CategoriaEspacio.SALA_COMUN,edificio);
+        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
+                CategoriaEspacio.LABORATORIO,edificio);
+
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
