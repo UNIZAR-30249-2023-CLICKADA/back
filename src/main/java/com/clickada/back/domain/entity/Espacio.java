@@ -38,14 +38,8 @@ public class Espacio extends Edificio {
 
     PropietarioEspacio propietarioEspacio;
 
-    public Espacio(Reservabilidad reservabilidad, double tamanyo, CategoriaEspacio categoriaEspacio){
-        super();
-        idEspacio = UUID.randomUUID();
-        this.reservabilidad = reservabilidad;
-        this.tamanyo = tamanyo;
-        this.categoriaEspacio = categoriaEspacio;
-    }
-    public Espacio(Reservabilidad reservabilidad, double tamanyo,int numMaxOcupantes, CategoriaEspacio categoriaEspacio, Edificio edificio)
+    public Espacio(Reservabilidad reservabilidad, double tamanyo,int numMaxOcupantes, CategoriaEspacio categoriaEspacio,
+                   Edificio edificio,PropietarioEspacio propietarioEspacio)
             throws Exception {
         super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables(),
                 edificio.getPorcentajeUsoPermitido());
@@ -57,6 +51,7 @@ public class Espacio extends Edificio {
         this.horaInicio = edificio.getHoraInicio();
         this.horaFin = edificio.getHoraFin();
         this.numMaxOcupantes = numMaxOcupantes;
+        this.propietarioEspacio = propietarioEspacio;
     }
 
     public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {

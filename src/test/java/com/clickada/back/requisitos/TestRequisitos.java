@@ -160,7 +160,7 @@ public class TestRequisitos {
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio espacio = new Espacio(new Reservabilidad(),150, 60,
-                CategoriaEspacio.SALA_COMUN,edificio);
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
         Reservabilidad reservabilidad1 = new Reservabilidad(false, CategoriaReserva.LABORATORIO);
@@ -205,9 +205,9 @@ public class TestRequisitos {
                 List.of(LocalDate.of(2023,1,1)),100);
 
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
-                CategoriaEspacio.SALA_COMUN,edificio);
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
-                CategoriaEspacio.LABORATORIO,edificio);
+                CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
 
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
@@ -255,16 +255,25 @@ public class TestRequisitos {
     }
 
     @Test
-    void requisito12(){
-        Espacio sala_comun = new Espacio(new Reservabilidad(),150,
-                CategoriaEspacio.SALA_COMUN);
+    void requisito12() throws Exception {
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+        Espacio sala_comun = new Espacio(new Reservabilidad(),150,60,
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
     }
     @Test
     void requisito13() throws Exception {
+
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,
-                CategoriaEspacio.SALA_COMUN);
+        Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,60,
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         assertEquals(CategoriaReserva.SALA_COMUN,sala_comun.getReservabilidad().categoriaReserva);
         sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.LABORATORIO));
         assertEquals(CategoriaReserva.LABORATORIO,sala_comun.getReservabilidad().categoriaReserva);
@@ -281,11 +290,11 @@ public class TestRequisitos {
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
-                CategoriaEspacio.LABORATORIO,edificio);
+                CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio laboratorio2 = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),100, 60,
-                CategoriaEspacio.LABORATORIO,edificio);
+                CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150, 60,
-                CategoriaEspacio.SALA_COMUN,edificio);
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
@@ -341,7 +350,7 @@ public class TestRequisitos {
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
-                CategoriaEspacio.AULA,edificio);
+                CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
         Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO);
@@ -354,6 +363,7 @@ public class TestRequisitos {
                 LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
                 20,"DD");
         assertTrue(reservaCorrecta);
+        //false reservar AULA siendo un estudiante
         try{
             espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
                     LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
@@ -361,6 +371,7 @@ public class TestRequisitos {
         }catch (Exception e){
             assertEquals(e.getMessage(),"Un estudiante solo puede reservar SALAS COMUNES");
         }
+        // false reservar AULA siendo un tecnico de laboratorio
         try{
             espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
                     LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
@@ -368,19 +379,52 @@ public class TestRequisitos {
         }catch (Exception e){
             assertEquals(e.getMessage(),"Un Tecnico de laboratorio no puede reservar aulas");
         }
-        //false reservar AULA siendo un estudiante
-
-        // false reservar AULA siendo un tecnico de laboratorio
     }
 
     @Test
     void requisito19() throws Exception{
         //true reservar LABORATORIOS cualqueira menos estudiantes
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
+        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
+                CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
+        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO);
+        Persona investigador = new Persona("Ger","ger@clickada.es","1234",Rol.INVESTIGADOR_CONTRATADO);
+        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
+        Persona conserje = new Persona("Ger","ger@clickada.es","1234",Rol.CONSERJE);
 
-        //false reservar LABORATORIO siendo un estudiante
-
+        ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
+        when(personaRepository.getById(any())).thenReturn(gerente)
+                .thenReturn(conserje)
+                .thenReturn(estudiante)
+                .thenReturn(docente)
+                .thenReturn(investigador)
+                .thenReturn(tecnico_laboratorio);
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
+        when(espacioRepository.getById(any())).thenReturn(laboratorio);
+        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(reservaCorrecta);
+        reservaCorrecta = espacioService.reservarEspacio(conserje.getIdPersona(),idEspacios,
+                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                20,"DD");
+        assertTrue(reservaCorrecta);
+        //false reservar AULA siendo un estudiante
+        try{
+            espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
+                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
+                    20,"DD");
+        }catch (Exception e){
+            assertEquals(e.getMessage(),"Un estudiante solo puede reservar SALAS COMUNES");
+        }
         // true reservar LABORATORIO siendo tecnico, investigador,docente solo pueden reservar
         //laboratiorios de su mismo departamento
+
     }
     @Test
     void requisito20() throws Exception{
@@ -391,13 +435,13 @@ public class TestRequisitos {
                 List.of(LocalDate.of(2023,1,1)),100);
         try{
             Espacio despacho = new Espacio(new Reservabilidad(true, CategoriaReserva.DESPACHO),150, 60,
-                    CategoriaEspacio.DESPACHO,edificio);
+                    CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
             assertNull(despacho);
         }catch (Exception e){
             assertEquals(e.getMessage(),"Los despachos no pueden ser reservables");
         }
         Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
-                CategoriaEspacio.DESPACHO,edificio);
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         try{
             despacho.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
@@ -405,20 +449,6 @@ public class TestRequisitos {
             assertEquals(e.getMessage(),"Los despachos no pueden ser reservables");
         }
         assertFalse(despacho.getReservabilidad().reservable);
-    }
-    @Test
-    public void testReservas() {
-        Reserva r1 = new Reserva();
-        Persona p = new Persona();
-        Espacio e1 = new Espacio(new Reservabilidad(),150,
-                CategoriaEspacio.SALA_COMUN);
-        ArrayList<UUID> esp = new ArrayList<>();
-        esp.add(e1.getIdEspacio());
-        Reserva r2 = new Reserva(new PeriodoReserva(LocalTime.NOON,LocalTime.MIDNIGHT),p.getIdPersona(),
-                TipoUso.DOCENCIA,esp,20,"DD",LocalDate.now());
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-
-
     }
 
 }
