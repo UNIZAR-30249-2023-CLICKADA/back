@@ -32,11 +32,6 @@ public class EspacioController {
         return new ResponseEntity<>(espacioService.todosEspacios(), HttpStatus.OK);
     }
 
-    @PutMapping("/reservasVivas")
-    /* Temp - habrá que decidir si unicamente del día actual  o de todos los dias posteriores */
-    ResponseEntity<?> obtenerReservasVivas(@RequestParam UUID idPersona){
-        return new ResponseEntity<>(espacioService.obtenerReservasVivas(idPersona), HttpStatus.OK);
-    }
     @GetMapping("/todasReservas")
     ResponseEntity<?> todasReservas() throws Exception {
         return new ResponseEntity<>(reservaService.listarTodasReservas() ,HttpStatus.OK);

@@ -67,4 +67,6 @@ public class PersonaController {
     ResponseEntity<?> permisosDeReserva(@RequestParam UUID id){
         return new ResponseEntity<>(personaService.permisosDeReserva(id),HttpStatus.OK);
     }
+
+
 }
