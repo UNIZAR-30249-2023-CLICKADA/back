@@ -4,7 +4,6 @@ import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
-import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

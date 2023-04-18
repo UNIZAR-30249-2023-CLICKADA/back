@@ -28,6 +28,9 @@ public class Reservabilidad implements Serializable {
         if(categoriaReserva1==null) {
             throw new Exception("No existe esa Categoria de Reserva");
         }
+        if(categoriaReserva1.equals(CategoriaReserva.DESPACHO) && reservable){
+            throw new Exception("Los despachos no pueden ser reservables");
+        }
         this.reservable = reservable;
         if(reservable){
             this.categoriaReserva = categoriaReserva1;

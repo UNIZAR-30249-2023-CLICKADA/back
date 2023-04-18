@@ -42,11 +42,6 @@ public class PersonaService {
         }
         return false;
     }
-
-    public  Persona obtenerPersona(String email){
-        return personaRepository.findByeMail(email);
-    }
-
     public boolean loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
         if (p!=null) return p.getContrasenya().equals(pass);

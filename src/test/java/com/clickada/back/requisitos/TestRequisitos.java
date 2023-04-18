@@ -79,6 +79,15 @@ public class TestRequisitos {
         //Debe mantener el anterior
         assertEquals(Rol.GERENTE,per.rolPrincipal());
 
+        when(personaRepository.existsById(any())).thenReturn(true);
+        when(personaRepository.getById(any())).thenReturn(per);
+        boolean resultado = personaService.cambiarRol(per.getIdPersona(),"Docente");
+        assertTrue(resultado);
+        resultado = personaService.cambiarRol(per.getIdPersona(),"Tecnico");
+        assertTrue(resultado);
+        resultado = personaService.cambiarRol(per.getIdPersona(),"Gerente");
+        assertTrue(resultado);
+
     }
 
     @Test
@@ -161,7 +170,7 @@ public class TestRequisitos {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
-        Espacio espacio = new Espacio(new Reservabilidad(),150, 60,
+        Espacio espacio = new Espacio(new Reservabilidad(false,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
         Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
@@ -195,7 +204,20 @@ public class TestRequisitos {
                     LocalTime.of(21,0));
         });
         assertEquals("Si no es GERENTE no puede Modificar el horario de reserva del Espacio",thrown.getMessage());
+        when(personaRepository.existsById(any())).thenReturn(true);
+        when(espacioRepository.existsById(any())).thenReturn(true);
+        when(personaRepository.getById(any())).thenReturn(gerente);
+        when(espacioRepository.getById(any())).thenReturn(espacio);
+        boolean resultado = espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad1,gerente.getIdPersona());
+        assertTrue(resultado);
 
+        resultado = espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad2,gerente.getIdPersona());
+        assertTrue(resultado);
+        when(personaRepository.getById(any())).thenReturn(docente);
+        thrown = assertThrows(Exception.class,()->{
+            espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad2,docente.getIdPersona());
+        });
+        assertEquals("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio",thrown.getMessage());
 
     }
 

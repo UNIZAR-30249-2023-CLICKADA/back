@@ -43,14 +43,4 @@ public class Reserva {
         this.fecha = fecha;
     }
 
-    /*public boolean estaDentroDeHorario(HorarioDisponible horario) {
-        LocalDate fecha = this.fechaInicio;
-        while (fecha.isBefore(this.fechaFin)) {
-            if (fecha.getDayOfWeek() == horario.getDiaSemana() && horaInicio.isAfter(horario.getHoraInicio()) && horaFin.isBefore(horario.getHoraFin())) {
-                return true;
-            }
-            fecha = fecha.plusDays(1);
-        }
-        return false;
-    }*/
 }

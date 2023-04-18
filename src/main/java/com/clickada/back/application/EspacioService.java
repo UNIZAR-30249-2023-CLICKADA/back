@@ -154,8 +154,7 @@ public class EspacioService {
             }
         }
         List<Reserva> contienenEspacio = reservasTodas.stream()
-                .filter(reserva1 -> reserva1.getIdEspacios().stream()
-                        .anyMatch(espaciosFiltrados::contains))
+                .filter(reserva1 -> reserva1.getIdEspacios().stream().anyMatch(espaciosFiltrados::contains))
                 .toList();
         List<Reserva> reservaList = new ArrayList<>();
         reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
