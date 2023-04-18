@@ -7,6 +7,7 @@ import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,9 +25,12 @@ public class ReservaService {
         this.personaRepository = personaRepository;
     }
 
+
     public List<Reserva> listarTodasReservas(){
         return reservaRepository.findAll();
     }
+
+    @Transactional
     public List<Reserva> obtenerReservasVivas(UUID idPersona) throws Exception {
         if(!personaRepository.existsById(idPersona)) throw new Exception("Esa persona no existe");
 

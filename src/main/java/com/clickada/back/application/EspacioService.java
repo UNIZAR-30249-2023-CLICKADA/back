@@ -11,6 +11,7 @@ import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,10 +34,12 @@ public class EspacioService {
         this.servicioCorreo = new EnviaMail();
     }
 
+    @Transactional (readOnly = true)
     public List<Espacio> todosEspacios() {
         return this.espacioRepository.findAll();
     }
 
+    @Transactional
     public boolean cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
         if (espacioRepository.existsById(idEspacio) && personaRepository.existsById(idPersona)) {
             Espacio espacio = espacioRepository.getById(idEspacio);
@@ -48,6 +51,7 @@ public class EspacioService {
         return false;
     }
 
+    @Transactional
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) throws Exception {
         //Habrá que controlar todas las restricciones
@@ -125,19 +129,13 @@ public class EspacioService {
         }
         return true;
     }
-    public List<Reserva> obtenerReservasVivas(UUID idPersona) {
-        List<Reserva> l = new ArrayList<>();
-        if(this.personaRepository.existsById(idPersona) &&
-                this.personaRepository.getById(idPersona).rolPrincipal().equals(Rol.GERENTE)){
-            //l.addAll(this.reservaRepository.findAllAfterTime()) ;
-        }
-        return l;
-    }
 
+    @Transactional
     public void eliminarTodos() {
         this.espacioRepository.deleteAll();
         this.personaRepository.deleteAll();
     }
+    @Transactional
     public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas,TipoUso tipoDeUso, String detalles) throws Exception {
         if(numEspacios>3){
             throw new Exception("Demasiados espacios para la reserva automatica");
@@ -196,6 +194,7 @@ public class EspacioService {
 
         return listaAdevolver;
     }
+
     private List<Espacio> espaciosDisponibles(List<Reserva> reservaList,List<UUID> espacioList, PeriodoReserva periodoReserva){
         List<Espacio> espacioListDisponible = new ArrayList<>();
         if(reservaList!=null) {
@@ -217,6 +216,7 @@ public class EspacioService {
         return espacioListDisponible;
     }
 
+    @Transactional
     public boolean modificarPorcentajeOcupacion(UUID idPersona, UUID idEspacio, int porcentaje){
         if(this.espacioRepository.existsById(idEspacio) && this.personaRepository.existsById(idPersona)) {
             Espacio e = this.espacioRepository.getById(idEspacio);
@@ -232,9 +232,8 @@ public class EspacioService {
                             e.getNumMaxOcupantes() * (e.getPorcentajeUsoPermitido()/100)){
                         //Se borrará reserva, hay que avisar.
                         String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
-
-                        Executors.newSingleThreadExecutor()
-                                .execute(() -> servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
+                        Executors.newSingleThreadExecutor().execute(() ->
+                                servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
 
                         reservaRepository.delete(reserva);
                     }

@@ -645,11 +645,11 @@ public class TestRequisitos {
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().plusDays(1));
         Reserva reserva2 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().plusDays(1));
         Reserva reserva3 = new Reserva(new PeriodoReserva(LocalTime.of(17,0),LocalTime.of(19,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().minusDays(1));
         Reserva reserva4 = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,25));
         Reserva reserva5 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),
