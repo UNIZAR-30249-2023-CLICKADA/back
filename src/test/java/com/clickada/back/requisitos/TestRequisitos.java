@@ -651,7 +651,7 @@ public class TestRequisitos {
         Reserva reserva3 = new Reserva(new PeriodoReserva(LocalTime.of(17,0),LocalTime.of(19,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
         Reserva reserva4 = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,18));
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,25));
         Reserva reserva5 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,12));
         when(personaRepository.existsById(any())).thenReturn(true);
