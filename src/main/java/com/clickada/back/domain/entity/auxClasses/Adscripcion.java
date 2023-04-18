@@ -4,11 +4,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Slf4j
-@Embeddable
 @NoArgsConstructor
-public class Adscripcion {
+public class Adscripcion implements Serializable {
     public Departamento departamento;
 
     public Adscripcion(Departamento departamento){

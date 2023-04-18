@@ -27,39 +27,48 @@ public class Espacio extends Edificio {
 
     double tamanyo; //Tamaño del espacio en m2
 
-    @Transient
+
     Reservabilidad reservabilidad;
 
     int numMaxOcupantes;
 
-    @Transient
-    ArrayList<LocalDate> diasNoReservables;
-
     double porcentajeUsoPermitido;
+    LocalTime horaInicio;
+    LocalTime horaFin;
 
-    @Transient
     PropietarioEspacio propietarioEspacio;
 
-    //HorarioDisponible horarioDisponible;
-
-    public Espacio(Reservabilidad reservabilidad, double tamanyo, int maxOcupantes, CategoriaEspacio categoriaEspacio){
-        super();
+    public Espacio(Reservabilidad reservabilidad, double tamanyo,int numMaxOcupantes, CategoriaEspacio categoriaEspacio,
+                   Edificio edificio,PropietarioEspacio propietarioEspacio)
+            throws Exception {
+        super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables(),
+                edificio.getPorcentajeUsoPermitido());
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
         this.categoriaEspacio = categoriaEspacio;
-        this.porcentajeUsoPermitido = porcentajeUsoEdificio;
-        this.numMaxOcupantes = maxOcupantes;
+        this.porcentajeUsoPermitido = edificio.getPorcentajeUsoPermitido();
+        this.horaInicio = edificio.getHoraInicio();
+        this.horaFin = edificio.getHoraFin();
+        this.numMaxOcupantes = numMaxOcupantes;
+        this.propietarioEspacio = propietarioEspacio;
     }
 
-    public void modificarReservabilidad(Persona persona, boolean reservable, CategoriaReserva categoriaReserva) throws Exception {
-        if(!persona.roles.get(0).equals(Rol.GERENTE)) {
+    public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {
+        if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
             throw new Exception("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio");
         }
-        this.reservabilidad.reservable = reservable;
-        if(reservable){
-            this.reservabilidad.categoriaReserva = categoriaReserva;
+        this.reservabilidad = nuevaReservabilidad;
+    }
+    public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {
+        if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
+            throw new Exception("Si no es GERENTE no puede Modificar el horario de reserva del Espacio");
         }
+        if(this.horaInicio.isAfter(horaInicioNueva) || this.horaFin.isBefore(horaFinNueva)){
+            throw new Exception("Las horas nuevas de reserva tienen que estar dentro del periodo de reseerva del Edificio");
+        }
+        this.horaFin=horaFinNueva;
+        this.horaInicio = horaInicioNueva;
     }
     public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
         if((this.categoriaEspacio.equals(CategoriaEspacio.AULA) ||
@@ -97,4 +106,7 @@ public class Espacio extends Edificio {
         return false;
     }
 
+    public int getTotalAsistentesPermitidos (){
+        return (int) (this.numMaxOcupantes * this.porcentajeUsoPermitido/100);
+    }
 }

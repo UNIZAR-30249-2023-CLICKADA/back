@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,9 +13,17 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@Embeddable
-public class PeriodoReserva {
-    private LocalDate fechaInicio;
+public class PeriodoReserva implements Serializable {
     private LocalTime horaInicio;
     private LocalTime horaFin;
+
+    public boolean periodosCompatibles(PeriodoReserva periodoReserva){
+        return !((periodoReserva.getHoraInicio().isBefore(horaFin) &&
+                periodoReserva.getHoraInicio().isAfter(horaInicio)) ||
+                periodoReserva.getHoraFin().isBefore(horaFin) &&
+                        periodoReserva.getHoraFin().isAfter(horaInicio));
+        //hora inicio p1 esta entre la hora inicio p2 y hora fin p2
+        //hora fin p1 esta entre hora inicio p2 y hora fin p2
+
+    }
 }

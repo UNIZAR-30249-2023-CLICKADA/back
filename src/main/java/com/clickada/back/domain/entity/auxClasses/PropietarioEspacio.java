@@ -2,10 +2,13 @@ package com.clickada.back.domain.entity.auxClasses;
 
 import com.clickada.back.domain.entity.Persona;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 @Getter
-public class PropietarioEspacio {
+@NoArgsConstructor
+public class PropietarioEspacio implements Serializable {
     public Eina eina;
     public Departamento departamento;
 
@@ -29,5 +32,14 @@ public class PropietarioEspacio {
         }
         this.personas = personas;
         this.indexPropietario = 2;
+    }
+    public boolean esDepartamento(){
+        return this.indexPropietario==1;
+    }
+    public boolean esEina(){
+        return this.indexPropietario==0;
+    }
+    public boolean esPersonas(){
+        return this.indexPropietario==2;
     }
 }

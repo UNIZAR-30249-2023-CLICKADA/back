@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,18 +22,17 @@ import java.util.UUID;
 public class Reserva {
     @Id
     private UUID idReserva;
-    @Embedded
     private PeriodoReserva periodoReserva;
     private UUID idPersona;
     private TipoUso tipoDeUso;
     private int numOcupantes;
     private String detallesReserva;
-
+    private LocalDate fecha;
     private ArrayList<UUID> idEspacios;
 
 
     public Reserva(PeriodoReserva periodoReserva, UUID idPersona,
-                   TipoUso tipoDeUso, ArrayList<UUID> idEspacios, int numOcupantes, String detallesReserva) {
+                   TipoUso tipoDeUso, ArrayList<UUID> idEspacios, int numOcupantes, String detallesReserva,LocalDate fecha) {
         this.idReserva = UUID.randomUUID();
         this.idEspacios = idEspacios;
         this.periodoReserva = periodoReserva;
@@ -41,16 +40,7 @@ public class Reserva {
         this.tipoDeUso = tipoDeUso;
         this.numOcupantes = numOcupantes;
         this.detallesReserva = detallesReserva;
+        this.fecha = fecha;
     }
 
-    /*public boolean estaDentroDeHorario(HorarioDisponible horario) {
-        LocalDate fecha = this.fechaInicio;
-        while (fecha.isBefore(this.fechaFin)) {
-            if (fecha.getDayOfWeek() == horario.getDiaSemana() && horaInicio.isAfter(horario.getHoraInicio()) && horaFin.isBefore(horario.getHoraFin())) {
-                return true;
-            }
-            fecha = fecha.plusDays(1);
-        }
-        return false;
-    }*/
 }
