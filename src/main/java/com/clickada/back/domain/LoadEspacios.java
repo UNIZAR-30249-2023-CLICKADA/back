@@ -18,7 +18,7 @@ public class LoadEspacios {
 
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository) throws Exception {
-        espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
+       /* espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
         Edificio edificio = new Edificio(LocalTime.of(8,0), LocalTime.of(22,0), List.of(),100);
         Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L,60,
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
@@ -26,7 +26,7 @@ public class LoadEspacios {
                 CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
 
         espacioRepository.save(espacio);
-        espacioRepository.save(espacio2);
+        espacioRepository.save(espacio2);*/
         return null;
     }
 }

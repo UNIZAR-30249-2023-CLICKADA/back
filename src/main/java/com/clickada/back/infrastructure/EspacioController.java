@@ -8,6 +8,7 @@ import com.clickada.back.dtos.ReservaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -82,4 +83,12 @@ public class EspacioController {
         return new ResponseEntity<>("Eliminados datos de las bases de datos", HttpStatus.OK);
     }
 
+
+    @PutMapping("/cambiarPorcentajeUso")
+    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
+        if (!espacioService.modificarPorcentajeOcupacion(idPersona,idEspacio,porcentaje)){
+            return  new ResponseEntity<>("No tiene permisos para hacer esta operación",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 }

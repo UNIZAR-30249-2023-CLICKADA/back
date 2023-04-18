@@ -7,18 +7,22 @@ import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
+import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.Executors;
 
 @Service
 public class EspacioService {
     EspacioRepository espacioRepository;
     PersonaRepository personaRepository;
     ReservaRepository  reservaRepository;
+    EnviaMail servicioCorreo;
 
     @Autowired
     public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
@@ -26,6 +30,7 @@ public class EspacioService {
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
+        this.servicioCorreo = new EnviaMail();
     }
 
     public List<Espacio> todosEspacios() {
@@ -211,4 +216,33 @@ public class EspacioService {
         }
         return espacioListDisponible;
     }
+
+    public boolean modificarPorcentajeOcupacion(UUID idPersona, UUID idEspacio, int porcentaje){
+        if(this.espacioRepository.existsById(idEspacio) && this.personaRepository.existsById(idPersona)) {
+            Espacio e = this.espacioRepository.getById(idEspacio);
+            Persona p = this.personaRepository.getById(idPersona);
+            if(e.modificarPorcentajeOcupacion(p,porcentaje)) {
+                this.espacioRepository.save(e);
+                //Si había reservas de este espacio, hay que comprobar si ahora son inválidas y avisar al usuario
+                List<UUID> esp = new ArrayList<>();
+                esp.add(idEspacio);
+                List<Reserva> reservas = this.reservaRepository.findAll();
+                for (Reserva reserva : reservas) {
+                    if (reserva.getIdEspacios().contains(idEspacio) && reserva.getNumOcupantes() >
+                            e.getNumMaxOcupantes() * (e.getPorcentajeUsoPermitido()/100)){
+                        //Se borrará reserva, hay que avisar.
+                        String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
+
+                        Executors.newSingleThreadExecutor()
+                                .execute(() -> servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
+
+                        reservaRepository.delete(reserva);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
+
