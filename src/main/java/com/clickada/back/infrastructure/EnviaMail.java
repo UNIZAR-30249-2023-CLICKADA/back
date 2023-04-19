@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Properties;
 
 @Service
@@ -15,7 +17,7 @@ public class EnviaMail {
     private JavaMailSenderImpl emailSender = new JavaMailSenderImpl();
 
     @Async
-    public void enviarCorreo(String dest,String texto) {
+    public void enviarCorreo(String dest, int tipo, String nombre, LocalDate fecha, LocalTime hora) {
         emailSender.setHost("smtp.gmail.com");
         emailSender.setPort(587);
         emailSender.setUsername("clickada2023");
@@ -30,8 +32,17 @@ public class EnviaMail {
         message.setFrom("clickada2023@gmail.com");
         message.setTo(dest);
         message.setSubject("Reserva cancelada");
-        message.setText("Hola, ha realizado una reserva que ha sido cancelada por cambios en la ocupación " +
-                "del espacio");
+        if (tipo==1){
+            message.setText("Hola, una de sus reservas ha sido cancelada por cambios en la ocupación " +
+                    "del espacio.<br> Su reserva en el espacio "+ nombre+ " , del " + fecha.toString() + " a las " +
+                    hora.toString() + " ha sido cancelada porque ha cambiado la ocupación máxima del espacio y " +
+                    "su reserva ya no cumple las condiciones de uso.");
+        }
+        else if (tipo==2){
+            message.setText("Hola, una de sus reservas ha sido cancelada." +
+                    "<br> Su reserva en el espacio "+ nombre+ ", del " + fecha.toString() + " a las " +
+                    hora.toString() + "ha sido cancelada porque un gerente ha eliminado la reserva.");
+        }
         emailSender.send(message);
     }
 }

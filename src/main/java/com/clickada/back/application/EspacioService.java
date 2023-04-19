@@ -277,7 +277,8 @@ public class EspacioService {
                 String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
 
                 Executors.newSingleThreadExecutor()
-                        .execute(() -> servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
+                        .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
+                                reserva.getPeriodoReserva().getHoraInicio()));
 
                 reservaRepository.delete(reserva);
                 reservaRepository.delete(reserva);
