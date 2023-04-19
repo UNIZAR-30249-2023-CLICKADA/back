@@ -310,7 +310,90 @@ public class TestRequisitos {
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
     }
     //Test 14 y 15 son de porcentaje de uso maximo
+    @Test
+    void requisito14() throws Exception {
+        Edificio edificio = new Edificio(
+                LocalTime.of(8,0),
+                LocalTime.of(20,0),
+                List.of(LocalDate.of(2023,1,1)),100);
 
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
+        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        Persona investigador = new Persona("Ger","ger@clickada.es","1234",Rol.INVESTIGADOR_CONTRATADO,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        Persona conserje = new Persona("Ger","ger@clickada.es","1234",Rol.CONSERJE,null);
+
+
+        Exception thrown = assertThrows(Exception.class,()->{
+            Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
+                    CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
+        });
+        assertEquals("AULA no puede tener a un departamento como propietario de espacio",thrown.getMessage());
+
+        Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
+                CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
+        assertEquals(Eina.EINA,aula.getPropietarioEspacio().eina);
+
+        thrown = assertThrows(Exception.class,()->{
+            Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+                    CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
+        });
+        assertEquals("SALA_COMUN no puede tener a un departamento como propietario de espacio",thrown.getMessage());
+
+        Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
+        assertEquals(Eina.EINA,sala_comun.getPropietarioEspacio().eina);
+
+        thrown = assertThrows(Exception.class,()->{
+            Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                    CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
+        });
+        assertEquals("DESPACHO no puede tener a la Eina como propietario de espacio",thrown.getMessage());
+
+        Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES));
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,despacho.getPropietarioEspacio().departamento);
+
+        thrown = assertThrows(Exception.class,()->{
+            new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                    CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(List.of(gerente)));
+        });
+        assertEquals("Para ser propietario de espacio se tiene que ser DOCENTE_INVESTIGADOR o INVESTIGADOR_CONTRATADO",thrown.getMessage());
+
+        gerente.anyadirRol(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(List.of(gerente)));
+        assertTrue(despacho.getPropietarioEspacio().esPersonas());
+
+        Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
+                CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
+        Espacio seminario = new Espacio(new Reservabilidad(true, CategoriaReserva.SEMINARIO),150, 60,
+                CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
+
+        assertTrue(laboratorio.getPropietarioEspacio().esEina());
+        assertTrue(seminario.getPropietarioEspacio().esEina());
+
+        laboratorio.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
+        seminario.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
+
+        assertTrue(laboratorio.getPropietarioEspacio().esDepartamento());
+        assertTrue(seminario.getPropietarioEspacio().esDepartamento());
+
+        thrown = assertThrows(Exception.class,()->{
+            laboratorio.asignarAEspacio(new PropietarioEspacio(List.of(gerente)));
+        });
+        assertEquals("Solo los despachos pueden tener como propietario a persona/as",thrown.getMessage());
+        thrown = assertThrows(Exception.class,()->{
+            seminario.asignarAEspacio(new PropietarioEspacio(List.of(gerente)));
+        });
+        assertEquals("Solo los despachos pueden tener como propietario a persona/as",thrown.getMessage());
+
+    }
+    @Test
+    void requisito15(){
+
+    }
     @Test
     void requisito16() throws Exception{
         //yyyy-mm-dd
@@ -483,14 +566,15 @@ public class TestRequisitos {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
-
         Exception thrown = assertThrows(Exception.class,()->{new Espacio(new Reservabilidad(true, CategoriaReserva.DESPACHO), 150, 60,
                 CategoriaEspacio.DESPACHO, edificio, new PropietarioEspacio(Eina.EINA));
         });
         assertEquals("Los despachos no pueden ser reservables",thrown.getMessage());
-        Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
-                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(List.of(docente)));
+
         thrown = assertThrows(Exception.class,()->{
             despacho.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
         });

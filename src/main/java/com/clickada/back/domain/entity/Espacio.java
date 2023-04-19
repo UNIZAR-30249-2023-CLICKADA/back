@@ -52,7 +52,7 @@ public class Espacio extends Edificio {
         this.horaInicio = edificio.getHoraInicio();
         this.horaFin = edificio.getHoraFin();
         this.numMaxOcupantes = numMaxOcupantes;
-        this.propietarioEspacio = propietarioEspacio;
+        this.asignarAEspacio(propietarioEspacio);
     }
 
     public void modificarReservabilidad(Persona persona,Reservabilidad nuevaReservabilidad) throws Exception {
@@ -71,32 +71,33 @@ public class Espacio extends Edificio {
         this.horaFin=horaFinNueva;
         this.horaInicio = horaInicioNueva;
     }
-    public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
-        if((this.categoriaEspacio.equals(CategoriaEspacio.AULA) ||
-                this.categoriaEspacio.equals(CategoriaEspacio.SALA_COMUN) ||
-        this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) ||
-        this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO))
-         && propietarioEspacio.getIndexPropietario()==0){ // EINA
-            this.propietarioEspacio = propietarioEspacio;
-            return true;
-        }else if(propietarioEspacio.getIndexPropietario()==1 &&
-                (this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO) ||
-                this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) ||
-                this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO))){ // Departamento
-            this.propietarioEspacio = propietarioEspacio;
-            return true;
-        } else if(propietarioEspacio.getIndexPropietario() == 2 &&
-                this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO)){
-
+    public void asignarAEspacio(PropietarioEspacio propietarioEspacio) throws Exception {
+        if(propietarioEspacio.esEina()){
+            if(     !this.categoriaEspacio.equals(CategoriaEspacio.AULA) &&
+                    !this.categoriaEspacio.equals(CategoriaEspacio.SALA_COMUN) &&
+                    !this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) &&
+                    !this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO)){
+                throw new Exception(this.categoriaEspacio+" no puede tener a la Eina como propietario de espacio");
+            }
+        }
+        if(propietarioEspacio.esDepartamento()){
+            if(     !this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO) &&
+                    !this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO) &&
+                    !this.categoriaEspacio.equals(CategoriaEspacio.LABORATORIO)){
+                throw new Exception(this.categoriaEspacio+" no puede tener a un departamento como propietario de espacio");
+            }
+        }
+        if(propietarioEspacio.esPersonas()){
+            if(!this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO)){
+                throw new Exception("Solo los despachos pueden tener como propietario a persona/as");
+            }
             for(Persona persona : propietarioEspacio.personas){
                 if(!persona.asignable()){
-                    return false;
+                    throw new Exception("La persona/as tienen que ser investiador contratado o bien");
                 }
             }
-            this.propietarioEspacio = propietarioEspacio;
-            return true;
         }
-        return false;
+        this.propietarioEspacio = propietarioEspacio;
     }
 
     public boolean modificarPorcentajeOcupacion(Persona persona, int porcentaje){

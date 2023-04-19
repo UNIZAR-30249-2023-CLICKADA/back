@@ -77,10 +77,11 @@ public class Persona {
     }
     public boolean asignable(){
         return this.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR) ||
-                this.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                (this.rolPrincipal().equals(Rol.GERENTE) && this.rolSecundario()!=null);
+                this.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) || gerente_docente();
     }
-
+    public boolean gerente_docente(){
+        return this.roles.size()>1;
+    }
     public Rol rolPrincipal(){
         return this.roles.get(0);
     }

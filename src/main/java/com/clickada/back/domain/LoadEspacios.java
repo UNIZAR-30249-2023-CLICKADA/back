@@ -1,6 +1,7 @@
 package com.clickada.back.domain;
 
 import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.auxClasses.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class LoadEspacios {
         Espacio espacio = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA), 20L,60,
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio espacio2 = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO), 25L, 60,
-                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
 
         espacioRepository.save(espacio);
         espacioRepository.save(espacio2);
