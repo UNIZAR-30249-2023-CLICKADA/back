@@ -1,6 +1,7 @@
 package com.clickada.back.infrastructure;
 
 import com.clickada.back.application.EspacioService;
+import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import com.clickada.back.dtos.ReservaAutomaticaDto;
@@ -21,11 +22,13 @@ import java.util.UUID;
 public class EspacioController {
     EspacioService espacioService;
     ReservaService reservaService;
+    PersonaService personaService;
 
     @Autowired
-    public EspacioController(EspacioService espacioService,ReservaService reservaService) {
+    public EspacioController(EspacioService espacioService,ReservaService reservaService,PersonaService personaService) {
         this.espacioService = espacioService;
         this.reservaService = reservaService;
+        this.personaService = personaService;
     }
     @GetMapping("/todosEspacios")
     ResponseEntity<?> todosEspacios(){
@@ -80,6 +83,27 @@ public class EspacioController {
         espacioService.eliminarTodos();
         reservaService.eliminarTodas();
         return new ResponseEntity<>("Eliminados datos de las bases de datos", HttpStatus.OK);
+    }
+
+    @PutMapping("/cambiarPorcentajeUsoEspacio")
+    ResponseEntity<?> reservarEspacio(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam double porcentaje){
+        try{
+            espacioService.cambiarPorcentajeEspacio(idPersona,idEspacio,porcentaje);
+            return new ResponseEntity<>("Porcentaje cambiado correctamente", HttpStatus.OK);
+
+        }catch(Exception e){
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PutMapping("/cambiarPorcentajeUsoEdificio")
+    ResponseEntity<?> reservarEdificio(@RequestParam UUID idPersona, @RequestParam double porcentaje){
+        try{
+            espacioService.cambiarPorcentajeEdificio(idPersona,porcentaje);
+
+            return new ResponseEntity<>("Porcentaje cambiado correctamente", HttpStatus.OK);
+        }catch(Exception e){
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

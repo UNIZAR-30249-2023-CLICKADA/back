@@ -7,6 +7,7 @@ import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class PersonaService {
 
     @Autowired
     public PersonaService(PersonaRepository personaRepository){ this.personaRepository = personaRepository;}
-
+    @Transactional
     public boolean cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
         Rol rolEnum = Rol.getRolByString(rol);
         Departamento departamento = Departamento.getDepartamentoByString(departamentoString);
@@ -32,11 +33,11 @@ public class PersonaService {
         }
         return false;
     }
-
+    @Transactional (readOnly = true)
     public List<Persona> todasPersonas(){
         return personaRepository.findAll();
     }
-
+    @Transactional (readOnly = true)
     public boolean aptoParaCambiar(UUID idPersona) {
         if(personaRepository.existsById(idPersona)){
             Persona persona = personaRepository.getById(idPersona);
@@ -44,12 +45,13 @@ public class PersonaService {
         }
         return false;
     }
+    @Transactional (readOnly = true)
     public boolean loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
         if (p!=null) return p.getContrasenya().equals(pass);
         else return false;
     }
-
+    @Transactional (readOnly = true)
     public List<CategoriaReserva> permisosDeReserva(UUID idPersona) {
         List<CategoriaReserva> l = new ArrayList<>();
         if (personaRepository.existsById(idPersona)) {

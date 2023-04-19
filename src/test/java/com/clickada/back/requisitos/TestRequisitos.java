@@ -176,7 +176,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio espacio = new Espacio(new Reservabilidad(false,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
@@ -233,7 +233,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
 
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
@@ -289,7 +289,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio sala_comun = new Espacio(new Reservabilidad(),150,60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
@@ -300,7 +300,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
@@ -315,7 +315,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
 
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
@@ -403,7 +403,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio laboratorio2 = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),100, 60,
@@ -461,7 +461,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
@@ -499,7 +499,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
@@ -567,7 +567,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Exception thrown = assertThrows(Exception.class,()->{new Espacio(new Reservabilidad(true, CategoriaReserva.DESPACHO), 150, 60,
                 CategoriaEspacio.DESPACHO, edificio, new PropietarioEspacio(Eina.EINA));
         });
@@ -589,7 +589,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio laboratorio2 = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),100, 60,
@@ -642,7 +642,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
 
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
@@ -679,7 +679,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
 
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
@@ -727,7 +727,7 @@ public class TestRequisitos {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                List.of(LocalDate.of(2023,1,1)),100);
+                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
 
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
@@ -737,11 +737,11 @@ public class TestRequisitos {
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().plusDays(1));
         Reserva reserva2 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().plusDays(1));
         Reserva reserva3 = new Reserva(new PeriodoReserva(LocalTime.of(17,0),LocalTime.of(19,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().minusDays(1));
         Reserva reserva4 = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,25));
         Reserva reserva5 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),

@@ -96,7 +96,10 @@ public class Espacio{
         this.propietarioEspacio = propietarioEspacio;
     }
 
-    public void modificarPorcentajeOcupacion(double porcentajeNuevo) throws Exception {
+    public void modificarPorcentajeOcupacion(Persona persona, double porcentajeNuevo) throws Exception {
+        if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
+            throw new Exception("Si no es GERENTE no puede Modificar el porcentaje de uso de un espacio");
+        }
         if(porcentajeNuevo>100 || porcentajeNuevo<0) throw new Exception("Porcentaje No valido");
         this.porcentajeUsoPermitido = porcentajeNuevo;
     }

@@ -8,12 +8,15 @@ import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
+import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.Executors;
 
 @Service
 public class EspacioService {
@@ -21,20 +24,24 @@ public class EspacioService {
     PersonaRepository personaRepository;
     ReservaRepository  reservaRepository;
     EdificioRepository edificioRepository;
+    EnviaMail servicioCorreo;
 
     @Autowired
     public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
-                          ReservaRepository reservaRepository,EdificioRepository edificioRepository){
+                          ReservaRepository reservaRepository,EdificioRepository edificioRepository,
+                          EnviaMail servicioCorreo){
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
         this.edificioRepository = edificioRepository;
+        this.servicioCorreo = servicioCorreo;
     }
-
+    @Transactional (readOnly = true)
     public List<Espacio> todosEspacios() {
         return this.espacioRepository.findAll();
     }
 
+    @Transactional
     public boolean cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
         if (espacioRepository.existsById(idEspacio) && personaRepository.existsById(idPersona)) {
             Espacio espacio = espacioRepository.getById(idEspacio);
@@ -46,6 +53,7 @@ public class EspacioService {
         return false;
     }
 
+    @Transactional
     public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
                                    LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) throws Exception {
         //Habrá que controlar todas las restricciones
@@ -120,11 +128,12 @@ public class EspacioService {
         }
         return true;
     }
-
+    @Transactional
     public void eliminarTodos() {
         this.espacioRepository.deleteAll();
         this.personaRepository.deleteAll();
     }
+    @Transactional
     public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas,TipoUso tipoDeUso, String detalles) throws Exception {
         if(numEspacios>3){
             throw new Exception("Demasiados espacios para la reserva automatica");
@@ -183,6 +192,7 @@ public class EspacioService {
 
         return listaAdevolver;
     }
+    @Transactional
     private List<Espacio> espaciosDisponibles(List<Reserva> reservaList,List<UUID> espacioList, PeriodoReserva periodoReserva){
         List<Espacio> espacioListDisponible = new ArrayList<>();
         if(reservaList!=null) {
@@ -203,10 +213,12 @@ public class EspacioService {
         }
         return espacioListDisponible;
     }
-
-    public void cambiarPorcentajeEdificio(double porcentajeNuevo) throws Exception{
+    @Transactional
+    public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
         //Cambiar todos los espacios
         //tener de vuelta los espacios a los que ha afectado
+        Persona persona = this.personaRepository.getById(idPersona);
+        if(persona==null) throw new Exception("La persona no existe");
         Edificio edificio = getUnicoEdificio();
         edificio.cambiarPorcentajeEdificio(porcentajeNuevo);
         edificioRepository.save(edificio);
@@ -217,35 +229,35 @@ public class EspacioService {
             if(espacio.getPorcentajeUsoPermitido()>porcentajeNuevo){ //le afecta
                 espaciosAfectados.add(espacio.getIdEspacio());
             }
-            espacio.modificarPorcentajeOcupacion(porcentajeNuevo);
+            espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
         }
         //Comprobamos las reservasVivas que tienen esos espacios asignados
-        List<Reserva> reservasInvalidas = comprobarReservasVivas(espaciosAfectados);
-
-        notificar(reservasInvalidas);
+        comprobarReservasVivas(espaciosAfectados);
         //notificar las reservas que con el cambio no han podido cumplir los requisitos
     }
     private Edificio getUnicoEdificio(){
         return edificioRepository.findAll().get(0);
     }
-    public void cambiarPorcentajeEspacio(UUID idEspacio,double porcentajeNuevo) throws Exception{
+    @Transactional
+    public void cambiarPorcentajeEspacio(UUID idPersona, UUID idEspacio,double porcentajeNuevo) throws Exception{
+        Persona persona = this.personaRepository.getById(idPersona);
+        if(persona==null) throw new Exception("La persona no existe");
         //hacer el cambio
         Espacio espacio = espacioRepository.getById(idEspacio);
         if(espacio==null){
             throw new Exception("No existe el espacio con ese id");
         }
-        espacio.modificarPorcentajeOcupacion(porcentajeNuevo);
+        espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
         espacioRepository.save(espacio);
         //Comprobamos las reservasVivas que tienen ese espacio asignado
-        List<Reserva> reservasInvalidas = comprobarReservasVivas(List.of(idEspacio));
-        //notificar las reservas que con el cambio no han podido cumplir los requisitos
-        notificar(reservasInvalidas);
+        // se notifica las reservas que con el cambio no han podido cumplir los requisitos
+        comprobarReservasVivas(List.of(idEspacio));
     }
     /*
     * Dodo una lista de espacios, comprueba las reservasVivas que tengan asignado ese espacio
     * y devuelve la lista de reservas que no cumplen los requisitos
     * */
-    private List<Reserva> comprobarReservasVivas(List<UUID> idEspacios) throws Exception{
+    private void comprobarReservasVivas(List<UUID> idEspacios) throws Exception{
         List<Reserva> reservasVivas = new java.util.ArrayList<>(reservaRepository.findAll().stream()
                 .filter(reserva -> reserva.getFecha().isAfter(LocalDate.now())).toList());
         reservasVivas.addAll(reservaRepository.findByFecha(LocalDate.now())
@@ -255,20 +267,21 @@ public class EspacioService {
                         .anyMatch(idEspacios::contains))
                 .toList();
         int totalAsistentesPermitidos;
-        List<Reserva> reservasInvalidas = new ArrayList<>();
+
         for(Reserva reserva  : reservasVivas){
             totalAsistentesPermitidos = 0;
             for(UUID idEspacio : reserva.getIdEspacios()){
                 totalAsistentesPermitidos+=espacioRepository.getById(idEspacio).getTotalAsistentesPermitidos();
             }
             if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
-                reservasInvalidas.add(reserva);
+                String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
+
+                Executors.newSingleThreadExecutor()
+                        .execute(() -> servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
+
+                reservaRepository.delete(reserva);
                 reservaRepository.delete(reserva);
             }
         }
-        return reservasInvalidas;
-    }
-    private void notificar(List<Reserva> reservasInvalidas){
-        //TODO COMPLETAR CON LA NOTIFICACION VIA CORREO
     }
 }

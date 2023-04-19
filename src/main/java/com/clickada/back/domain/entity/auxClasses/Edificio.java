@@ -1,5 +1,6 @@
 package com.clickada.back.domain.entity.auxClasses;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,14 +18,14 @@ import java.util.UUID;
 @Entity
 public class Edificio {
     @Id
-    private UUID idEdificio;
+    UUID idEdificio;
 
     //Horario disponible de reserva
     protected LocalTime horaInicio;
     protected LocalTime horaFin;
     protected double porcentajeUsoPermitido;
-    List<LocalDate> diasNoReservables;
-    public Edificio(LocalTime horaInicio, LocalTime horaFin, List<LocalDate> diasNoReservables,
+    ArrayList<LocalDate> diasNoReservables;
+    public Edificio(LocalTime horaInicio, LocalTime horaFin, ArrayList<LocalDate> diasNoReservables,
                     double porcentajeUsoPermitido) throws Exception {
         this.horaFin = horaFin;
         this.horaInicio = horaInicio;
