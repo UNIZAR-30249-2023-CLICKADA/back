@@ -389,6 +389,8 @@ public class TestRequisitos {
         });
         assertEquals("Solo los despachos pueden tener como propietario a persona/as",thrown.getMessage());
 
+
+
     }
     @Test
     void requisito15(){

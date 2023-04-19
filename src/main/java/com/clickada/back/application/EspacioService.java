@@ -1,5 +1,6 @@
 package com.clickada.back.application;
 
+import com.clickada.back.domain.EdificioRepository;
 import com.clickada.back.domain.EspacioRepository;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
@@ -19,13 +20,15 @@ public class EspacioService {
     EspacioRepository espacioRepository;
     PersonaRepository personaRepository;
     ReservaRepository  reservaRepository;
+    EdificioRepository edificioRepository;
 
     @Autowired
     public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
-                          ReservaRepository reservaRepository){
+                          ReservaRepository reservaRepository,EdificioRepository edificioRepository){
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
         this.reservaRepository = reservaRepository;
+        this.edificioRepository = edificioRepository;
     }
 
     public List<Espacio> todosEspacios() {
@@ -55,25 +58,22 @@ public class EspacioService {
         if(persona!= null){ // Comprueba permisos de ese rol
             for(UUID idEspacio: idEspacios){
                 Espacio espacio = espacioRepository.getById(idEspacio);
-                if(espacio != null && !espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
-                        espacio.getReservabilidad() !=null &&
-                !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
-                        persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
+                if(espacio == null) throw new Exception("El espacio que se quiere reservar no existe");
+                if( espacio.getReservabilidad() !=null &&
+                    !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
+                    persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
                     throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
                 }
-                if(espacio != null && espacio.getCategoriaEspacio().equals(CategoriaEspacio.AULA) &&
-                        espacio.getReservabilidad() !=null &&
-                        espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
-                        persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
+                if( espacio.getReservabilidad() !=null &&
+                    espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
+                    persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
                     throw new Exception("Un Tecnico de laboratorio no puede reservar aulas");
                 }
-                if(espacio != null && espacio.getCategoriaEspacio().equals(CategoriaEspacio.LABORATORIO) &&
-                        espacio.getReservabilidad() !=null &&
-                        espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
-                        (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
-                            persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                            persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR)
-                        )){
+                if( espacio.getReservabilidad() !=null &&
+                    espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
+                    (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
+                        persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                        persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR))){
                     if(!espacio.getPropietarioEspacio().esDepartamento()){
                         throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
                                 "laboratiorios que esten adscritos a un departamento");
@@ -119,14 +119,6 @@ public class EspacioService {
             }
         }
         return true;
-    }
-    public List<Reserva> obtenerReservasVivas(UUID idPersona) {
-        List<Reserva> l = new ArrayList<>();
-        if(this.personaRepository.existsById(idPersona) &&
-                this.personaRepository.getById(idPersona).rolPrincipal().equals(Rol.GERENTE)){
-            //l.addAll(this.reservaRepository.findAllAfterTime()) ;
-        }
-        return l;
     }
 
     public void eliminarTodos() {
@@ -210,5 +202,73 @@ public class EspacioService {
             }
         }
         return espacioListDisponible;
+    }
+
+    public void cambiarPorcentajeEdificio(double porcentajeNuevo) throws Exception{
+        //Cambiar todos los espacios
+        //tener de vuelta los espacios a los que ha afectado
+        Edificio edificio = getUnicoEdificio();
+        edificio.cambiarPorcentajeEdificio(porcentajeNuevo);
+        edificioRepository.save(edificio);
+
+        List<Espacio> todosEspacios = todosEspacios();
+        List<UUID> espaciosAfectados = new ArrayList<>();
+        for(Espacio espacio: todosEspacios){
+            if(espacio.getPorcentajeUsoPermitido()>porcentajeNuevo){ //le afecta
+                espaciosAfectados.add(espacio.getIdEspacio());
+            }
+            espacio.modificarPorcentajeOcupacion(porcentajeNuevo);
+        }
+        //Comprobamos las reservasVivas que tienen esos espacios asignados
+        List<Reserva> reservasInvalidas = comprobarReservasVivas(espaciosAfectados);
+
+        notificar(reservasInvalidas);
+        //notificar las reservas que con el cambio no han podido cumplir los requisitos
+    }
+    private Edificio getUnicoEdificio(){
+        return edificioRepository.findAll().get(0);
+    }
+    public void cambiarPorcentajeEspacio(UUID idEspacio,double porcentajeNuevo) throws Exception{
+        //hacer el cambio
+        Espacio espacio = espacioRepository.getById(idEspacio);
+        if(espacio==null){
+            throw new Exception("No existe el espacio con ese id");
+        }
+        espacio.modificarPorcentajeOcupacion(porcentajeNuevo);
+        espacioRepository.save(espacio);
+        //Comprobamos las reservasVivas que tienen ese espacio asignado
+        List<Reserva> reservasInvalidas = comprobarReservasVivas(List.of(idEspacio));
+        //notificar las reservas que con el cambio no han podido cumplir los requisitos
+        notificar(reservasInvalidas);
+    }
+    /*
+    * Dodo una lista de espacios, comprueba las reservasVivas que tengan asignado ese espacio
+    * y devuelve la lista de reservas que no cumplen los requisitos
+    * */
+    private List<Reserva> comprobarReservasVivas(List<UUID> idEspacios) throws Exception{
+        List<Reserva> reservasVivas = new java.util.ArrayList<>(reservaRepository.findAll().stream()
+                .filter(reserva -> reserva.getFecha().isAfter(LocalDate.now())).toList());
+        reservasVivas.addAll(reservaRepository.findByFecha(LocalDate.now())
+                .stream().filter(reserva1 -> reserva1.getPeriodoReserva().getHoraFin().isAfter(LocalTime.now()))
+                .toList());
+        reservasVivas.stream().filter(reserva1 -> reserva1.getIdEspacios().stream()
+                        .anyMatch(idEspacios::contains))
+                .toList();
+        int totalAsistentesPermitidos;
+        List<Reserva> reservasInvalidas = new ArrayList<>();
+        for(Reserva reserva  : reservasVivas){
+            totalAsistentesPermitidos = 0;
+            for(UUID idEspacio : reserva.getIdEspacios()){
+                totalAsistentesPermitidos+=espacioRepository.getById(idEspacio).getTotalAsistentesPermitidos();
+            }
+            if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
+                reservasInvalidas.add(reserva);
+                reservaRepository.delete(reserva);
+            }
+        }
+        return reservasInvalidas;
+    }
+    private void notificar(List<Reserva> reservasInvalidas){
+        //TODO COMPLETAR CON LA NOTIFICACION VIA CORREO
     }
 }

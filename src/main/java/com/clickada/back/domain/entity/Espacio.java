@@ -8,11 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -20,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Espacio extends Edificio {
+public class Espacio{
     @Id
     UUID idEspacio;
 
@@ -38,12 +34,11 @@ public class Espacio extends Edificio {
     LocalTime horaFin;
 
     PropietarioEspacio propietarioEspacio;
+    UUID idEdificio;
 
     public Espacio(Reservabilidad reservabilidad, double tamanyo,int numMaxOcupantes, CategoriaEspacio categoriaEspacio,
                    Edificio edificio,PropietarioEspacio propietarioEspacio)
             throws Exception {
-        super(edificio.getHoraInicio(),edificio.getHoraFin(),edificio.getDiasNoReservables(),
-                edificio.getPorcentajeUsoPermitido());
         idEspacio = UUID.randomUUID();
         this.reservabilidad = reservabilidad;
         this.tamanyo = tamanyo;
@@ -52,6 +47,7 @@ public class Espacio extends Edificio {
         this.horaInicio = edificio.getHoraInicio();
         this.horaFin = edificio.getHoraFin();
         this.numMaxOcupantes = numMaxOcupantes;
+        this.idEdificio = edificio.getIdEdificio();
         this.asignarAEspacio(propietarioEspacio);
     }
 
@@ -100,12 +96,9 @@ public class Espacio extends Edificio {
         this.propietarioEspacio = propietarioEspacio;
     }
 
-    public boolean modificarPorcentajeOcupacion(Persona persona, int porcentaje){
-        if(persona.getRoles().get(0).equals(Rol.GERENTE)){
-            this.porcentajeUsoPermitido = porcentaje;
-            return true;
-        }
-        return false;
+    public void modificarPorcentajeOcupacion(double porcentajeNuevo) throws Exception {
+        if(porcentajeNuevo>100 || porcentajeNuevo<0) throw new Exception("Porcentaje No valido");
+        this.porcentajeUsoPermitido = porcentajeNuevo;
     }
 
     public int getTotalAsistentesPermitidos (){
