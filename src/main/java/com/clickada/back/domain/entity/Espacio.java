@@ -24,6 +24,8 @@ public class Espacio extends Edificio {
     @Id
     UUID idEspacio;
 
+    String nombre;
+
     CategoriaEspacio categoriaEspacio;
 
     double tamanyo; //Tamaño del espacio en m2

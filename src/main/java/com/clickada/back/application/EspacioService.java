@@ -224,8 +224,6 @@ public class EspacioService {
             if(e.modificarPorcentajeOcupacion(p,porcentaje)) {
                 this.espacioRepository.save(e);
                 //Si había reservas de este espacio, hay que comprobar si ahora son inválidas y avisar al usuario
-                List<UUID> esp = new ArrayList<>();
-                esp.add(idEspacio);
                 List<Reserva> reservas = this.reservaRepository.findAll();
                 for (Reserva reserva : reservas) {
                     if (reserva.getIdEspacios().contains(idEspacio) && reserva.getNumOcupantes() >
@@ -233,8 +231,8 @@ public class EspacioService {
                         //Se borrará reserva, hay que avisar.
                         String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
                         Executors.newSingleThreadExecutor().execute(() ->
-                                servicioCorreo.enviarCorreo(mail,reserva.getPeriodoReserva().toString()));
-
+                                servicioCorreo.enviarCorreo(mail,1,e.getNombre(),reserva.getFecha(),
+                                        reserva.getPeriodoReserva().getHoraInicio()));
                         reservaRepository.delete(reserva);
                     }
                 }

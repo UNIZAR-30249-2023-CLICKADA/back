@@ -45,6 +45,18 @@ public class ReservaService {
                 .toList());
         return resultado;
     }
+
+    @Transactional
+    public void eliminarReserva(UUID idPersona,UUID idReserva) throws Exception {
+        if(!personaRepository.existsById(idPersona)) throw new Exception("Usuario no registrado");
+        if(!reservaRepository.existsById(idReserva)) throw new Exception("No existe la reserva");
+        Persona persona = personaRepository.getById(idPersona);
+        if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
+            throw new Exception("Sólo los gerentes pueden eliminar reservas");
+        }
+        this.reservaRepository.deleteById(idReserva);
+    }
+
     public void eliminarTodas() {
         this.reservaRepository.deleteAll();
     }
