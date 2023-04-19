@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ee868f9d-e4bb-47a8-8ca0-d58d2014f05b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/AppTier/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AppTier/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/down.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/down.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/BackApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/BackApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/EspacioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/EspacioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/PersonaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/PersonaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/ReservaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/ReservaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/EspacioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/EspacioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/LoadEspacios.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/LoadEspacios.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/LoadPersonas.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/LoadPersonas.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/PersonaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/PersonaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/ReservaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/ReservaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Espacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Espacio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Persona.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Persona.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Reserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Reserva.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Adscripcion.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Adscripcion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaEspacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaEspacio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaReserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaReserva.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Departamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Departamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Edificio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Edificio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Eina.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Eina.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/PeriodoReserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/PeriodoReserva.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Politica.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Politica.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/PropietarioEspacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/PropietarioEspacio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Reservabilidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Reservabilidad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Rol.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Rol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/TipoUso.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/TipoUso.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/dtos/ReservaAutomaticaDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/dtos/ReservaAutomaticaDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/dtos/ReservaDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/dtos/ReservaDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/EnviaMail.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/EnviaMail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/EspacioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/EspacioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/PersonaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/PersonaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/ReservaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/ReservaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/BackApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/BackApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/requisitos/TestRequisitos.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/requisitos/TestRequisitos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/requisitos/TestServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/requisitos/TestServicios.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/up.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/up.sh" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OPEN_IN_BROWSER" value="true" />
+    <option name="OUTPUT_DIRECTORY" value="C:\Users\Usuario\Documents\GitHub\back\htmlReport" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2MwxYuC9syxqhO3DnfrTKRJS7Gv" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "openjdk-19",
+    "last_opened_file_path": "C:/Users/Usuario/Documents/GitHub/back/AppTier",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors",
+    "spring.configuration.checksum": "469bba0a564235dfceede42db14f17b0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Usuario\Documents\GitHub\back" />
+      <recent name="C:\Users\Usuario\Documents\GitHub\back\appServer" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.clickada.back.domain" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.BackApplication">
+    <configuration name="BackApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.clickada.back.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.clickada.back" />
+      <option name="MAIN_CLASS_NAME" value="com.clickada.back.BackApplicationTests" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.clickada.back.domain.entity.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.clickada.back.requisitos" />
+      <option name="MAIN_CLASS_NAME" value="com.clickada.back.requisitos.PersonaTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonaTest.testLoginPersona" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.clickada.back.requisitos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.clickada.back.requisitos" />
+      <option name="MAIN_CLASS_NAME" value="com.clickada.back.requisitos.PersonaTest" />
+      <option name="METHOD_NAME" value="testLoginPersona" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestRequisitos.requisito25" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.clickada.back.requisitos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.clickada.back.requisitos" />
+      <option name="MAIN_CLASS_NAME" value="com.clickada.back.requisitos.TestRequisitos" />
+      <option name="METHOD_NAME" value="requisito25" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TodosTests" type="JUnit" factoryName="JUnit">
+      <module name="back" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BackApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.clickada.back.BackApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.clickada.back.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebTierApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="WebTier" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.clickada.back.webtier.WebTierApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.TodosTests" />
+      <item itemvalue="JUnit.TestRequisitos.requisito25" />
+      <item itemvalue="JUnit.BackApplicationTests" />
+      <item itemvalue="JUnit.PersonaTest" />
+      <item itemvalue="JUnit.PersonaTest.testLoginPersona" />
+      <item itemvalue="Spring Boot.WebTierApplication" />
+      <item itemvalue="Spring Boot.BackApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.BackApplication" />
+        <item itemvalue="JUnit.TestRequisitos.requisito25" />
+        <item itemvalue="JUnit.BackApplicationTests" />
+        <item itemvalue="JUnit.PersonaTest" />
+        <item itemvalue="JUnit.PersonaTest.testLoginPersona" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringBeansView">
+    <option name="beanDetailsProportion" value="0.3" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ee868f9d-e4bb-47a8-8ca0-d58d2014f05b" name="Changes" comment="" />
+      <created>1678692506261</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678692506261</updated>
+      <workItem from="1678692509283" duration="902000" />
+      <workItem from="1678693514339" duration="5404000" />
+      <workItem from="1678917069114" duration="3116000" />
+      <workItem from="1678957761799" duration="1146000" />
+      <workItem from="1679004393311" duration="5055000" />
+      <workItem from="1679041825507" duration="8971000" />
+      <workItem from="1679089291337" duration="5232000" />
+      <workItem from="1679126286984" duration="31355000" />
+      <workItem from="1679385771751" duration="6593000" />
+      <workItem from="1679554824127" duration="43722000" />
+      <workItem from="1680124609489" duration="40000" />
+      <workItem from="1680160848580" duration="2641000" />
+      <workItem from="1680248714840" duration="5566000" />
+      <workItem from="1680509060431" duration="1770000" />
+      <workItem from="1680614095454" duration="26310000" />
+      <workItem from="1680936134413" duration="4054000" />
+      <workItem from="1680946780869" duration="1439000" />
+      <workItem from="1680948277843" duration="2052000" />
+      <workItem from="1680950425402" duration="17495000" />
+      <workItem from="1681050206891" duration="10713000" />
+      <workItem from="1681282502174" duration="21299000" />
+      <workItem from="1681368563349" duration="20647000" />
+      <workItem from="1681462987641" duration="2722000" />
+      <workItem from="1681715423209" duration="1229000" />
+      <workItem from="1681764698699" duration="39403000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.clickada.back.domain.entity.Espacio$HibernateProxy$cfyB2E31" memberName="$$_hibernate_interceptor" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/back$TodosTests.ic" NAME="TodosTests Coverage Results" MODIFIED="1681850979737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/back$PersonaTest.ic" NAME="PersonaTest Coverage Results" MODIFIED="1680678205106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.clickada.back.requisitos.*</FILTER>
+      <FILTER>com.clickada.back.domain.entity.Persona</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/back$BackApplicationTests.ic" NAME="BackApplicationTests Coverage Results" MODIFIED="1680678333447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.clickada.back.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/back$BackApplication.ic" NAME="BackApplication Coverage Results" MODIFIED="1679949734778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.clickada.back.*</FILTER>
+    </SUITE>
+  </component>
+</project>

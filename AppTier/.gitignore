@@ -1,6 +1,6 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
+!appServer/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -15,7 +15,7 @@ target/
 
 ### IntelliJ IDEA ###
 htmlReport
-.idea
+appServer/.idea
 *.iws
 *.iml
 *.ipr
@@ -34,7 +34,7 @@ build/
 .vscode/
 
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+!appServer/.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
@@ -167,8 +167,8 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
+appServer/.mvn/timing.properties
+appServer/.mvn/wrapper/maven-wrapper.jar
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -196,7 +196,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ### IntelliJ IDEA ###
-.idea
+appServer/.idea
 *.iws
 *.iml
 *.ipr
@@ -232,5 +232,5 @@ dependency-reduced-pom.xml
 .gradle
 README.html
 *.iml
-.idea
+appServer/.idea
 .exercism

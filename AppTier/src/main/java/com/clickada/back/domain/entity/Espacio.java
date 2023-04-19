@@ -70,7 +70,7 @@ public class Espacio extends Edificio {
         if(this.horaInicio.isAfter(horaInicioNueva) || this.horaFin.isBefore(horaFinNueva)){
             throw new Exception("Las horas nuevas de reserva tienen que estar dentro del periodo de reseerva del Edificio");
         }
-        this.horaFin=horaFinNueva;
+        this.horaFin = horaFinNueva;
         this.horaInicio = horaInicioNueva;
     }
     public boolean asignarAEspacio(PropietarioEspacio propietarioEspacio){
