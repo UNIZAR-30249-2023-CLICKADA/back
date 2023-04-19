@@ -78,7 +78,7 @@ public class EspacioService {
                         throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
                                 "laboratiorios que esten adscritos a un departamento");
                     }
-                    if(!espacio.getPropietarioEspacio().departamento.equals(persona.getAdscripcion().departamento)){
+                    if(!espacio.getPropietarioEspacio().departamento.equals(persona.getDepartamento())){
                         throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
                                 "laboratorios de su mismo departamento");
                     }

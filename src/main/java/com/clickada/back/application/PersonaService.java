@@ -3,6 +3,7 @@ package com.clickada.back.application;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
+import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,13 @@ public class PersonaService {
     @Autowired
     public PersonaService(PersonaRepository personaRepository){ this.personaRepository = personaRepository;}
 
-    public boolean cambiarRol(UUID idPersona, String rol) {
+    public boolean cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
         Rol rolEnum = Rol.getRolByString(rol);
+        Departamento departamento = Departamento.getDepartamentoByString(departamentoString);
         if(personaRepository.existsById(idPersona) && rolEnum != null){
 
             Persona persona = personaRepository.getById(idPersona);
-            persona.cambiarRol(rolEnum);
+            persona.cambiarRol(rolEnum,departamento);
             personaRepository.save(persona);
             return true;
         }

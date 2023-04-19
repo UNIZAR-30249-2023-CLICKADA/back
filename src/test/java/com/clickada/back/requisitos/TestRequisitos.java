@@ -48,44 +48,62 @@ public class TestRequisitos {
     @InjectMocks
     ReservaService reservaService;
     @Test
-    void requisito2(){
-        Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE);
+    void requisito2() throws Exception {
+        Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE,null);
 
         Assert.state(persona.getEMail().equals("pepe@gmail.com"),"Conserje");
     }
 
     @Test
-    public void requisito3(){
+    public void requisito3() throws Exception {
         Persona per = new Persona("Señor Tst","unico@mail.com", "123",
-                Rol.getRolByString("Estudiante")) ;
+                Rol.getRolByString("Estudiante"),null) ;
         assertEquals(Rol.ESTUDIANTE,per.rolPrincipal());
 
-        per.cambiarRol(Rol.getRolByString("Conserje"));
+        per.cambiarRol(Rol.getRolByString("Conserje"),null);
         assertEquals(Rol.CONSERJE,per.rolPrincipal());
 
-        per.cambiarRol(Rol.getRolByString("Investigador"));
+        Exception thrown = assertThrows(Exception.class,()->{
+            per.cambiarRol(Rol.getRolByString("Investigador"),null);
+        });
+        assertEquals("Este rol necesita estar asignado a un Departamento",thrown.getMessage());
+        assertEquals(Rol.CONSERJE,per.rolPrincipal());
+
+        per.cambiarRol(Rol.getRolByString("Investigador"),Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
         assertEquals(Rol.INVESTIGADOR_CONTRATADO,per.rolPrincipal());
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,per.getDepartamento());
 
-        per.cambiarRol(Rol.getRolByString("Docente"));
+        per.cambiarRol(Rol.getRolByString("Docente"),null);
         assertEquals(Rol.DOCENTE_INVESTIGADOR,per.rolPrincipal());
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,per.getDepartamento());
 
-        per.cambiarRol(Rol.getRolByString("Tecnico"));
+        per.cambiarRol(Rol.getRolByString("Tecnico"),null);
         assertEquals(Rol.TECNICO_LABORATORIO,per.rolPrincipal());
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,per.getDepartamento());
 
-        per.cambiarRol(Rol.getRolByString("Gerente"));
+        per.cambiarRol(Rol.getRolByString("Gerente"),Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         assertEquals(Rol.GERENTE,per.rolPrincipal());
+        assertNull(per.getDepartamento());
 
-        per.cambiarRol(Rol.getRolByString("RolErroneo"));
+        thrown = assertThrows(Exception.class,()->{
+            per.anyadirRol(null);
+                });
+        assertEquals("No es Gerente o no existe el departamento y necesita uno",thrown.getMessage());
+
         //Debe mantener el anterior
         assertEquals(Rol.GERENTE,per.rolPrincipal());
+        assertEquals(1,per.getRoles().size());
+
+        per.anyadirRol(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        assertEquals(Rol.DOCENTE_INVESTIGADOR,per.rolSecundario());
 
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(per);
-        boolean resultado = personaService.cambiarRol(per.getIdPersona(),"Docente");
+        boolean resultado = personaService.cambiarRol(per.getIdPersona(),"Docente","Ingenieria");
         assertTrue(resultado);
-        resultado = personaService.cambiarRol(per.getIdPersona(),"Tecnico");
+        resultado = personaService.cambiarRol(per.getIdPersona(),"Tecnico","Informatica");
         assertTrue(resultado);
-        resultado = personaService.cambiarRol(per.getIdPersona(),"Gerente");
+        resultado = personaService.cambiarRol(per.getIdPersona(),"Gerente",null);
         assertTrue(resultado);
 
     }
@@ -97,45 +115,38 @@ public class TestRequisitos {
         Rol rol_docente = Rol.DOCENTE_INVESTIGADOR;
         Rol rol_gerente = Rol.GERENTE;
 
-        Persona persona = new Persona(nombre, eMail,"123",rol_docente);
+        Persona persona = new Persona(nombre, eMail,"123",rol_docente,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Exception thrown = assertThrows(Exception.class,()-> {
-            persona.anyadirRol();
+            persona.anyadirRol(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         });
-        assertEquals("No es Gerente, no puede tener segundo Rol",thrown.getMessage());
+        assertEquals("No es Gerente o no existe el departamento y necesita uno",thrown.getMessage());
 
-        persona.setAdscripcion(new Adscripcion());
-        persona.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-
-        persona.cambiarRol(rol_gerente);
+        persona.cambiarRol(rol_gerente,null);
         Assertions.assertEquals(rol_gerente, persona.rolPrincipal());
 
-        persona.anyadirRol();
+        persona.anyadirRol(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Assertions.assertEquals(rol_docente, persona.rolSecundario());
 
-        persona.cambiarRol(Rol.ESTUDIANTE);
+        persona.cambiarRol(Rol.ESTUDIANTE,null);
         Assertions.assertEquals(1,persona.getRoles().size());
-        persona.cambiarRol(Rol.DOCENTE_INVESTIGADOR);
-        persona.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        persona.cambiarRol(Rol.DOCENTE_INVESTIGADOR,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Assertions.assertEquals(1,persona.getRoles().size());
 
     }
     @Test
-    void requisito7(){
+    void requisito7() throws Exception {
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
 
-        Persona investigador = new Persona(nombre, eMail,"123",Rol.INVESTIGADOR_CONTRATADO);
-        Persona docente = new Persona(nombre,eMail,"123",Rol.DOCENTE_INVESTIGADOR);
-        Persona tecnico = new Persona(nombre,eMail,"123",Rol.TECNICO_LABORATORIO);
+        Persona investigador = new Persona(nombre, eMail,"123",Rol.INVESTIGADOR_CONTRATADO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        Persona docente = new Persona(nombre,eMail,"123",Rol.DOCENTE_INVESTIGADOR,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        Persona tecnico = new Persona(nombre,eMail,"123",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
 
-        investigador.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-        assertEquals(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS,investigador.getAdscripcion().departamento);
+        assertEquals(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS,investigador.getDepartamento());
 
-        docente.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,docente.getAdscripcion().departamento);
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,docente.getDepartamento());
 
-        tecnico.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,tecnico.getAdscripcion().departamento);
+        assertEquals(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS,tecnico.getDepartamento());
 
     }
     @Test
@@ -143,25 +154,21 @@ public class TestRequisitos {
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
 
-        Persona estudiante = new Persona(nombre, eMail,"123",Rol.ESTUDIANTE);
-        Persona conderje = new Persona(nombre,eMail,"123",Rol.CONSERJE);
-        Persona gerente = new Persona(nombre,eMail,"123",Rol.GERENTE);
+        Persona estudiante = new Persona(nombre, eMail,"123",Rol.ESTUDIANTE,null);
+        Persona conderje = new Persona(nombre,eMail,"123",Rol.CONSERJE,null);
+        Persona gerente = new Persona(nombre,eMail,"123",Rol.GERENTE,null);
 
-        estudiante.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-        assertNull(estudiante.getAdscripcion());
+        assertNull(estudiante.getDepartamento());
 
-        conderje.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        assertNull(conderje.getAdscripcion());
+        assertNull(conderje.getDepartamento());
 
-        gerente.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        assertNull(gerente.getAdscripcion());
+        assertNull(gerente.getDepartamento());
 
-        gerente.anyadirRol();
-        gerente.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
-        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,gerente.getAdscripcion().departamento);
+        gerente.anyadirRol(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        assertEquals(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS,gerente.getDepartamento());
 
-        gerente.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-        assertEquals(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS,gerente.getAdscripcion().departamento);
+        gerente.cambiarDepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        assertEquals(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES,gerente.getDepartamento());
 
     }
     @Test
@@ -172,8 +179,8 @@ public class TestRequisitos {
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio espacio = new Espacio(new Reservabilidad(false,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Reservabilidad reservabilidad1 = new Reservabilidad(false, CategoriaReserva.LABORATORIO);
         Reservabilidad reservabilidad2 = new Reservabilidad(true,CategoriaReserva.AULA);
 
@@ -233,8 +240,8 @@ public class TestRequisitos {
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
 
-        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
@@ -294,7 +301,7 @@ public class TestRequisitos {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 List.of(LocalDate.of(2023,1,1)),100);
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         assertEquals(CategoriaReserva.SALA_COMUN,sala_comun.getReservabilidad().categoriaReserva);
@@ -318,7 +325,7 @@ public class TestRequisitos {
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
@@ -372,9 +379,9 @@ public class TestRequisitos {
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio aula = new Espacio(new Reservabilidad(true, CategoriaReserva.AULA),150, 60,
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
-        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
+        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(aula.getIdEspacio()));
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante).thenReturn(tecnico_laboratorio);
@@ -410,12 +417,12 @@ public class TestRequisitos {
                 List.of(LocalDate.of(2023,1,1)),100);
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
-        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO);
-        Persona investigador = new Persona("Ger","ger@clickada.es","1234",Rol.INVESTIGADOR_CONTRATADO);
-        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR);
-        Persona conserje = new Persona("Ger","ger@clickada.es","1234",Rol.CONSERJE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
+        Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        Persona investigador = new Persona("Ger","ger@clickada.es","1234",Rol.INVESTIGADOR_CONTRATADO,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
+        Persona conserje = new Persona("Ger","ger@clickada.es","1234",Rol.CONSERJE,null);
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
         when(personaRepository.getById(any())).thenReturn(gerente)
@@ -455,7 +462,6 @@ public class TestRequisitos {
                 "laboratiorios que esten adscritos a un departamento",thrown.getMessage());
 
         laboratorio.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
-        investigador.adscripcionADepartamento(Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
         thrown = assertThrows(Exception.class,()->{
             espacioService.reservarEspacio(investigador.getIdPersona(),idEspacios,
                     LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
@@ -464,7 +470,7 @@ public class TestRequisitos {
         assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
                 "laboratorios de su mismo departamento",thrown.getMessage());
 
-        tecnico_laboratorio.adscripcionADepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+        tecnico_laboratorio.cambiarDepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         boolean resultado = espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
                 LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
                 20,"DD");
@@ -484,7 +490,7 @@ public class TestRequisitos {
         assertEquals("Los despachos no pueden ser reservables",thrown.getMessage());
         Espacio despacho = new Espacio(new Reservabilidad(false, CategoriaReserva.DESPACHO),150, 60,
                 CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         thrown = assertThrows(Exception.class,()->{
             despacho.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.DESPACHO));
         });
@@ -504,7 +510,7 @@ public class TestRequisitos {
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
@@ -557,8 +563,8 @@ public class TestRequisitos {
         Espacio laboratorio = new Espacio(new Reservabilidad(true, CategoriaReserva.LABORATORIO),150, 60,
                 CategoriaEspacio.LABORATORIO,edificio,new PropietarioEspacio(Eina.EINA));
 
-        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
@@ -598,7 +604,7 @@ public class TestRequisitos {
         Espacio seminario = new Espacio(new Reservabilidad(true, CategoriaReserva.SEMINARIO),150, 60,
                 CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
 
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio(),laboratorio.getIdEspacio(),aula.getIdEspacio()
                 ,seminario.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
@@ -640,8 +646,8 @@ public class TestRequisitos {
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
 
-        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE);
-        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE);
+        Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
+        Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
         Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
