@@ -55,6 +55,9 @@ public class Espacio{
         if(!persona.rolPrincipal().equals(Rol.GERENTE)) {
             throw new Exception("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio");
         }
+        if(this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO) && nuevaReservabilidad.reservable){
+            throw new Exception("Un despacho no puede ser reservable");
+        }
         this.reservabilidad = nuevaReservabilidad;
     }
     public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {

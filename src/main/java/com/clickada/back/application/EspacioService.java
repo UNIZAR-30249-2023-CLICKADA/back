@@ -151,7 +151,7 @@ public class EspacioService {
                                 persona.rolPrincipal().equals(Rol.ESTUDIANTE)) || !persona.rolPrincipal().equals(Rol.ESTUDIANTE))
                         && espacio.getReservabilidad().reservable) {
                 espaciosFiltrados.add(espacio.getIdEspacio());
-            }
+                }
             }
         }
         List<Reserva> contienenEspacio = reservasTodas.stream()
@@ -220,13 +220,14 @@ public class EspacioService {
         Persona persona = this.personaRepository.getById(idPersona);
         if(persona==null) throw new Exception("La persona no existe");
         Edificio edificio = getUnicoEdificio();
+        double porcentajeViejo = edificio.getPorcentajeUsoPermitido();
         edificio.cambiarPorcentajeEdificio(porcentajeNuevo);
         edificioRepository.save(edificio);
 
         List<Espacio> todosEspacios = todosEspacios();
         List<UUID> espaciosAfectados = new ArrayList<>();
         for(Espacio espacio: todosEspacios){
-            if(espacio.getPorcentajeUsoPermitido()>porcentajeNuevo){ //le afecta
+            if(espacio.getPorcentajeUsoPermitido()==porcentajeViejo){ //le afecta
                 espaciosAfectados.add(espacio.getIdEspacio());
             }
             espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
@@ -280,7 +281,6 @@ public class EspacioService {
                         .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
                                 reserva.getPeriodoReserva().getHoraInicio()));
 
-                reservaRepository.delete(reserva);
                 reservaRepository.delete(reserva);
             }
         }

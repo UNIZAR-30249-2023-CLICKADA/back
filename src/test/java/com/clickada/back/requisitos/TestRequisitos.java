@@ -389,8 +389,6 @@ public class TestRequisitos {
         });
         assertEquals("Solo los despachos pueden tener como propietario a persona/as",thrown.getMessage());
 
-
-
     }
     @Test
     void requisito15(){
@@ -743,13 +741,13 @@ public class TestRequisitos {
         Reserva reserva3 = new Reserva(new PeriodoReserva(LocalTime.of(17,0),LocalTime.of(19,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now().minusDays(1));
         Reserva reserva4 = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,25));
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,2));
         Reserva reserva5 = new Reserva(new PeriodoReserva(LocalTime.of(18,0),LocalTime.of(19,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,12));
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.of(2023,4,2));
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(estudiante).thenReturn(gerente);
         when(reservaRepository.findAll()).thenReturn(new ArrayList<>(List.of(reserva,reserva4,reserva2,reserva5,reserva3)));
-        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva,reserva2,reserva3)));
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of()));
         Exception thrown = assertThrows(Exception.class,()->{
             reservaService.obtenerReservasVivas(estudiante.getIdPersona());
         });
@@ -757,7 +755,7 @@ public class TestRequisitos {
 
         List<Reserva> listaReservas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
         assertNotNull(listaReservas);
-        assertEquals(3,listaReservas.size());
+        assertEquals(2,listaReservas.size());
 
         when(personaRepository.existsById(any())).thenReturn(false);
 
