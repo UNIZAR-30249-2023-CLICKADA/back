@@ -14,10 +14,16 @@ public class WebTierApplication {
         SpringApplication.run(WebTierApplication.class, args);
     }
 
+    //Quizás una cola de mensajes para cada controlador
     @Bean
     public Queue personaQueue() { return new Queue("personas"); }
+
     @Bean
-    public Queue duplicarQueue() { return new Queue("duplicar"); }
+    public Queue espacioQueue() { return new Queue("espacios"); }
+
     @Bean
-    public Queue responseQueue() { return new Queue("response"); }
+    public Queue reservaQueue() { return new Queue("reservas"); }
+
+    @Bean
+    public Queue responseQueue() { return new Queue("respuestas"); }
 }

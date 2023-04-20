@@ -657,7 +657,7 @@ public class TestRequisitos {
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(estudiante).thenReturn(gerente);
         when(reservaRepository.findAll()).thenReturn(new ArrayList<>(List.of(reserva,reserva4,reserva2,reserva5,reserva3)));
-        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva,reserva2,reserva3)));
+        when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of()));
         Exception thrown = assertThrows(Exception.class,()->{
             reservaService.obtenerReservasVivas(estudiante.getIdPersona());
         });
