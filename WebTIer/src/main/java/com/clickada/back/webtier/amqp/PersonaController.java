@@ -1,9 +1,7 @@
 package com.clickada.back.webtier.amqp;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
@@ -33,27 +31,21 @@ public class PersonaController {
         if (response == null) {
             throw new TimeoutException();
         }
-
-        // Lo que conseguimos es que efectivamente este método que responde a una
-        // petición GET enviando un mensaje y esperando su respuesta parezca un
-        // método síncrono, normal(con la diferencia de que hay un timeout y saltará una
-        // excepción si la respuesta no llega en X segundos).
         return "Operacion ok, Nnuevo rol: " + rol;
     }
 
 
     @GetMapping("/todasPersonas")
     String todasPersonas() throws TimeoutException {
-        //return new ResponseEntity<>(personaService.todasPersonas(),HttpStatus.OK);
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("todasPersonas"); //Operación
-        String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (response == null) {
+        if (resp == null) {
             throw new TimeoutException();
         }
-        return response;
+        return resp;
     }
 
 
@@ -64,12 +56,26 @@ public class PersonaController {
         datos.add("loginPersona"); //Operación
         datos.add(email);
         datos.add(pass);
-        String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (response == null) {
+        if (resp == null) {
             throw new TimeoutException();
         }
-        return response;
+        return resp;
+    }
+
+    @PutMapping("/permisosReserva")
+    String permisosDeReserva(@RequestParam UUID id) throws TimeoutException {
+
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("permisosReserva"); //Operación
+        datos.add(id.toString());
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
+
+        if (resp == null) {
+            throw new TimeoutException();
+        }
+        return resp;
     }
 
 

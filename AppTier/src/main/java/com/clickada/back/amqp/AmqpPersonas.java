@@ -2,17 +2,12 @@ package com.clickada.back.amqp;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Persona;
-import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.json.simple.*;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
+import org.json.JSONObject;
+import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,18 +39,21 @@ public class AmqpPersonas {
                             persona.put("nombre",p.getNombre());
                             persona.put("adscripcion",p.getAdscripcion());
                             persona.put("departamentoDisponible",p.isDepartamentoDisponible());
-                            persona.put("roles",p.isDepartamentoDisponible());
+                            persona.put("roles",p.getRoles());
                             persona.put("email",p.getEMail());
-                            lista.add(persona);
+                            lista.put(persona);
                         }
 
-                        return lista.toJSONString();
+                        return lista.toString();
                     }
                     case "loginPersona" -> {
                         if (personaService.loginPersona(datos.get(1),datos.get(2))){
                             return "True";
                         }
                         else { return  "Login fallido"; }
+                    }
+                    case "permisosReserva" -> {
+                            return personaService.permisosDeReserva(UUID.fromString(datos.get(1))).toString();
                     }
                 }
             }
