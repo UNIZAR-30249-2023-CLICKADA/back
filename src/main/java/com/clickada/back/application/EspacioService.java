@@ -42,15 +42,14 @@ public class EspacioService {
     }
 
     @Transactional
-    public boolean cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
-        if (espacioRepository.existsById(idEspacio) && personaRepository.existsById(idPersona)) {
-            Espacio espacio = espacioRepository.getById(idEspacio);
-            Persona persona = personaRepository.getById(idPersona);
-            espacio.modificarReservabilidad(persona,reservabilidad);
-            espacioRepository.save(espacio);
-            return true;
+    public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
+        Espacio espacio = espacioRepository.getById(idEspacio);
+        Persona persona = personaRepository.getById(idPersona);
+        if (espacio==null || persona==null) {
+            throw new Exception("El espacio o la persona no existen");
         }
-        return false;
+        espacio.modificarReservabilidad(persona,reservabilidad);
+        espacioRepository.save(espacio);
     }
 
     @Transactional

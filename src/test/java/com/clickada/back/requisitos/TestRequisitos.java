@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -177,36 +178,67 @@ public class TestRequisitos {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
-        Espacio espacio = new Espacio(new Reservabilidad(false,CategoriaReserva.SALA_COMUN),150, 60,
+        Espacio sala_comun = new Espacio(new Reservabilidad(false,CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
+        Espacio aula = new Espacio(new Reservabilidad(false,CategoriaReserva.AULA),150, 60,
+                CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
+        Espacio seminario = new Espacio(new Reservabilidad(false,CategoriaReserva.SEMINARIO),150, 60,
+                CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         Persona docente = new Persona("Ger","ger@clickada.es","1234",Rol.DOCENTE_INVESTIGADOR,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Reservabilidad reservabilidad1 = new Reservabilidad(false, CategoriaReserva.LABORATORIO);
         Reservabilidad reservabilidad2 = new Reservabilidad(true,CategoriaReserva.AULA);
+        Reservabilidad reserSALA = new Reservabilidad(true,CategoriaReserva.SALA_COMUN);
+        Reservabilidad reservabilidad3 = new Reservabilidad(false,CategoriaReserva.DESPACHO);
+        Reservabilidad reserSeminario =  new Reservabilidad(false,CategoriaReserva.SEMINARIO);
+        //sala comun error
+        Exception thrown = assertThrows(Exception.class,()-> {
+            sala_comun.modificarReservabilidad(gerente,reservabilidad1);
+        });
+        assertEquals("Las salas comunes solo pueden ser SEMINARIO o DESPACHO",thrown.getMessage());
+        //sala_comun bien
+        sala_comun.modificarReservabilidad(gerente,reservabilidad3);
+        assertEquals(false,sala_comun.getReservabilidad().reservable);
+        assertEquals(reservabilidad3.categoriaReserva,sala_comun.getReservabilidad().categoriaReserva);
+        // aula error (distinto de seminario)
+        thrown = assertThrows(Exception.class,()-> {
+            aula.modificarReservabilidad(gerente,reservabilidad1);
+        });
+        assertEquals("Las aulas solo puede ser SEMINARIO",thrown.getMessage());
+        //aula bien
+        aula.modificarReservabilidad(gerente,reserSeminario);
+        assertEquals(false,aula.getReservabilidad().reservable);
+        assertEquals(reserSeminario.categoriaReserva,aula.getReservabilidad().categoriaReserva);
 
-        espacio.modificarReservabilidad(gerente,reservabilidad1);
-        assertEquals(false,espacio.getReservabilidad().reservable);
-        assertEquals(reservabilidad1.categoriaReserva,espacio.getReservabilidad().categoriaReserva);
+        //SEMINARIO ERROR (distinto a aula o sala comun)
+        thrown = assertThrows(Exception.class,()-> {
+            seminario.modificarReservabilidad(gerente,reservabilidad1);
+        });
+        assertEquals("Los seminarios solo pueden ser aulas o salas comunes",thrown.getMessage());
+        //aula bien
+        seminario.modificarReservabilidad(gerente,reservabilidad2);
+        assertEquals(true,seminario.getReservabilidad().reservable);
+        assertEquals(reservabilidad2.categoriaReserva,seminario.getReservabilidad().categoriaReserva);
 
-        espacio.modificarReservabilidad(gerente,reservabilidad2);
-        assertEquals(true,espacio.getReservabilidad().reservable);
-        assertEquals(CategoriaReserva.AULA,espacio.getReservabilidad().categoriaReserva);
+        seminario.modificarReservabilidad(gerente,reserSALA);
+        assertEquals(true,seminario.getReservabilidad().reservable);
+        assertEquals(reserSALA.categoriaReserva,seminario.getReservabilidad().categoriaReserva);
 
-        assertEquals(edificio.getHoraInicio(),espacio.getHoraInicio());
-        espacio.modificarHorarioDisponible(gerente,
+        assertEquals(edificio.getHoraInicio(),sala_comun.getHoraInicio());
+        sala_comun.modificarHorarioDisponible(gerente,
                 LocalTime.of(9,0),
                 LocalTime.of(19,0));
-        assertNotEquals(edificio.getHoraFin(),espacio.getHoraFin());
+        assertNotEquals(edificio.getHoraFin(),sala_comun.getHoraFin());
 
-        Exception thrown = assertThrows(Exception.class,()-> {
-            espacio.modificarHorarioDisponible(gerente,
+        thrown = assertThrows(Exception.class,()-> {
+            sala_comun.modificarHorarioDisponible(gerente,
                     LocalTime.of(7,0),
                     LocalTime.of(21,0));
         });
         assertEquals("Las horas nuevas de reserva tienen que estar dentro del periodo de reseerva del Edificio",thrown.getMessage());
 
         thrown = assertThrows(Exception.class,()-> {
-            espacio.modificarHorarioDisponible(docente,
+            sala_comun.modificarHorarioDisponible(docente,
                     LocalTime.of(7,0),
                     LocalTime.of(21,0));
         });
@@ -214,15 +246,15 @@ public class TestRequisitos {
         when(personaRepository.existsById(any())).thenReturn(true);
         when(espacioRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(gerente);
-        when(espacioRepository.getById(any())).thenReturn(espacio);
-        boolean resultado = espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad1,gerente.getIdPersona());
-        assertTrue(resultado);
+        when(espacioRepository.getById(any())).thenReturn(sala_comun);
+        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reserSeminario,gerente.getIdPersona()));
 
-        resultado = espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad2,gerente.getIdPersona());
-        assertTrue(resultado);
+
+        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad3,gerente.getIdPersona()));
+
         when(personaRepository.getById(any())).thenReturn(docente);
         thrown = assertThrows(Exception.class,()->{
-            espacioService.cambiarReservabilidadEspacio(espacio.getIdEspacio(),reservabilidad2,docente.getIdPersona());
+            espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad2,docente.getIdPersona());
         });
         assertEquals("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio",thrown.getMessage());
 
@@ -305,8 +337,8 @@ public class TestRequisitos {
         Espacio sala_comun = new Espacio(new Reservabilidad(true,CategoriaReserva.SALA_COMUN),150,60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         assertEquals(CategoriaReserva.SALA_COMUN,sala_comun.getReservabilidad().categoriaReserva);
-        sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.LABORATORIO));
-        assertEquals(CategoriaReserva.LABORATORIO,sala_comun.getReservabilidad().categoriaReserva);
+        sala_comun.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.SEMINARIO));
+        assertEquals(CategoriaReserva.SEMINARIO,sala_comun.getReservabilidad().categoriaReserva);
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
     }
     //Test 14 y 15 son de porcentaje de uso maximo

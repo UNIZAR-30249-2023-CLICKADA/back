@@ -58,6 +58,20 @@ public class Espacio{
         if(this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO) && nuevaReservabilidad.reservable){
             throw new Exception("Un despacho no puede ser reservable");
         }
+        if((this.categoriaEspacio.equals(CategoriaEspacio.AULA))&&
+                !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.SEMINARIO)){
+            throw new Exception("Las aulas solo puede ser SEMINARIO");
+        }
+        if(this.categoriaEspacio.equals(CategoriaEspacio.SALA_COMUN)&& (
+                !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.SEMINARIO) &&
+                        !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.DESPACHO))){
+            throw new Exception("Las salas comunes solo pueden ser SEMINARIO o DESPACHO");
+        }
+        if((this.categoriaEspacio.equals(CategoriaEspacio.SEMINARIO))&&(
+                !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.AULA) &&
+                        !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.SALA_COMUN))){
+            throw new Exception("Los seminarios solo pueden ser aulas o salas comunes");
+        }
         this.reservabilidad = nuevaReservabilidad;
     }
     public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {

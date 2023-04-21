@@ -47,10 +47,8 @@ public class PersonaController {
                                             @RequestParam boolean reservable, @RequestParam String categoriaReserva) throws Exception {
         if (personaService.aptoParaCambiar(idPersona)){
             try{
-                if(espacioService.cambiarReservabilidadEspacio(idEspacio,new Reservabilidad(reservable,categoriaReserva),idPersona)){
-                    return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
-                }
-                return new ResponseEntity<>("No existe el espacio para cambiar la reservabilidad",HttpStatus.BAD_REQUEST);
+               espacioService.cambiarReservabilidadEspacio(idEspacio,new Reservabilidad(reservable,categoriaReserva),idPersona);
+               return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
             }catch (Exception e){
                 return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
             }
