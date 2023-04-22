@@ -236,8 +236,8 @@ public class EspacioService {
                         reservaRepository.delete(reserva);
                     }
                 }
+                return true;
             }
-            return true;
         }
         return false;
     }

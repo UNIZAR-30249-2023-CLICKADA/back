@@ -85,7 +85,7 @@ public class EspacioController {
 
 
     @PutMapping("/cambiarPorcentajeUso")
-    ResponseEntity<?> reservar(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
+    ResponseEntity<?> cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
         if (!espacioService.modificarPorcentajeOcupacion(idPersona,idEspacio,porcentaje)){
             return  new ResponseEntity<>("No tiene permisos para hacer esta operación",HttpStatus.BAD_REQUEST);
         }
