@@ -80,4 +80,7 @@ public class PersonaService {
         if(persona==null) throw new Exception("El idPersona no existe");
         return persona;
     }
+    public List<Persona> getPersonasById(List<UUID> idPersonas) throws Exception{
+        return personaRepository.findAllById(idPersonas);
+    }
 }

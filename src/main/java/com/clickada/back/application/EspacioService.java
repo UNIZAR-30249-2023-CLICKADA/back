@@ -190,9 +190,7 @@ public class EspacioService {
         return edificioRepository.findAll().get(0);
     }
     @Transactional
-    public void cambiarPorcentajeEspacio(UUID idPersona, UUID idEspacio,double porcentajeNuevo) throws Exception{
-        Persona persona = this.personaRepository.getById(idPersona);
-        if(persona==null) throw new Exception("La persona no existe");
+    public void cambiarPorcentajeEspacio(Persona persona, UUID idEspacio,double porcentajeNuevo) throws Exception{
         //hacer el cambio
         Espacio espacio = espacioRepository.getById(idEspacio);
         if(espacio==null){

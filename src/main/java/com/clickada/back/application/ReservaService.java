@@ -83,4 +83,39 @@ public class ReservaService {
             }
         }
     }
+
+    public List<Reserva> reservasVivasEspacios(List<UUID> idEspacios) throws Exception {
+        List<Reserva> reservasVivas = new java.util.ArrayList<>(reservaRepository.findAll().stream()
+                .filter(reserva -> reserva.getFecha().isAfter(LocalDate.now())).toList());
+        reservasVivas.addAll(reservaRepository.findByFecha(LocalDate.now())
+                .stream().filter(reserva1 -> reserva1.getPeriodoReserva().getHoraFin().isAfter(LocalTime.now()))
+                .toList());
+        reservasVivas.stream().filter(reserva1 -> reserva1.getIdEspacios().stream()
+                        .anyMatch(idEspacios::contains))
+                .toList();
+        return reservasVivas;
+    }
+    public void comprobarReservasEspacios(List<Reserva> reservasVivas,List<Espacio> espacioList, List<Persona> personasImplicadas) throws Exception {
+        int totalAsistentesPermitidos;
+
+        for(Reserva reserva  : reservasVivas){
+            totalAsistentesPermitidos = 0;
+            for(UUID idEspacio : reserva.getIdEspacios()){
+                Espacio espacio = espacioList.stream()
+                        .filter(espacio1 -> espacio1.getIdEspacio().equals(idEspacio)).toList().get(0);
+                totalAsistentesPermitidos+=espacio.getTotalAsistentesPermitidos();
+            }
+            if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
+                Persona persona = personasImplicadas.stream()
+                        .filter(persona1 -> persona1.getIdPersona().equals(reserva.getIdPersona())).toList().get(0);
+                String mail = persona.getEMail();
+
+                Executors.newSingleThreadExecutor()
+                        .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
+                                reserva.getPeriodoReserva().getHoraInicio()));
+
+                reservaRepository.delete(reserva);
+            }
+        }
+    }
 }

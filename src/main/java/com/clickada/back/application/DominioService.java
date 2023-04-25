@@ -69,7 +69,22 @@ public class DominioService {
     public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarReservabilidadEspacio(idEspacio,reservabilidad,persona);
-
     }
 
+    @Transactional
+    public void cambiarPorcentajeEspacio(UUID idPersona, UUID idEspacio,double porcentajeNuevo) throws Exception{
+        Persona persona = personaService.getPersonaById(idPersona);
+        espacioService.cambiarPorcentajeEspacio(persona,idEspacio,porcentajeNuevo);
+        List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
+        List<UUID> listIdPersona = new ArrayList<>();
+        reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
+
+        List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
+
+        List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
+
+        reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+
+
+    }
 }
