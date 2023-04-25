@@ -76,4 +76,9 @@ public class PersonaService {
         return l;
     }
 
+    public Persona getPersonaById(UUID idPersona) throws Exception{
+        Persona persona = personaRepository.getById(idPersona);
+        if(persona==null) throw new Exception("El idPersona no existe");
+        return persona;
+    }
 }

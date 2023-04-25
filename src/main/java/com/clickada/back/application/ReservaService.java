@@ -46,4 +46,12 @@ public class ReservaService {
     public void eliminarTodas() {
         this.reservaRepository.deleteAll();
     }
+
+    public List<Reserva> reservasPorFecha(LocalDate fecha) {
+        return reservaRepository.findByFecha(fecha);
+    }
+
+    public void reservar(Reserva reservaCompletada) {
+        reservaRepository.save(reservaCompletada);
+    }
 }

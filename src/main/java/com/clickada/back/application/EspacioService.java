@@ -53,52 +53,20 @@ public class EspacioService {
     }
 
     @Transactional
-    public boolean reservarEspacio(UUID idPersona, ArrayList<UUID> idEspacios, LocalDate fecha, LocalTime horaInicio,
-                                   LocalTime horaFinal, TipoUso uso,int numAsistentes,String detalles) throws Exception {
-        //Habrá que controlar todas las restricciones
-        Reserva reserva = new Reserva(new PeriodoReserva(horaInicio,horaFinal),idPersona,uso,idEspacios,numAsistentes,detalles,fecha);
-        Persona persona = personaRepository.getById(idPersona);
+    public Reserva reservarEspacio(Persona persona, List<Reserva> reservasTodas,Reserva reserva) throws Exception {
         //ver si esta dispponible reservar el espacio ese dia y esas horas
         List<Reserva> reservaList = new ArrayList<>();
-        List<Reserva> reservasTodas = reservaRepository.findByFecha(fecha);
         int totalAsistentesPermitidos = 0;
         if(persona!= null){ // Comprueba permisos de ese rol
-            for(UUID idEspacio: idEspacios){
+            for(UUID idEspacio: reserva.getIdEspacios()){
                 Espacio espacio = espacioRepository.getById(idEspacio);
                 if(espacio == null) throw new Exception("El espacio que se quiere reservar no existe");
-                if( espacio.getReservabilidad() !=null &&
-                    !espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
-                    persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
-                    throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
-                }
-                if( espacio.getReservabilidad() !=null &&
-                    espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
-                    persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
-                    throw new Exception("Un Tecnico de laboratorio no puede reservar aulas");
-                }
-                if( espacio.getReservabilidad() !=null &&
-                    espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
-                    (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
-                        persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                        persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR))){
-                    if(!espacio.getPropietarioEspacio().esDepartamento()){
-                        throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
-                                "laboratiorios que esten adscritos a un departamento");
-                    }
-                    if(!espacio.getPropietarioEspacio().departamento.equals(persona.getDepartamento())){
-                        throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
-                                "laboratorios de su mismo departamento");
-                    }
-
-                }
-                if(espacio.getReservabilidad()!=null && !espacio.getReservabilidad().reservable){
-                    throw new Exception("El espacio "+ espacio.getIdEspacio()+ " no es reservable. " +
-                            "Espere a que un gerente lo habilite");
-                }
+                if(espacio.getReservabilidad() == null) throw new Exception("El espacio que se quiere reservar no tiene reservabilidad");
+                espacio.aptoParaReservar(persona);
                 totalAsistentesPermitidos+=espacio.getTotalAsistentesPermitidos();
                 List<Reserva> contienenEspacio = reservasTodas.stream()
                         .filter(reserva1 -> reserva1.getIdEspacios().stream()
-                                .anyMatch(idEspacios::contains))
+                                .anyMatch(reserva.getIdEspacios()::contains))
                         .toList();
                 reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
             }
@@ -106,13 +74,12 @@ public class EspacioService {
         if(!reservaCorrecta(reservaList,reserva)){
             throw new Exception("Ya existe una reserva en el horario introducido");
         }
-        if(totalAsistentesPermitidos<numAsistentes){
+        if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
             throw new Exception("Se supera el numero máximo de asistentes de los espacios seleccionados siendo "+
-                    totalAsistentesPermitidos + " el total de asistentes permitidos y "+numAsistentes
+                    totalAsistentesPermitidos + " el total de asistentes permitidos y "+reserva.getNumOcupantes()
                     +" el numero de asistentes de la reserva.");
         }
-        reservaRepository.save(reserva);
-        return true;
+        return reserva;
     }
 
     private boolean reservaCorrecta(List<Reserva> reservaList,Reserva reservaNueva){

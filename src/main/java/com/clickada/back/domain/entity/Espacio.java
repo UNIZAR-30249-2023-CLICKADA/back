@@ -72,6 +72,12 @@ public class Espacio{
                         !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.SALA_COMUN))){
             throw new Exception("Los seminarios solo pueden ser aulas o salas comunes");
         }
+        //Categoria reserva
+        //sala comun -> despacho, seminario
+        //aula -> seminario
+        //despacho ->
+        //laboratorio ->
+        //seminario -> aula, sala_comun
         this.reservabilidad = nuevaReservabilidad;
     }
     public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {
@@ -123,5 +129,32 @@ public class Espacio{
 
     public int getTotalAsistentesPermitidos (){
         return (int) (this.numMaxOcupantes * this.porcentajeUsoPermitido/100);
+    }
+    public void aptoParaReservar(Persona persona)throws Exception{
+        if(!this.getReservabilidad().reservable){
+            throw new Exception("El espacio "+ this.getIdEspacio()+ " no es reservable. " +
+                    "Espere a que un gerente lo habilite");
+        }
+        if( !this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
+                persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
+            throw new Exception("Un estudiante solo puede reservar SALAS COMUNES");
+        }
+        if( this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
+                persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
+            throw new Exception("Un Tecnico de laboratorio no puede reservar aulas");
+        }
+        if( this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
+                (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
+                        persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                        persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR))){
+            if(!this.getPropietarioEspacio().esDepartamento()){
+                throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                        "laboratiorios que esten adscritos a un departamento");
+            }
+            if(!this.getPropietarioEspacio().departamento.equals(persona.getDepartamento())){
+                throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
+                        "laboratorios de su mismo departamento");
+            }
+        }
     }
 }

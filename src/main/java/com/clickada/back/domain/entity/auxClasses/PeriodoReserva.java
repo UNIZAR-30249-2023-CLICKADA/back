@@ -20,8 +20,10 @@ public class PeriodoReserva implements Serializable {
     public boolean periodosCompatibles(PeriodoReserva periodoReserva){
         return !((periodoReserva.getHoraInicio().isBefore(horaFin) &&
                 periodoReserva.getHoraInicio().isAfter(horaInicio)) ||
-                periodoReserva.getHoraFin().isBefore(horaFin) &&
-                        periodoReserva.getHoraFin().isAfter(horaInicio));
+                (periodoReserva.getHoraFin().isBefore(horaFin) &&
+                periodoReserva.getHoraFin().isAfter(horaInicio)) || (
+                periodoReserva.equals(this)
+                ));
         //hora inicio p1 esta entre la hora inicio p2 y hora fin p2
         //hora fin p1 esta entre hora inicio p2 y hora fin p2
 

@@ -1,5 +1,6 @@
 package com.clickada.back.requisitos;
 
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
@@ -46,6 +47,8 @@ public class TestRequisitos {
     EspacioRepository espacioRepository;
     @InjectMocks
     EspacioService espacioService;
+    @InjectMocks
+    DominioService dominioService;
     @InjectMocks
     ReservaService reservaService;
     @Test
@@ -275,45 +278,37 @@ public class TestRequisitos {
         Persona estudiante = new Persona("Ger","ger@clickada.es","1234",Rol.ESTUDIANTE,null);
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(sala_comun.getIdEspacio()));
-        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+        idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
+        Reserva reserva_laboratorio = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),estudiante.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
 
         when(personaRepository.getById(any())).thenReturn(estudiante);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(sala_comun);
-
-        boolean reservaCorrecta = espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva));
 
         //si intentamos reservar donde ya hay una reserva en el mismo horario dara error
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva)));
-        ArrayList<UUID> finalIdEspacios = idEspacios;
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(estudiante.getIdPersona(), finalIdEspacios,
-                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
-                    20, "DD");
+            espacioService.reservarEspacio(estudiante,new ArrayList<>(List.of(reserva)),reserva);
         });
         assertEquals("Ya existe una reserva en el horario introducido",thrown.getMessage());
 
         //Si el estudiante intenta reservar un laboratorio dara error
-        idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
+
         when(espacioRepository.getById(any())).thenReturn(laboratorio);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(estudiante.getIdPersona(), finalIdEspacios,
-                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
-                    20, "DD");
+            espacioService.reservarEspacio(estudiante,new ArrayList<>(List.of()),reserva_laboratorio);
         });
         assertEquals("Un estudiante solo puede reservar SALAS COMUNES",thrown.getMessage());
 
         laboratorio.modificarReservabilidad(gerente,new Reservabilidad(true,CategoriaReserva.SALA_COMUN));
         //cambiamos la reservabilidad del laboratiorio poniendolo como sala comun -> nos tendria que dejar
-        reservaCorrecta = espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->
+                espacioService.reservarEspacio(estudiante,new ArrayList<>(List.of()),reserva_laboratorio));
     }
 
     @Test
@@ -442,21 +437,19 @@ public class TestRequisitos {
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
-        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),gerente.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,100,"DD",LocalDate.now());
+        Reserva reserva_300 = new Reserva(new PeriodoReserva(LocalTime.of(19,0),LocalTime.of(20,0)),gerente.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
         when(personaRepository.getById(any())).thenReturn(gerente);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
-        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                100,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
+
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(19,0),LocalTime.of(20,0),TipoUso.DOCENCIA,
-                    300,"DD");
+            espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva_300);
         });
         assertEquals("Se supera el numero máximo de asistentes de los espacios seleccionados siendo "+
                 120 + " el total de asistentes permitidos y "+300
@@ -499,26 +492,22 @@ public class TestRequisitos {
         Persona tecnico_laboratorio = new Persona("Ger","ger@clickada.es","1234",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(aula.getIdEspacio()));
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),
+                estudiante.getIdPersona(),TipoUso.DOCENCIA,idEspacios,
+                20,"DD",LocalDate.now());
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante).thenReturn(tecnico_laboratorio);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(aula);
-        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
         //false reservar AULA siendo un estudiante
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                    20,"DD");
+            espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva);
         });
         assertEquals("Un estudiante solo puede reservar SALAS COMUNES",thrown.getMessage());
 
         // false reservar AULA siendo un tecnico de laboratorio
         thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                    20,"DD");
+            espacioService.reservarEspacio(tecnico_laboratorio,new ArrayList<>(),reserva);
         });
         assertEquals("Un Tecnico de laboratorio no puede reservar aulas",thrown.getMessage());
     }
@@ -540,7 +529,16 @@ public class TestRequisitos {
         Persona conserje = new Persona("Ger","ger@clickada.es","1234",Rol.CONSERJE,null);
 
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio()));
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),
+                gerente.getIdPersona(),TipoUso.DOCENCIA,idEspacios,
+                20,"DD",LocalDate.now());
         when(personaRepository.getById(any())).thenReturn(gerente)
+                .thenReturn(conserje)
+                .thenReturn(estudiante)
+                .thenReturn(docente)
+                .thenReturn(investigador)
+                .thenReturn(tecnico_laboratorio);
+        when(personaService.getPersonaById(any())).thenReturn(gerente)
                 .thenReturn(conserje)
                 .thenReturn(estudiante)
                 .thenReturn(docente)
@@ -548,19 +546,11 @@ public class TestRequisitos {
                 .thenReturn(tecnico_laboratorio);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio);
-        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
-        reservaCorrecta = espacioService.reservarEspacio(conserje.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
+        assertDoesNotThrow(()->espacioService.reservarEspacio(conserje,new ArrayList<>(),reserva));
         //false reservar LABORATORIO siendo un estudiante
         Exception thrown = assertThrows(Exception.class,()-> {
-                    espacioService.reservarEspacio(estudiante.getIdPersona(), idEspacios,
-                            LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
-                            20, "DD");
+                    espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva);
         });
         assertEquals("Un estudiante solo puede reservar SALAS COMUNES",thrown.getMessage());
 
@@ -568,9 +558,7 @@ public class TestRequisitos {
         //laboratiorios de su mismo departamento
 
         thrown =  assertThrows(Exception.class,()->{
-            espacioService.reservarEspacio(docente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
+            espacioService.reservarEspacio(docente,new ArrayList<>(),reserva);
         });
 
         assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
@@ -578,18 +566,13 @@ public class TestRequisitos {
 
         laboratorio.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         thrown = assertThrows(Exception.class,()->{
-            espacioService.reservarEspacio(investigador.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                    20,"DD");
+            espacioService.reservarEspacio(investigador,new ArrayList<>(),reserva);
         });
         assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
                 "laboratorios de su mismo departamento",thrown.getMessage());
 
         tecnico_laboratorio.cambiarDepartamento(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
-        boolean resultado = espacioService.reservarEspacio(tecnico_laboratorio.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(resultado);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(tecnico_laboratorio,new ArrayList<>(),reserva));
     }
     @Test
     void requisito20() throws Exception{
@@ -628,21 +611,18 @@ public class TestRequisitos {
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Persona gerente = new Persona("Ger","ger@clickada.es","1234",Rol.GERENTE,null);
         ArrayList<UUID> idEspacios = new ArrayList<>(List.of(laboratorio.getIdEspacio(),laboratorio2.getIdEspacio()));
-        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(8,0),LocalTime.of(10,0)),gerente.getIdPersona(),
-                TipoUso.DOCENCIA, idEspacios,20,"DD",LocalDate.now());
+        Reserva reserva = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),gerente.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,100,"DD",LocalDate.now());
+        Reserva reserva_excedida = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),gerente.getIdPersona(),
+                TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
         when(personaRepository.getById(any())).thenReturn(gerente);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
-        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                100,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                    LocalDate.now(),LocalTime.of(19,0),LocalTime.of(20,0),TipoUso.DOCENCIA,
-                    300,"DD");
+            espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva_excedida);
         });
         assertEquals("Se supera el numero máximo de asistentes de los espacios seleccionados siendo "+
                 120 + " el total de asistentes permitidos y "+300
@@ -689,18 +669,12 @@ public class TestRequisitos {
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(sala_comun);
 
-        boolean reservaCorrecta = espacioService.reservarEspacio(estudiante.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva));
 
         //si intentamos reservar donde ya hay una reserva en el mismo horario dara error
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva)));
-        ArrayList<UUID> finalIdEspacios = idEspacios;
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(estudiante.getIdPersona(), finalIdEspacios,
-                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
-                    20, "DD");
+            espacioService.reservarEspacio(estudiante,new ArrayList<>(List.of(reserva)),reserva);
         });
         assertEquals("Ya existe una reserva en el horario introducido",thrown.getMessage());
     }
@@ -736,18 +710,13 @@ public class TestRequisitos {
                 .thenReturn(aula)
                 .thenReturn(seminario);
 
-        boolean reservaCorrecta = espacioService.reservarEspacio(gerente.getIdPersona(),idEspacios,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),TipoUso.DOCENCIA,
-                20,"DD");
-        assertTrue(reservaCorrecta);
+        assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
 
         //si intentamos reservar donde ya hay una reserva en el mismo horario dara error
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>(List.of(reserva)));
         ArrayList<UUID> finalIdEspacios = idEspacios;
         Exception thrown = assertThrows(Exception.class,()-> {
-            espacioService.reservarEspacio(gerente.getIdPersona(), finalIdEspacios,
-                    LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), TipoUso.DOCENCIA,
-                    20, "DD");
+            espacioService.reservarEspacio(gerente,new ArrayList<>(List.of(reserva)),reserva);
         });
         assertEquals("Ya existe una reserva en el horario introducido",thrown.getMessage());
     }

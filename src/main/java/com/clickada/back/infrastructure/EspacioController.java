@@ -1,5 +1,6 @@
 package com.clickada.back.infrastructure;
 
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
@@ -23,12 +24,15 @@ public class EspacioController {
     EspacioService espacioService;
     ReservaService reservaService;
     PersonaService personaService;
+    DominioService dominioService;
 
     @Autowired
-    public EspacioController(EspacioService espacioService,ReservaService reservaService,PersonaService personaService) {
+    public EspacioController(EspacioService espacioService,ReservaService reservaService,PersonaService personaService,
+                             DominioService dominioService) {
         this.espacioService = espacioService;
         this.reservaService = reservaService;
         this.personaService = personaService;
+        this.dominioService = dominioService;
     }
     @GetMapping("/todosEspacios")
     ResponseEntity<?> todosEspacios(){
@@ -52,7 +56,7 @@ public class EspacioController {
             return new ResponseEntity<>("Ese tipo de uso no existe, pruebe con otro",HttpStatus.BAD_REQUEST);
         }
         try {
-            espacioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
+            dominioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
                     fecha,horaInicio,horaFinal,
                     tipoUso, reservaDto.getNumMaxPersonas(), reservaDto.getDetalles());
         }catch (Exception e){
