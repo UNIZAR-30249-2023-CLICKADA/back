@@ -251,4 +251,10 @@ public class EspacioService {
             }
         }
     }
+
+    public List<Espacio> obtenerEspaciosReservas(List<Reserva> reservasVivasPersona) {
+        List<UUID> listId= new ArrayList<>();
+        reservasVivasPersona.forEach(reserva -> listId.addAll(reserva.getIdEspacios()));
+        return espacioRepository.findAllById(listId);
+    }
 }

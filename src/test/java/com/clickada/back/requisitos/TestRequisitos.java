@@ -103,12 +103,12 @@ public class TestRequisitos {
 
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(per);
-        boolean resultado = personaService.cambiarRol(per.getIdPersona(),"Docente","Ingenieria");
-        assertTrue(resultado);
+        Persona resultado = personaService.cambiarRol(per.getIdPersona(),"Docente","Ingenieria");
+        assertTrue(per.equals(resultado));
         resultado = personaService.cambiarRol(per.getIdPersona(),"Tecnico","Informatica");
-        assertTrue(resultado);
+        assertTrue(per.equals(resultado));
         resultado = personaService.cambiarRol(per.getIdPersona(),"Gerente",null);
-        assertTrue(resultado);
+        assertTrue(per.equals(resultado));
 
     }
 

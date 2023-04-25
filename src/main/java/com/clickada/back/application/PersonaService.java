@@ -21,17 +21,16 @@ public class PersonaService {
     @Autowired
     public PersonaService(PersonaRepository personaRepository){ this.personaRepository = personaRepository;}
     @Transactional
-    public boolean cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
+    public Persona cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
         Rol rolEnum = Rol.getRolByString(rol);
         Departamento departamento = Departamento.getDepartamentoByString(departamentoString);
-        if(personaRepository.existsById(idPersona) && rolEnum != null){
-
-            Persona persona = personaRepository.getById(idPersona);
-            persona.cambiarRol(rolEnum,departamento);
-            personaRepository.save(persona);
-            return true;
+        if(!personaRepository.existsById(idPersona) || rolEnum == null) {
+            throw new Exception("No existe el rol o la persona");
         }
-        return false;
+        Persona persona = personaRepository.getById(idPersona);
+        persona.cambiarRol(rolEnum,departamento);
+        personaRepository.save(persona);
+        return persona;
     }
     @Transactional (readOnly = true)
     public List<Persona> todasPersonas(){

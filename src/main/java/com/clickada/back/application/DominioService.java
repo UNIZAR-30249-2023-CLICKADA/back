@@ -4,6 +4,7 @@ import com.clickada.back.domain.EdificioRepository;
 import com.clickada.back.domain.EspacioRepository;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
+import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
@@ -42,6 +43,18 @@ public class DominioService {
         Reserva reserva = new Reserva(new PeriodoReserva(horaInicio,horaFinal),persona.getIdPersona(),uso,idEspacios,numAsistentes,detalles,fecha);
         Reserva reservaCompletada = espacioService.reservarEspacio(persona,reservasTodas,reserva);
         reservaService.reservar(reservaCompletada);
+    }
+
+    @Transactional
+    public void cambiarRol(UUID idGerente,UUID idPersona, String rol, String departamentoString) throws Exception {
+        if(personaService.aptoParaCambiar(idGerente)) {
+            Persona gerente = personaService.getPersonaById(idPersona);
+            Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
+            List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
+            List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
+
+            reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
+        }
     }
 
 }

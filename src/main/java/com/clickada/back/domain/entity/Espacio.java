@@ -157,4 +157,27 @@ public class Espacio{
             }
         }
     }
+    public boolean aptoCambioRol(Persona persona)throws Exception{
+        if(!this.getReservabilidad().reservable){
+            return false;
+        }
+        if( !this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
+                persona.rolPrincipal().equals(Rol.ESTUDIANTE)){
+            return false;
+        }
+        if( this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.AULA) &&
+                persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO)){
+            return false;
+        }
+        if( this.getReservabilidad().categoriaReserva.equals(CategoriaReserva.LABORATORIO) &&
+                (persona.rolPrincipal().equals(Rol.TECNICO_LABORATORIO) ||
+                        persona.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
+                        persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR))){
+            if(!this.getPropietarioEspacio().esDepartamento()){
+                return false;
+            }
+            return this.getPropietarioEspacio().departamento.equals(persona.getDepartamento());
+        }
+        return true;
+    }
 }

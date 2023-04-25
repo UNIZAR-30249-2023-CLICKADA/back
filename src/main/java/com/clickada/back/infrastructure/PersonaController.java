@@ -27,13 +27,13 @@ public class PersonaController {
     @PutMapping("/cambiarRol")
     ResponseEntity<?> cambiarRolPersona(@RequestParam UUID idPersona, @RequestParam String rol, @RequestParam String departamento) throws Exception {
         try{
-            if(personaService.cambiarRol(idPersona,rol,departamento)) return new ResponseEntity<>(HttpStatus.OK);
+            //cambiarRol(idPersona,rol,departamento);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Persona no encontrada, no se ha podido cambiar su Rol: "+
                     e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Persona no encontrada, no se ha podido cambiar su Rol",HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/todasPersonas")
