@@ -31,7 +31,7 @@ public class PersonaController {
         if (response == null) {
             throw new TimeoutException();
         }
-        return "Operacion ok, Nnuevo rol: " + rol;
+        return response;
     }
 
 

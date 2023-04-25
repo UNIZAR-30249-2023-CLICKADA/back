@@ -29,10 +29,9 @@ public class EspacioController {
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
 
         if (resp == null) {
-            return "F";//  throw new TimeoutException();
+            throw new TimeoutException();
         }
         return resp;
-
     }
 
     @PostMapping("/reservarEspacio")
@@ -51,11 +50,10 @@ public class EspacioController {
 
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
 
-        if(resp == null) {
-            return "F";//  throw new TimeoutException();
+        if (resp == null) {
+            throw new TimeoutException();
         }
         return resp;
-
     }
 
     @PostMapping("/reservarAutomatica")
@@ -75,13 +73,14 @@ public class EspacioController {
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
 
         if (resp == null) {
-            return "F";//  throw new TimeoutException();
+            throw new TimeoutException();
         }
         return resp;
     }
 
     @PutMapping("/cambiarPorcentajeUso")
-    String cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
+    String cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio,
+                             @RequestParam int porcentaje) throws TimeoutException {
         ArrayList<String> datos = new ArrayList<>();
         datos.add("cambiarPorcentajeUso"); //Operación
         datos.add(idPersona.toString());
@@ -91,7 +90,7 @@ public class EspacioController {
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
 
         if (resp == null) {
-            return "F";//  throw new TimeoutException();
+            throw new TimeoutException();
         }
         return resp;
     }

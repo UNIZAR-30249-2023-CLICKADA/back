@@ -27,8 +27,8 @@ public class AmqpPersonas {
                 String op = datos.get(0);
                 switch (op) {
                     case "cambiarRol" -> {
-                        if (personaService.cambiarRol(UUID.fromString(datos.get(0)), datos.get(1))) return "ok";
-                        return "Persona no encontrada, no se ha podido cambiar su Rol";
+                        if (personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2))) return "OK";
+                        return "Persona no encontrada o rol inválido. No se han hecho cambios";
                     }
                     case "todasPersonas" -> {
                         JSONArray lista = new JSONArray();
@@ -43,7 +43,6 @@ public class AmqpPersonas {
                             persona.put("email",p.getEMail());
                             lista.put(persona);
                         }
-
                         return lista.toString();
                     }
                     case "loginPersona" -> {
@@ -65,7 +64,7 @@ public class AmqpPersonas {
                     }
                 }
             }
-        return "ok";
+        return "Operación inválida";
     }
 
 }

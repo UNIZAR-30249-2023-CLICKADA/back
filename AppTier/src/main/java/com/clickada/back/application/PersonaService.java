@@ -24,7 +24,6 @@ public class PersonaService {
     public boolean cambiarRol(UUID idPersona, String rol) {
         Rol rolEnum = Rol.getRolByString(rol);
         if(personaRepository.existsById(idPersona) && rolEnum != null){
-
             Persona persona = personaRepository.getById(idPersona);
             persona.cambiarRol(rolEnum);
             personaRepository.save(persona);
