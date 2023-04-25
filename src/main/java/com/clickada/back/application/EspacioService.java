@@ -42,11 +42,10 @@ public class EspacioService {
     }
 
     @Transactional
-    public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
+    public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, Persona persona) throws Exception {
         Espacio espacio = espacioRepository.getById(idEspacio);
-        Persona persona = personaRepository.getById(idPersona);
-        if (espacio==null || persona==null) {
-            throw new Exception("El espacio o la persona no existen");
+        if (espacio==null) {
+            throw new Exception("El espacio no existe");
         }
         espacio.modificarReservabilidad(persona,reservabilidad);
         espacioRepository.save(espacio);
@@ -100,26 +99,18 @@ public class EspacioService {
         this.personaRepository.deleteAll();
     }
     @Transactional
-    public List<UUID> buscarEspacios(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas,TipoUso tipoDeUso, String detalles) throws Exception {
+    public ArrayList<UUID> buscarEspacios(Persona persona,List<Reserva> reservasTodas, int numEspacios, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas) throws Exception {
         if(numEspacios>3){
             throw new Exception("Demasiados espacios para la reserva automatica");
         }
-        Persona persona = personaRepository.getById(idPersona);
-        List<Reserva> reservasTodas = reservaRepository.findByFecha(fecha);
         List<Espacio> listaEspacios = espacioRepository.findAll();
         List<UUID> espaciosFiltrados = new ArrayList<>();
         int totalAsistentesPermitidos = 0;
-        if(persona!= null){ // Comprueba permisos de ese rol
             for(Espacio espacio: listaEspacios) {
-                if ((espacio != null && espacio.getReservabilidad() != null) && (
-                        (espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN) &&
-                                espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.SALA_COMUN) &&
-                                persona.rolPrincipal().equals(Rol.ESTUDIANTE)) || !persona.rolPrincipal().equals(Rol.ESTUDIANTE))
-                        && espacio.getReservabilidad().reservable) {
-                espaciosFiltrados.add(espacio.getIdEspacio());
+                if ((espacio != null && espacio.getReservabilidad() != null) && (espacio.aptoCambioRol(persona))){
+                    espaciosFiltrados.add(espacio.getIdEspacio());
                 }
             }
-        }
         List<Reserva> contienenEspacio = reservasTodas.stream()
                 .filter(reserva1 -> reserva1.getIdEspacios().stream().anyMatch(espaciosFiltrados::contains))
                 .toList();
@@ -127,7 +118,6 @@ public class EspacioService {
         reservaList.addAll(contienenEspacio); //añadimos reservas que tienen los mismo espacios (falta que sea la misma fecha)
         List<Espacio> espaciosCorrectos = espaciosDisponibles(reservaList,espaciosFiltrados,new PeriodoReserva(horaInicio,horaFinal));
         ArrayList<UUID> listaAdevolver = new ArrayList<>();
-        List<Integer> listaMaxOcupantes = new ArrayList<>();
 
         if (espaciosCorrectos.size() < numEspacios) {
             throw new Exception("No existen esapcios suficientes disponibles con esas caracteristicas");
@@ -151,10 +141,6 @@ public class EspacioService {
         if(suma<numMaxPersonas){
             throw new Exception("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
         }
-        for (int i = 0; i < numEspacios; i++) {
-            reservaRepository.save(new Reserva((new PeriodoReserva(horaInicio,horaFinal)),idPersona,
-                    tipoDeUso, listaAdevolver, numMaxPersonas, detalles,fecha));
-        }
 
         return listaAdevolver;
     }
@@ -173,9 +159,7 @@ public class EspacioService {
                 }
             }
         }else{
-            for (UUID idEspacio : espacioList) {
-                espacioList.add(idEspacio);
-            }
+            espacioListDisponible = espacioRepository.findAllById(espacioList);
         }
         return espacioListDisponible;
     }

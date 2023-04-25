@@ -74,10 +74,10 @@ public class EspacioController {
         LocalTime horaInicio = LocalTime.parse(reservaAutomaticaDto.getHoraInicio(), formatterTime);
         LocalTime horaFinal = LocalTime.parse(reservaAutomaticaDto.getHoraFinal(), formatterTime);
         try {
-            List<UUID> listEspacios = espacioService.buscarEspacios(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
+            List<UUID> listaEspacios = dominioService.reservaAutomaticaEspacio(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
                     fecha,horaInicio,horaFinal, reservaAutomaticaDto.getNumMaxPersonas(),reservaAutomaticaDto.getTipoUso(), reservaAutomaticaDto.getDetalles());
 
-            return new ResponseEntity<>(listEspacios, HttpStatus.OK);
+            return new ResponseEntity<>(listaEspacios,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }

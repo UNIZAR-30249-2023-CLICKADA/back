@@ -1,24 +1,18 @@
 package com.clickada.back.application;
 
-import com.clickada.back.domain.EdificioRepository;
-import com.clickada.back.domain.EspacioRepository;
-import com.clickada.back.domain.PersonaRepository;
-import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
+import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
-import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DominioService {
@@ -27,7 +21,7 @@ public class DominioService {
     @Autowired
     EspacioService espacioService;
     @Autowired
-    PersonaService personaService;
+    public PersonaService personaService;
 
     @Autowired
     public DominioService(ReservaService reservaService,EspacioService espacioService,PersonaService personaService){
@@ -44,7 +38,22 @@ public class DominioService {
         Reserva reservaCompletada = espacioService.reservarEspacio(persona,reservasTodas,reserva);
         reservaService.reservar(reservaCompletada);
     }
+    @Transactional
+    public ArrayList<UUID> reservaAutomaticaEspacio(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas, TipoUso tipoDeUso, String detalles) throws Exception {
+        if(numEspacios>3){
+            throw new Exception("Demasiados espacios para la reserva automatica");
+        }
+        Persona persona = personaService.getPersonaById(idPersona);
+        List<Reserva> reservasTodas = reservaService.reservasPorFecha(fecha);
 
+        ArrayList<UUID> listaEspacios = espacioService.buscarEspacios(persona,reservasTodas,numEspacios,horaInicio,horaFinal,numMaxPersonas);
+        Reserva reserva = new Reserva((new PeriodoReserva(horaInicio,horaFinal)),idPersona,
+                tipoDeUso, listaEspacios, numMaxPersonas, detalles,fecha);
+
+        reservaService.reservar(reserva);
+        return listaEspacios;
+
+    }
     @Transactional
     public void cambiarRol(UUID idGerente,UUID idPersona, String rol, String departamentoString) throws Exception {
         if(personaService.aptoParaCambiar(idGerente)) {
@@ -55,6 +64,12 @@ public class DominioService {
 
             reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
         }
+    }
+    @Transactional
+    public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
+        Persona persona = personaService.getPersonaById(idPersona);
+        espacioService.cambiarReservabilidadEspacio(idEspacio,reservabilidad,persona);
+
     }
 
 }

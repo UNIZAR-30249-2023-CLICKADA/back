@@ -47,7 +47,7 @@ public class TestRequisitos {
     EspacioRepository espacioRepository;
     @InjectMocks
     EspacioService espacioService;
-    @InjectMocks
+    @Autowired
     DominioService dominioService;
     @InjectMocks
     ReservaService reservaService;
@@ -250,14 +250,14 @@ public class TestRequisitos {
         when(espacioRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(gerente);
         when(espacioRepository.getById(any())).thenReturn(sala_comun);
-        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reserSeminario,gerente.getIdPersona()));
+        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reserSeminario,gerente));
 
 
-        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad3,gerente.getIdPersona()));
+        assertDoesNotThrow(()->espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad3,gerente));
 
         when(personaRepository.getById(any())).thenReturn(docente);
         thrown = assertThrows(Exception.class,()->{
-            espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad2,docente.getIdPersona());
+            espacioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),reservabilidad2,docente);
         });
         assertEquals("Si no es GERENTE no puede Modificar la Reservabilidad del Espacio",thrown.getMessage());
 
@@ -442,7 +442,10 @@ public class TestRequisitos {
         Reserva reserva_300 = new Reserva(new PeriodoReserva(LocalTime.of(19,0),LocalTime.of(20,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
-        when(personaRepository.getById(any())).thenReturn(gerente);
+        //when(personaRepository.getById(any())).thenReturn(gerente);
+        //personaRepository.save(gerente);
+        //when(personaRepository.getById(any())).thenReturn(gerente);
+        //when(personaService.getPersonaById(any())).thenReturn(gerente);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
@@ -459,17 +462,17 @@ public class TestRequisitos {
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2).thenReturn(sala_comun);
         when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
-        List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente.getIdPersona(),3,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
+        List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente,new ArrayList<>(),3,
+                LocalTime.of(9,0),LocalTime.of(10,0),100);
         listaBusqueda.forEach(idEspacio -> {assertEquals(idEspacio,idEspacios.get(listaBusqueda.indexOf(idEspacio)));});
 
-        List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
+        List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente,new ArrayList<>(),2,
+                LocalTime.of(9,0),LocalTime.of(10,0),100);
         assertEquals(2,listaBusqueda2.size());
 
         thrown = assertThrows(Exception.class,()-> {
-            espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),130,TipoUso.DOCENCIA,"DD");
+            espacioService.buscarEspacios(gerente,new ArrayList<>(),2,
+                    LocalTime.of(9,0),LocalTime.of(10,0),130);
         });
         assertEquals("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan",thrown.getMessage());
 
@@ -616,7 +619,7 @@ public class TestRequisitos {
         Reserva reserva_excedida = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
-        when(personaRepository.getById(any())).thenReturn(gerente);
+        //when(personaRepository.getById(any())).thenReturn(gerente);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
@@ -632,17 +635,17 @@ public class TestRequisitos {
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2).thenReturn(sala_comun);
         when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
-        List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente.getIdPersona(),3,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
+        List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente,new ArrayList<>(),3,
+                LocalTime.of(9,0),LocalTime.of(10,0),100);
         listaBusqueda.forEach(idEspacio -> {assertEquals(idEspacio,idEspacios.get(listaBusqueda.indexOf(idEspacio)));});
 
-        List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),100,TipoUso.DOCENCIA,"DD");
+        List<UUID> listaBusqueda2 = espacioService.buscarEspacios(gerente,new ArrayList<>(),2,
+                LocalTime.of(9,0),LocalTime.of(10,0),100);
         assertEquals(2,listaBusqueda2.size());
 
         thrown = assertThrows(Exception.class,()-> {
-            espacioService.buscarEspacios(gerente.getIdPersona(),2,
-                    LocalDate.now(),LocalTime.of(9,0),LocalTime.of(10,0),130,TipoUso.DOCENCIA,"DD");
+            espacioService.buscarEspacios(gerente,new ArrayList<>(),2,
+                    LocalTime.of(9,0),LocalTime.of(10,0),130);
         });
         assertEquals("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan",thrown.getMessage());
 
