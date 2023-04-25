@@ -47,10 +47,18 @@ public class AmqpPersonas {
                         return lista.toString();
                     }
                     case "loginPersona" -> {
-                        if (personaService.loginPersona(datos.get(1),datos.get(2))){
-                            return "True";
+                        Persona p = personaService.loginPersona(datos.get(1),datos.get(2));
+                        if (p!=null){
+                            JSONObject persona = new JSONObject();
+                            persona.put("idPersona",p.getIdPersona());
+                            persona.put("nombre",p.getNombre());
+                            persona.put("adscripcion",p.getAdscripcion());
+                            persona.put("departamentoDisponible",p.isDepartamentoDisponible());
+                            persona.put("roles",p.getRoles());
+                            persona.put("email",p.getEMail());
+                            return persona.toString();
                         }
-                        else { return  "Login fallido"; }
+                        else { return "Login fallido";  }
                     }
                     case "permisosReserva" -> {
                             return personaService.permisosDeReserva(UUID.fromString(datos.get(1))).toString();

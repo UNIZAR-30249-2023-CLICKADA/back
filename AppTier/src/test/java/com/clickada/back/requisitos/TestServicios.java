@@ -18,8 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.postgresql.hostchooser.HostRequirement.any;
@@ -61,9 +60,9 @@ public class TestServicios {
         when(personaRepository.findByeMail(any())).thenReturn(null).thenReturn(gerente).thenReturn(estudiante);
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante);
 
-        assertFalse(personaService.loginPersona(gerente.getEMail(),gerente.getContrasenya()));
-        assertFalse(personaService.loginPersona(estudiante.getEMail(),estudiante.getContrasenya()));
-        assertTrue(personaService.loginPersona(estudiante.getEMail(),estudiante.getContrasenya()));
+        assertNull(personaService.loginPersona(gerente.getEMail(),gerente.getContrasenya()));
+        assertNull(personaService.loginPersona(estudiante.getEMail(),estudiante.getContrasenya()));
+        assertNotNull(personaService.loginPersona(estudiante.getEMail(),estudiante.getContrasenya()));
     }
 
     @Test

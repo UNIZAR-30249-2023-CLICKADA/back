@@ -48,10 +48,12 @@ public class PersonaService {
     }
 
     @Transactional (readOnly = true)
-    public boolean loginPersona(String email, String pass){
+    public Persona loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
-        if (p!=null) return p.getContrasenya().equals(pass);
-        else return false;
+        if (p!=null && p.getContrasenya().equals(pass)){
+            return p;
+        }
+        else return null;
     }
 
     @Transactional (readOnly = true)
