@@ -2,6 +2,7 @@ package com.clickada.back.webtier.amqp;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
@@ -36,7 +37,7 @@ public class PersonaController {
 
 
     @GetMapping("/todasPersonas")
-    String todasPersonas() throws TimeoutException {
+    ResponseEntity<String> todasPersonas() throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("todasPersonas"); //Operación
@@ -45,12 +46,12 @@ public class PersonaController {
         if (resp == null) {
             throw new TimeoutException();
         }
-        return resp;
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
 
     @PutMapping("/loginPersona")
-    String loginPersona(@RequestParam String email, @RequestParam String pass) throws TimeoutException {
+    ResponseEntity<String> loginPersona(@RequestParam String email, @RequestParam String pass) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("loginPersona"); //Operación
@@ -58,10 +59,9 @@ public class PersonaController {
         datos.add(pass);
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
-        }
-        return resp;
+        if (resp == null) {throw new TimeoutException();}
+        else if (resp.equals("Login fallido")) {return new ResponseEntity<>("Login Fallido", HttpStatus.BAD_REQUEST);}
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @PutMapping("/permisosReserva")

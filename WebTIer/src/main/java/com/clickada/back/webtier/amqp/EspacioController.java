@@ -34,49 +34,6 @@ public class EspacioController {
         return resp;
     }
 
-    @PostMapping("/reservarEspacio")
-    String reservar(@RequestBody ReservaDto reservaDto) throws Exception {
-
-        ArrayList<String> datos = new ArrayList<>();
-        datos.add("reservarEspacio"); //Operación
-        datos.add(reservaDto.getIdPersona().toString());
-        datos.add(reservaDto.getIdEspacios().toString());
-        datos.add(reservaDto.getStringTipoUso());
-        datos.add(reservaDto.getFecha());
-        datos.add(reservaDto.getHoraInicio());
-        datos.add(reservaDto.getHoraFinal());
-        datos.add(reservaDto.getDetalles());
-        datos.add(String.valueOf(reservaDto.getNumMaxPersonas()));
-
-        String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
-
-        if (resp == null) {
-            throw new TimeoutException();
-        }
-        return resp;
-    }
-
-    @PostMapping("/reservarAutomatica")
-    String reservarAutomatica(@RequestBody ReservaAutomaticaDto reserva) throws Exception {
-
-        ArrayList<String> datos = new ArrayList<>();
-        datos.add("reservarAutomatica"); //Operación
-        datos.add(reserva.getIdPersona().toString());
-        datos.add(String.valueOf(reserva.getNumEspacios()));
-        datos.add(String.valueOf(reserva.getNumMaxPersonas()));
-        datos.add(reserva.getFecha());
-        datos.add(reserva.getHoraInicio());
-        datos.add(reserva.getHoraFinal());
-        datos.add(reserva.getDetalles());
-        datos.add(reserva.getTipoUso());
-
-        String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
-
-        if (resp == null) {
-            throw new TimeoutException();
-        }
-        return resp;
-    }
 
     @PutMapping("/cambiarPorcentajeUso")
     String cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio,
