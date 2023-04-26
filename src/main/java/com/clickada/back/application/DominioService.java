@@ -45,7 +45,6 @@ public class DominioService {
         }
         Persona persona = personaService.getPersonaById(idPersona);
         List<Reserva> reservasTodas = reservaService.reservasPorFecha(fecha);
-
         ArrayList<UUID> listaEspacios = espacioService.buscarEspacios(persona,reservasTodas,numEspacios,horaInicio,horaFinal,numMaxPersonas);
         Reserva reserva = new Reserva((new PeriodoReserva(horaInicio,horaFinal)),idPersona,
                 tipoDeUso, listaEspacios, numMaxPersonas, detalles,fecha);

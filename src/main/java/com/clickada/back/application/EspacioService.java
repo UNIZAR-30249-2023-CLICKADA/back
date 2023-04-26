@@ -177,8 +177,8 @@ public class EspacioService {
         for(Espacio espacio: todosEspacios){
             if(espacio.getPorcentajeUsoPermitido()==porcentajeViejo){ //le afecta
                 espaciosAfectados.add(espacio.getIdEspacio());
+                espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
             }
-            espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
         }
         //Comprobamos las reservasVivas que tienen esos espacios asignados
         //comprobarReservasVivas(espaciosAfectados);
