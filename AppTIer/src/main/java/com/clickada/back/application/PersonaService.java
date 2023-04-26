@@ -45,14 +45,11 @@ public class PersonaService {
         return false;
     }
     @Transactional (readOnly = true)
-    public Persona loginPersona(String email, String pass){
+    public boolean loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
-        if (p!=null && p.getContrasenya().equals(pass)){
-            return p;
-        }
-        else return null;
+        if (p!=null) return p.getContrasenya().equals(pass);
+        else return false;
     }
-
     @Transactional (readOnly = true)
     public List<CategoriaReserva> permisosDeReserva(UUID idPersona) {
         List<CategoriaReserva> l = new ArrayList<>();

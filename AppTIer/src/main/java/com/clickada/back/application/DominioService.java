@@ -45,7 +45,6 @@ public class DominioService {
         }
         Persona persona = personaService.getPersonaById(idPersona);
         List<Reserva> reservasTodas = reservaService.reservasPorFecha(fecha);
-
         ArrayList<UUID> listaEspacios = espacioService.buscarEspacios(persona,reservasTodas,numEspacios,horaInicio,horaFinal,numMaxPersonas);
         Reserva reserva = new Reserva((new PeriodoReserva(horaInicio,horaFinal)),idPersona,
                 tipoDeUso, listaEspacios, numMaxPersonas, detalles,fecha);
@@ -56,14 +55,15 @@ public class DominioService {
     }
     @Transactional
     public void cambiarRol(UUID idGerente,UUID idPersona, String rol, String departamentoString) throws Exception {
-        if(personaService.aptoParaCambiar(idGerente)) {
-            Persona gerente = personaService.getPersonaById(idPersona);
-            Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
-            List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
-            List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
-
-            reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
+        if(!personaService.aptoParaCambiar(idGerente)) {
+            throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
         }
+        Persona gerente = personaService.getPersonaById(idGerente);
+        Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
+        List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
+        List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
+
+        reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
     }
     @Transactional
     public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
@@ -76,15 +76,31 @@ public class DominioService {
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarPorcentajeEspacio(persona,idEspacio,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
-        List<UUID> listIdPersona = new ArrayList<>();
-        reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
+        if(reservasVivasEspacios.size()>0){
+            List<UUID> listIdPersona = new ArrayList<>();
+            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
 
-        List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
+            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
 
-        List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
+            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
 
-        reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+        }
+    }
+    @Transactional
+    public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
+        Persona persona = personaService.getPersonaById(idPersona);
+        List<UUID> espaciosAfectados = espacioService.cambiarPorcentajeEdificio(persona,porcentajeNuevo);
+        List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(espaciosAfectados);
+        if(reservasVivasEspacios.size()>0){
+            List<UUID> listIdPersona = new ArrayList<>();
+            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
 
+            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
 
+            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
+
+            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+        }
     }
 }

@@ -50,10 +50,16 @@ public class EspacioService {
         espacio.modificarReservabilidad(persona,reservabilidad);
         espacioRepository.save(espacio);
     }
-
+    public void comprobarDiaNoReservable(LocalDate fecha) throws Exception {
+        Edificio edificio = getUnicoEdificio();
+        if(edificio.getDiasNoReservables().contains(fecha)){
+            throw new Exception("El edificio no tiene habilitado ese día como reservable");
+        }
+    }
     @Transactional
     public Reserva reservarEspacio(Persona persona, List<Reserva> reservasTodas,Reserva reserva) throws Exception {
         //ver si esta dispponible reservar el espacio ese dia y esas horas
+        comprobarDiaNoReservable(reserva.getFecha());
         List<Reserva> reservaList = new ArrayList<>();
         int totalAsistentesPermitidos = 0;
         if(persona!= null){ // Comprueba permisos de ese rol
@@ -153,7 +159,7 @@ public class EspacioService {
                 for (Reserva reserva : reservaList) {
                     if (reserva.getIdEspacios().contains(idEspacio)) {//si esteidEspacio espacio esta reservado ese mismo dia tambien
                         if (!reserva.getPeriodoReserva().periodosCompatibles(periodoReserva)) {
-                            espacioListDisponible.remove(espacioList.indexOf(espacioRepository.getById(idEspacio)));
+                            espacioListDisponible.remove(espacioList.indexOf(idEspacio));
                         }
                     }
                 }
@@ -164,11 +170,9 @@ public class EspacioService {
         return espacioListDisponible;
     }
     @Transactional
-    public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
+    public List<UUID> cambiarPorcentajeEdificio(Persona persona, double porcentajeNuevo) throws Exception{
         //Cambiar todos los espacios
         //tener de vuelta los espacios a los que ha afectado
-        Persona persona = this.personaRepository.getById(idPersona);
-        if(persona==null) throw new Exception("La persona no existe");
         Edificio edificio = getUnicoEdificio();
         double porcentajeViejo = edificio.getPorcentajeUsoPermitido();
         edificio.cambiarPorcentajeEdificio(porcentajeNuevo);
@@ -179,14 +183,15 @@ public class EspacioService {
         for(Espacio espacio: todosEspacios){
             if(espacio.getPorcentajeUsoPermitido()==porcentajeViejo){ //le afecta
                 espaciosAfectados.add(espacio.getIdEspacio());
+                espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
             }
-            espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
         }
         //Comprobamos las reservasVivas que tienen esos espacios asignados
-        comprobarReservasVivas(espaciosAfectados);
+        //comprobarReservasVivas(espaciosAfectados);
         //notificar las reservas que con el cambio no han podido cumplir los requisitos
+        return espaciosAfectados;
     }
-    private Edificio getUnicoEdificio(){
+    public Edificio getUnicoEdificio(){
         return edificioRepository.findAll().get(0);
     }
     @Transactional
@@ -200,38 +205,7 @@ public class EspacioService {
         espacioRepository.save(espacio);
         //Comprobamos las reservasVivas que tienen ese espacio asignado
         // se notifica las reservas que con el cambio no han podido cumplir los requisitos
-        comprobarReservasVivas(List.of(idEspacio));
-    }
-    /*
-    * Dodo una lista de espacios, comprueba las reservasVivas que tengan asignado ese espacio
-    * y devuelve la lista de reservas que no cumplen los requisitos
-    * */
-    private void comprobarReservasVivas(List<UUID> idEspacios) throws Exception{
-        List<Reserva> reservasVivas = new java.util.ArrayList<>(reservaRepository.findAll().stream()
-                .filter(reserva -> reserva.getFecha().isAfter(LocalDate.now())).toList());
-        reservasVivas.addAll(reservaRepository.findByFecha(LocalDate.now())
-                .stream().filter(reserva1 -> reserva1.getPeriodoReserva().getHoraFin().isAfter(LocalTime.now()))
-                .toList());
-        reservasVivas.stream().filter(reserva1 -> reserva1.getIdEspacios().stream()
-                        .anyMatch(idEspacios::contains))
-                .toList();
-        int totalAsistentesPermitidos;
-
-        for(Reserva reserva  : reservasVivas){
-            totalAsistentesPermitidos = 0;
-            for(UUID idEspacio : reserva.getIdEspacios()){
-                totalAsistentesPermitidos+=espacioRepository.getById(idEspacio).getTotalAsistentesPermitidos();
-            }
-            if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
-                String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
-
-                Executors.newSingleThreadExecutor()
-                        .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
-                                reserva.getPeriodoReserva().getHoraInicio()));
-
-                reservaRepository.delete(reserva);
-            }
-        }
+        //comprobarReservasVivas(List.of(idEspacio));
     }
 
     public List<Espacio> obtenerEspaciosReservas(List<Reserva> reservasVivasPersona) {
