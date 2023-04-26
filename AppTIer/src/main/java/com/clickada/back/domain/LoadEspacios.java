@@ -42,11 +42,14 @@ public class LoadEspacios {
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio seminario = new Espacio(new Reservabilidad(false,CategoriaReserva.SEMINARIO),150, 60,
                 CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
+        Espacio despacho = new Espacio(new Reservabilidad(false,CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         edificioRepository.save(edificio);
 
         espacioRepository.save(sala_comun);
         espacioRepository.save(aula);
         espacioRepository.save(seminario);
+        espacioRepository.save(despacho);
 
         personaRepository.save(investigador);
         personaRepository.save(docente);

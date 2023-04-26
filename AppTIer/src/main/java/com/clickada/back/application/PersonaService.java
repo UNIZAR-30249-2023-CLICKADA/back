@@ -4,6 +4,7 @@ import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
+import com.clickada.back.domain.entity.auxClasses.PropietarioEspacio;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,5 +85,14 @@ public class PersonaService {
     }
     public List<Persona> getPersonasById(List<UUID> idPersonas) throws Exception{
         return personaRepository.findAllById(idPersonas);
+    }
+
+    public void comprobarPropietarios(PropietarioEspacio propietarioEspacio) throws Exception {
+        List<Persona> personas = personaRepository.findAllById(propietarioEspacio.personas);
+        for(Persona persona : personas){
+            if(!persona.asignable()){
+                throw new Exception("La persona/as tienen que ser investiador contratado o bien");
+            }
+        }
     }
 }

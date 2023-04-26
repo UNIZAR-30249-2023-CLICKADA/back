@@ -9,6 +9,7 @@ import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
 import com.clickada.back.infrastructure.EnviaMail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-
+@Slf4j
 @Service
 public class EspacioService {
     EspacioRepository espacioRepository;
@@ -211,5 +212,37 @@ public class EspacioService {
         List<UUID> listId= new ArrayList<>();
         reservasVivasPersona.forEach(reserva -> listId.addAll(reserva.getIdEspacios()));
         return espacioRepository.findAllById(listId);
+    }
+    @Transactional
+    public void comprobarDespachos(boolean rol_antiguo_asignable, Departamento departamentoAntiguo, Persona persona) throws Exception{
+        //log.info(rol_antiguo+"pasa a "+persona.rolPrincipal());
+        if(rol_antiguo_asignable && !persona.asignable()){ //los despachos ya no pueden estar asignados a esta persona
+            List<Espacio> espaciosAfectados = todosEspacios().stream()
+                    .filter(espacio -> espacio.getReservabilidad().categoriaReserva.equals(CategoriaReserva.DESPACHO)) //todos los despachos
+                    .filter(espacio -> espacio.getPropietarioEspacio().esPersonas()) // los que tengan personas
+                    .filter(espacio -> espacio.getPropietarioEspacio().personas.contains(persona.getIdPersona())).toList(); // que contengan como propietaria a esta persona
+            espaciosAfectados.forEach(espacio -> {
+                if(espacio.getPropietarioEspacio().personas.size()>1){ // quitamos a la persona de propietaria y listo
+                    espacio.getPropietarioEspacio().personas.remove(persona.getIdPersona());
+                }else{ //asignar todos los despachos que tenía al departamento al que pertenecia
+                    try {
+                        espacio.asignarAEspacio(new PropietarioEspacio(departamentoAntiguo));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                espacioRepository.save(espacio);
+            });
+
+        }
+    }
+
+    public void cambiarPropietarioEspacio(UUID idEspacio, PropietarioEspacio propietarioEspacio) throws Exception {
+        Espacio espacio = espacioRepository.getById(idEspacio);
+        if(espacio==null){
+            throw new Exception("No existe el espacio con ese id");
+        }
+        espacio.asignarAEspacio(propietarioEspacio);
+        espacioRepository.save(espacio);
     }
 }

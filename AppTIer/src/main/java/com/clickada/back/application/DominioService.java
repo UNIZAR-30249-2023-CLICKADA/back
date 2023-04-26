@@ -3,9 +3,7 @@ package com.clickada.back.application;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
-import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
-import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
-import com.clickada.back.domain.entity.auxClasses.TipoUso;
+import com.clickada.back.domain.entity.auxClasses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,18 +57,31 @@ public class DominioService {
             throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
         }
         Persona gerente = personaService.getPersonaById(idGerente);
+        Persona persona_antigua = personaService.getPersonaById(idPersona);
+        Departamento departamentoAntiguo = persona_antigua.getDepartamento();
+        boolean asignable = persona_antigua.asignable();
         Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
         List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
         List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
-
         reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
+        //comprobar Despachos (lo unico que le puede afectar un cambio de rol)
+        espacioService.comprobarDespachos(asignable,departamentoAntiguo,persona);
     }
     @Transactional
     public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarReservabilidadEspacio(idEspacio,reservabilidad,persona);
     }
-
+    @Transactional
+    public void cambiarPropietarioEspacio(UUID idEspacio, PropietarioEspacio propietarioEspacio, UUID idPersona) throws Exception{
+        if(!personaService.aptoParaCambiar(idPersona)) {
+            throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
+        }
+        if(propietarioEspacio.esPersonas()){
+            personaService.comprobarPropietarios(propietarioEspacio);
+        }
+        espacioService.cambiarPropietarioEspacio(idEspacio,propietarioEspacio);
+    }
     @Transactional
     public void cambiarPorcentajeEspacio(UUID idPersona, UUID idEspacio,double porcentajeNuevo) throws Exception{
         Persona persona = personaService.getPersonaById(idPersona);

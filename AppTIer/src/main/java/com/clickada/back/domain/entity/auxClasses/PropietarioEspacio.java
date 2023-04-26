@@ -5,14 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @Getter
-@NoArgsConstructor
 public class PropietarioEspacio implements Serializable {
     public Eina eina;
     public Departamento departamento;
 
-    public List<Persona> personas;
+    public List<UUID> personas;
     int indexPropietario;
 
     public PropietarioEspacio(Eina eina){
@@ -24,13 +26,15 @@ public class PropietarioEspacio implements Serializable {
         this.indexPropietario = 1;
     }
     public  PropietarioEspacio(List<Persona> personas) throws Exception {
+        List<UUID> idPersonas = new ArrayList<>();
         for(Persona persona : personas){
             if(!persona.asignable()){
                 throw new Exception("Para ser propietario de espacio se tiene que ser DOCENTE_INVESTIGADOR o " +
                         "INVESTIGADOR_CONTRATADO");
             }
+            idPersonas.add(persona.getIdPersona());
         }
-        this.personas = personas;
+        this.personas = idPersonas;
         this.indexPropietario = 2;
     }
     public boolean esDepartamento(){
