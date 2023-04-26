@@ -35,6 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -70,6 +74,7 @@ public class TestDominioService {
     private Espacio aula;
     private Espacio seminario;
     private final double porcentaje_MAX = 100;
+    private double epsilon = 0.000001d;
     @Before
     public void repoblarAntes() throws Exception {
         espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
@@ -148,12 +153,12 @@ public class TestDominioService {
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo = 80;
 
-        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido(),epsilon);
 
         dominioService.cambiarPorcentajeEdificio(gerente.getIdPersona(),porcentajeNuevo);
 
         List<Espacio> todosEspacios = espacioService.todosEspacios();
-        todosEspacios.forEach(espacio -> assertEquals(porcentajeNuevo,espacio.getPorcentajeUsoPermitido()));
+        todosEspacios.forEach(espacio -> assertEquals(porcentajeNuevo,espacio.getPorcentajeUsoPermitido(),epsilon));
 
     }
     @Test
@@ -161,21 +166,21 @@ public class TestDominioService {
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo_Espacio = 80;
         double porcentajeNuevo_Edificio = 50;
-        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido(),epsilon);
         dominioService.cambiarPorcentajeEspacio(gerente.getIdPersona(),sala_comun.getIdEspacio(),porcentajeNuevo_Espacio);
 
         List<Espacio> todosEspacios = espacioService.todosEspacios();
         sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
-        assertEquals(porcentajeNuevo_Espacio,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentajeNuevo_Espacio,sala_comun.getPorcentajeUsoPermitido(),epsilon);
 
         dominioService.cambiarPorcentajeEdificio(gerente.getIdPersona(),porcentajeNuevo_Edificio);
 
         todosEspacios = espacioService.todosEspacios();
         sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
-        assertEquals(porcentajeNuevo_Espacio,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentajeNuevo_Espacio,sala_comun.getPorcentajeUsoPermitido(),epsilon);
         todosEspacios.remove(todosEspacios.indexOf(sala_comun));
 
-        todosEspacios.forEach(espacio -> assertEquals(porcentajeNuevo_Edificio,espacio.getPorcentajeUsoPermitido()));
+        todosEspacios.forEach(espacio -> assertEquals(porcentajeNuevo_Edificio,espacio.getPorcentajeUsoPermitido(),epsilon));
     }
     @Test
     public void requisito14_buscarEspacio() throws Exception{
@@ -208,7 +213,7 @@ public class TestDominioService {
                 "Reservar correcta");
         ArrayList<UUID> listaLocal  = new ArrayList<>(List.of(sala_comun.getIdEspacio(),sala_comun2.getIdEspacio(),
                 sala_comun3.getIdEspacio()));
-        assertEquals(listaLocal.size(),resultado.size());
+        assertEquals(listaLocal.size(),resultado.size(),epsilon);
         listaLocal.forEach(idEspacio->assertTrue(resultado.contains(idEspacio)));
         //hacemos una reserva en la sala_comun2 y no nos tendria que dejar
         dominioService.reservarEspacio(gerente.getIdPersona(),new ArrayList<>(List.of(sala_comun.getIdEspacio())),
@@ -229,12 +234,12 @@ public class TestDominioService {
         //when(personaRepository.getById(any())).thenReturn(gerente);
         //when(espacioRepository.getById(any())).thenReturn(sala_comun);
         //when(edificioRepository.getById(any())).thenReturn(edificio);
-        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentaje_MAX,sala_comun.getPorcentajeUsoPermitido(),epsilon);
         dominioService.cambiarPorcentajeEspacio(gerente.getIdPersona(),sala_comun.getIdEspacio(),porcentajeNuevo);
 
         List<Espacio> todosEspacios = espacioService.todosEspacios();
         sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
-        assertEquals(porcentajeNuevo,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentajeNuevo,sala_comun.getPorcentajeUsoPermitido(),epsilon);
 
     }
 
@@ -257,7 +262,7 @@ public class TestDominioService {
 
         List<Espacio> todosEspacios = espacioService.todosEspacios();
         sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
-        assertEquals(porcentajeNuevo,sala_comun.getPorcentajeUsoPermitido());
+        assertEquals(porcentajeNuevo,sala_comun.getPorcentajeUsoPermitido(),epsilon);
 
     }
     @Test
@@ -272,6 +277,50 @@ public class TestDominioService {
 
         List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
         assertEquals(0,reservasVivas.size());
+
+    }
+    @Test
+    public void cambioRolDesdeDominioService() throws Exception{
+        Exception thrown = assertThrows(Exception.class,()-> {
+            dominioService.cambiarRol(estudiante.getIdPersona(),estudiante.getIdPersona(),
+                    "Conserje",null);
+        });
+        assertEquals("Se ncesita un rol gerente para cambiar el rol de cualquier persona",thrown.getMessage());
+        //estudiante a consejer bien
+        dominioService.cambiarRol(gerente.getIdPersona(),estudiante.getIdPersona(),
+                "Conserje",null);
+        estudiante = personaService.todasPersonas().stream().filter(persona ->
+                persona.getIdPersona().equals(estudiante.getIdPersona())).toList().get(0);
+        assertEquals(Rol.CONSERJE,estudiante.rolPrincipal());
+        dominioService.cambiarReservabilidadEspacio(aula.getIdEspacio(),new Reservabilidad(true,CategoriaReserva.AULA),
+                gerente.getIdPersona());
+        aula = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(aula.getIdEspacio())).toList().get(0);
+        assertTrue(aula.getReservabilidad().reservable);
+        // se reserva como conserje un aula
+        dominioService.reservarEspacio(estudiante.getIdPersona(),
+                new ArrayList<>(List.of(aula.getIdEspacio())),LocalDate.now().plusDays(1),
+                LocalTime.of(18,0),LocalTime.of(19,0),TipoUso.DOCENCIA,40,
+                "Reservar mas espacios de los que hay disponibles");
+        List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(1,reservasVivas.size());
+        //se cambia de conserje a estudiante- > como un estudiante no puede reservar un aula, la reserva se eliminara
+        dominioService.cambiarRol(gerente.getIdPersona(),estudiante.getIdPersona(),
+                "Estudiante",null);
+        estudiante = personaService.todasPersonas().stream().filter(persona ->
+                persona.getIdPersona().equals(estudiante.getIdPersona())).toList().get(0);
+        assertEquals(Rol.ESTUDIANTE,estudiante.rolPrincipal());
+
+        reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(0,reservasVivas.size());
+        //conserje a investigador mal sin departamento
+        //assertEquals("Este rol necesita estar asignado a un Departamento",thrown.getMessage());
+        //conserje a investigador bien con departamento
+        // a docente sin departamento bien
+        //a tecnico bien
+        //a gerente bien
+        //anyadir rol nulo "No es Gerente o no existe el departamento y necesita uno"
+        //anyadir rol
 
     }
 }

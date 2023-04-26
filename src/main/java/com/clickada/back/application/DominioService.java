@@ -55,14 +55,15 @@ public class DominioService {
     }
     @Transactional
     public void cambiarRol(UUID idGerente,UUID idPersona, String rol, String departamentoString) throws Exception {
-        if(personaService.aptoParaCambiar(idGerente)) {
-            Persona gerente = personaService.getPersonaById(idPersona);
-            Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
-            List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
-            List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
-
-            reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
+        if(!personaService.aptoParaCambiar(idGerente)) {
+            throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
         }
+        Persona gerente = personaService.getPersonaById(idGerente);
+        Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
+        List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
+        List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
+
+        reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
     }
     @Transactional
     public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
