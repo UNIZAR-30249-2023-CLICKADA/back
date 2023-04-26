@@ -37,8 +37,7 @@ public class LoadEspacios {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
-        edificio.setIdEdificio(UUID.randomUUID());
+                new ArrayList<>(List.of(LocalDate.now().plusDays(2))),100);
         Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio aula = new Espacio(new Reservabilidad(false,CategoriaReserva.AULA),150, 60,

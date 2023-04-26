@@ -72,12 +72,6 @@ public class Espacio{
                         !nuevaReservabilidad.categoriaReserva.equals(CategoriaReserva.SALA_COMUN))){
             throw new Exception("Los seminarios solo pueden ser aulas o salas comunes");
         }
-        //Categoria reserva
-        //sala comun -> despacho, seminario
-        //aula -> seminario
-        //despacho ->
-        //laboratorio ->
-        //seminario -> aula, sala_comun
         this.reservabilidad = nuevaReservabilidad;
     }
     public void modificarHorarioDisponible(Persona persona,LocalTime horaInicioNueva, LocalTime horaFinNueva) throws Exception {

@@ -4,6 +4,7 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
+import com.clickada.back.domain.EdificioRepository;
 import com.clickada.back.domain.EspacioRepository;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
@@ -51,6 +52,9 @@ public class TestRequisitos {
     DominioService dominioService;
     @InjectMocks
     ReservaService reservaService;
+    @Mock
+    EdificioRepository edificioRepository;
+
     @Test
     void requisito2() throws Exception {
         Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE,null);
@@ -287,6 +291,7 @@ public class TestRequisitos {
         when(personaRepository.getById(any())).thenReturn(estudiante);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(sala_comun);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
         assertDoesNotThrow(()->espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva));
 
         //si intentamos reservar donde ya hay una reserva en el mismo horario dara error
@@ -442,10 +447,7 @@ public class TestRequisitos {
         Reserva reserva_300 = new Reserva(new PeriodoReserva(LocalTime.of(19,0),LocalTime.of(20,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
-        //when(personaRepository.getById(any())).thenReturn(gerente);
-        //personaRepository.save(gerente);
-        //when(personaRepository.getById(any())).thenReturn(gerente);
-        //when(personaService.getPersonaById(any())).thenReturn(gerente);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
@@ -501,6 +503,7 @@ public class TestRequisitos {
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante).thenReturn(tecnico_laboratorio);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(aula);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
         assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
         //false reservar AULA siendo un estudiante
         Exception thrown = assertThrows(Exception.class,()-> {
@@ -549,6 +552,7 @@ public class TestRequisitos {
                 .thenReturn(tecnico_laboratorio);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
         assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
         assertDoesNotThrow(()->espacioService.reservarEspacio(conserje,new ArrayList<>(),reserva));
         //false reservar LABORATORIO siendo un estudiante
@@ -619,7 +623,7 @@ public class TestRequisitos {
         Reserva reserva_excedida = new Reserva(new PeriodoReserva(LocalTime.of(9,0),LocalTime.of(10,0)),gerente.getIdPersona(),
                 TipoUso.DOCENCIA, idEspacios,300,"DD",LocalDate.now());
 
-        //when(personaRepository.getById(any())).thenReturn(gerente);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2);
 
@@ -671,6 +675,7 @@ public class TestRequisitos {
         when(personaRepository.getById(any())).thenReturn(estudiante);
         when(reservaRepository.findByFecha(any())).thenReturn(new ArrayList<>());
         when(espacioRepository.getById(any())).thenReturn(sala_comun);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
 
         assertDoesNotThrow(()->espacioService.reservarEspacio(estudiante,new ArrayList<>(),reserva));
 
@@ -712,6 +717,7 @@ public class TestRequisitos {
                 .thenReturn(laboratorio)
                 .thenReturn(aula)
                 .thenReturn(seminario);
+        when(edificioRepository.findAll()).thenReturn(List.of(edificio));
 
         assertDoesNotThrow(()->espacioService.reservarEspacio(gerente,new ArrayList<>(),reserva));
 

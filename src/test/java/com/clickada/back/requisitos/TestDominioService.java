@@ -86,8 +86,7 @@ public class TestDominioService {
         edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
-        edificio.setIdEdificio(UUID.randomUUID());
+                new ArrayList<>(List.of(LocalDate.now().plusDays(2))),100);
         sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         aula = new Espacio(new Reservabilidad(false,CategoriaReserva.AULA),150, 60,
@@ -100,6 +99,7 @@ public class TestDominioService {
         espacioRepository.save(aula);
         espacioRepository.save(seminario);
 
+        personaRepository.deleteAllInBatch();
         personaRepository.save(investigador);
         personaRepository.save(docente);
         personaRepository.save(tecnico);
@@ -123,8 +123,7 @@ public class TestDominioService {
         edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
-                new ArrayList<>(List.of(LocalDate.of(2023,1,1))),100);
-        edificio.setIdEdificio(UUID.randomUUID());
+                new ArrayList<>(List.of(LocalDate.now().plusDays(2))),100);
         sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
                 CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         aula = new Espacio(new Reservabilidad(false,CategoriaReserva.AULA),150, 60,
@@ -259,6 +258,20 @@ public class TestDominioService {
         List<Espacio> todosEspacios = espacioService.todosEspacios();
         sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
         assertEquals(porcentajeNuevo,sala_comun.getPorcentajeUsoPermitido());
+
+    }
+    @Test
+    public void reservarDiaNoReservable() throws Exception{
+
+        Exception thrown = assertThrows(Exception.class,()-> {
+                    dominioService.reservarEspacio(gerente.getIdPersona(), new ArrayList<>(List.of(sala_comun.getIdEspacio())),
+                            LocalDate.now().plusDays(2), LocalTime.of(10, 0), LocalTime.of(11, 0),
+                            TipoUso.DOCENCIA, 50, "Reserva en un dia no reservable");
+                });
+        assertEquals("El edificio no tiene habilitado ese día como reservable",thrown.getMessage());
+
+        List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(0,reservasVivas.size());
 
     }
 }
