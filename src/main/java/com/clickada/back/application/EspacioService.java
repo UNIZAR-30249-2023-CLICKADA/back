@@ -164,11 +164,9 @@ public class EspacioService {
         return espacioListDisponible;
     }
     @Transactional
-    public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
+    public List<UUID> cambiarPorcentajeEdificio(Persona persona, double porcentajeNuevo) throws Exception{
         //Cambiar todos los espacios
         //tener de vuelta los espacios a los que ha afectado
-        Persona persona = this.personaRepository.getById(idPersona);
-        if(persona==null) throw new Exception("La persona no existe");
         Edificio edificio = getUnicoEdificio();
         double porcentajeViejo = edificio.getPorcentajeUsoPermitido();
         edificio.cambiarPorcentajeEdificio(porcentajeNuevo);
@@ -183,8 +181,9 @@ public class EspacioService {
             espacio.modificarPorcentajeOcupacion(persona,porcentajeNuevo);
         }
         //Comprobamos las reservasVivas que tienen esos espacios asignados
-        comprobarReservasVivas(espaciosAfectados);
+        //comprobarReservasVivas(espaciosAfectados);
         //notificar las reservas que con el cambio no han podido cumplir los requisitos
+        return espaciosAfectados;
     }
     private Edificio getUnicoEdificio(){
         return edificioRepository.findAll().get(0);
@@ -200,7 +199,7 @@ public class EspacioService {
         espacioRepository.save(espacio);
         //Comprobamos las reservasVivas que tienen ese espacio asignado
         // se notifica las reservas que con el cambio no han podido cumplir los requisitos
-        comprobarReservasVivas(List.of(idEspacio));
+        //comprobarReservasVivas(List.of(idEspacio));
     }
     /*
     * Dodo una lista de espacios, comprueba las reservasVivas que tengan asignado ese espacio

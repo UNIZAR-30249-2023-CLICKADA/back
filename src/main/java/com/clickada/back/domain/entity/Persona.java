@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Persona {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private UUID idPersona;
     String nombre;
     @Column (unique = true)
@@ -25,7 +26,6 @@ public class Persona {
     boolean departamentoDisponible;
     ArrayList<Rol> roles;
     public Persona(String nombre, String eMail, String pass, Rol rol, Departamento departamento) throws Exception {
-        this.idPersona = UUID.randomUUID();
         this.nombre = nombre;
         this.eMail = eMail;
         this.contrasenya = Base64.getEncoder().encodeToString(pass.getBytes());

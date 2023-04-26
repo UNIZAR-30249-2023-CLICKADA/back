@@ -102,7 +102,7 @@ public class EspacioController {
     @PutMapping("/cambiarPorcentajeUsoEdificio")
     ResponseEntity<?> reservarEdificio(@RequestParam UUID idPersona, @RequestParam double porcentaje){
         try{
-            espacioService.cambiarPorcentajeEdificio(idPersona,porcentaje);
+            dominioService.cambiarPorcentajeEdificio(idPersona,porcentaje);
 
             return new ResponseEntity<>("Porcentaje cambiado correctamente", HttpStatus.OK);
         }catch(Exception e){

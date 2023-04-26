@@ -76,15 +76,31 @@ public class DominioService {
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarPorcentajeEspacio(persona,idEspacio,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
-        List<UUID> listIdPersona = new ArrayList<>();
-        reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
+        if(reservasVivasEspacios.size()>0){
+            List<UUID> listIdPersona = new ArrayList<>();
+            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
 
-        List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
+            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
 
-        List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
+            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
 
-        reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+        }
+    }
+    @Transactional
+    public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
+        Persona persona = personaService.getPersonaById(idPersona);
+        List<UUID> espaciosAfectados = espacioService.cambiarPorcentajeEdificio(persona,porcentajeNuevo);
+        List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(espaciosAfectados);
+        if(reservasVivasEspacios.size()>0){
+            List<UUID> listIdPersona = new ArrayList<>();
+            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
 
+            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
 
+            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
+
+            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
+        }
     }
 }
