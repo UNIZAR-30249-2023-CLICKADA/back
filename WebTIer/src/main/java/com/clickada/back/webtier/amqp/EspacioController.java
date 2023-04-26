@@ -35,20 +35,35 @@ public class EspacioController {
     }
 
 
-    @PutMapping("/cambiarPorcentajeUso")
-    String cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio,
-                             @RequestParam int porcentaje) throws TimeoutException {
+    @PutMapping("/cambiarPorcentajeUsoEspacio")
+    ResponseEntity<?> cambiarPorcentajeEspacio(@RequestParam UUID idPersona, @RequestParam UUID idEspacio,
+                             @RequestParam double porcentaje) throws TimeoutException {
         ArrayList<String> datos = new ArrayList<>();
-        datos.add("cambiarPorcentajeUso"); //Operación
+        datos.add("cambiarPorcentajeEspacio"); //Operación
         datos.add(idPersona.toString());
         datos.add(idEspacio.toString());
         datos.add(String.valueOf(porcentaje));
 
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
+        if (resp !=null && resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return resp;
+        return new ResponseEntity<>(resp,HttpStatus.OK);
+    }
+
+    @PutMapping("/cambiarPorcentajeUsoEdificio")
+    ResponseEntity<?> cambiarPorcentajeEdificio(@RequestParam UUID idPersona, @RequestParam double porcentaje) throws TimeoutException {
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("cambiarPorcentajeEdificio"); //Operación
+        datos.add(idPersona.toString());
+        datos.add(String.valueOf(porcentaje));
+
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
+
+        if (resp !=null && resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 }

@@ -1,9 +1,10 @@
 package com.clickada.back.amqp;
 
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
-import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import org.json.JSONArray;
@@ -27,6 +28,8 @@ public class AmqpReservas {
     ReservaService reservaService;
     @Autowired
     EspacioService espacioService;
+    @Autowired
+    DominioService dominioService;
 
     @RabbitListener(queues="reservas")
     public String receive(ArrayList<String> datos) {
@@ -52,7 +55,7 @@ public class AmqpReservas {
                         for (int i = 0; i < je.length(); i++) {
                             listaEspacios.add(UUID.fromString(je.getString(i)));
                         }
-                        espacioService.reservarEspacio(UUID.fromString(datos.get(1)), listaEspacios,
+                        dominioService.reservarEspacio(UUID.fromString(datos.get(1)), listaEspacios,
                                 fecha, horaInicio, horaFinal,
                                 tipoUso, Integer.parseInt(datos.get(8)), datos.get(7));
                     } catch (Exception e) {
@@ -72,8 +75,9 @@ public class AmqpReservas {
                     LocalTime horaFinal = LocalTime.parse(datos.get(6), formatterTime);
 
                     try {
-                        List<UUID> listEspacios = espacioService.buscarEspacios(UUID.fromString(datos.get(1)),
-                                Integer.parseInt(datos.get(2)),fecha,horaInicio,horaFinal, Integer.parseInt(datos.get(3)),tipoUso, datos.get(7));
+                        Persona p = personaService.getPersonaById(UUID.fromString(datos.get(1)));
+                        List<UUID> listEspacios = espacioService.buscarEspacios(p,new ArrayList<>(),
+                                Integer.parseInt(datos.get(2)),horaInicio,horaFinal,Integer.parseInt(datos.get(3)));
 
                         JSONArray jsonEspacios = new JSONArray();
                         for (UUID listEspacio : listEspacios) {

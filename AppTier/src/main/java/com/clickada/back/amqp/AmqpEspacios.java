@@ -1,5 +1,6 @@
 package com.clickada.back.amqp;
 
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Espacio;
@@ -31,6 +32,8 @@ public class AmqpEspacios {
     PersonaService personaService;
 
     @Autowired
+    DominioService dominioService;
+    @Autowired
     EspacioService espacioService;
 
     @RabbitListener(queues="espacios")
@@ -39,7 +42,6 @@ public class AmqpEspacios {
             String op = datos.get(0);
             switch (op) {
                 case "todosEspacios" -> {
-
                     JSONArray lista = new JSONArray();
                     List<Espacio> espacios = espacioService.todosEspacios();
                     for (Espacio e : espacios) {
@@ -65,21 +67,27 @@ public class AmqpEspacios {
                         esp.put("horaInicio", e.getHoraInicio());
                         esp.put("horaFin", e.getHoraFin());
                         esp.put("horaInicio", e.getHoraInicio());
-                        esp.put("diasNoReservables", e.getDiasNoReservables());
+
                         lista.put(esp);
                     }
                     return lista.toString();
                 }
-                case "cambiarPorcentajeUso" -> {
+                case "cambiarPorcentajeEspacio" -> {
                     try {
-                        if (!espacioService.modificarPorcentajeOcupacion(UUID.fromString(datos.get(1)),
-                                UUID.fromString(datos.get(2)),Integer.parseInt(datos.get(3)))){
-                            return  "No tiene permisos para hacer esta operación o no exixte el espacio";
-                        }
+                        dominioService.cambiarPorcentajeEspacio(UUID.fromString(datos.get(1)),
+                                UUID.fromString(datos.get(2)),Double.parseDouble(datos.get(3)));
                         return "Porcentaje cambiado correctamente";
-
                     } catch (Exception e) {
-                        return e.toString();
+                        return "ERR:" + e.getMessage();
+                    }
+                }
+                case "cambiarPorcentajeEdificio" -> {
+                    try {
+                        espacioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
+                                Double.parseDouble(datos.get(2)));
+                        return "Porcentaje cambiado correctamente";
+                    } catch (Exception e) {
+                        return "ERR:" + e.getMessage();
                     }
                 }
             }

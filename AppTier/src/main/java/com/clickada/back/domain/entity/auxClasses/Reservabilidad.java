@@ -19,9 +19,8 @@ public class Reservabilidad implements Serializable {
             throw new Exception("Los despachos no pueden ser reservables");
         }
         this.reservable = reservable;
-        if(reservable){
-            this.categoriaReserva = categoriaReserva;
-        }
+        this.categoriaReserva = categoriaReserva;
+
     }
     public Reservabilidad(boolean reservable, String categoriaReserva) throws Exception {
         CategoriaReserva categoriaReserva1 = CategoriaReserva.getCategoriaByString(categoriaReserva);
@@ -32,9 +31,9 @@ public class Reservabilidad implements Serializable {
             throw new Exception("Los despachos no pueden ser reservables");
         }
         this.reservable = reservable;
-        if(reservable){
-            this.categoriaReserva = categoriaReserva1;
-        }
+
+        this.categoriaReserva = categoriaReserva1;
+
     }
 
 }

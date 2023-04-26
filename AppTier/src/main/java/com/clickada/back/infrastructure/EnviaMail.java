@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Async;
-
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Properties;
-
 
 @Service
 public class EnviaMail {
@@ -37,19 +34,15 @@ public class EnviaMail {
         message.setSubject("Reserva cancelada");
         if (tipo==1){
             message.setText("Hola, una de sus reservas ha sido cancelada por cambios en la ocupación " +
-                    "del espacio.<br/> Su reserva en el espacio "+ nombre + " , del " + fecha.toString() + " a las " +
+                    "del espacio.<br> Su reserva en el espacio "+ nombre+ " , del " + fecha.toString() + " a las " +
                     hora.toString() + " ha sido cancelada porque ha cambiado la ocupación máxima del espacio y " +
                     "su reserva ya no cumple las condiciones de uso.");
         }
         else if (tipo==2){
-                message.setText("Hola, una de sus reservas ha sido cancelada." +
-                        "<br/> Su reserva en el espacio "+ nombre+ ", del " + fecha.toString() + " a las " +
-                        hora.toString() + "ha sido cancelada porque un gerente ha eliminado la reserva.");
+            message.setText("Hola, una de sus reservas ha sido cancelada." +
+                    "<br> Su reserva en el espacio "+ nombre+ ", del " + fecha.toString() + " a las " +
+                    hora.toString() + "ha sido cancelada porque un gerente ha eliminado la reserva.");
         }
-
-
-
-
         emailSender.send(message);
     }
 }

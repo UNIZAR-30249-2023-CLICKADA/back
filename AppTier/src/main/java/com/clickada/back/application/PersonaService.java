@@ -3,6 +3,7 @@ package com.clickada.back.application;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
+import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,24 +20,22 @@ public class PersonaService {
 
     @Autowired
     public PersonaService(PersonaRepository personaRepository){ this.personaRepository = personaRepository;}
-
     @Transactional
-    public boolean cambiarRol(UUID idPersona, String rol) {
+    public Persona cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
         Rol rolEnum = Rol.getRolByString(rol);
-        if(personaRepository.existsById(idPersona) && rolEnum != null){
-            Persona persona = personaRepository.getById(idPersona);
-            persona.cambiarRol(rolEnum);
-            personaRepository.save(persona);
-            return true;
+        Departamento departamento = Departamento.getDepartamentoByString(departamentoString);
+        if(!personaRepository.existsById(idPersona) || rolEnum == null) {
+            throw new Exception("No existe el rol o la persona");
         }
-        return false;
+        Persona persona = personaRepository.getById(idPersona);
+        persona.cambiarRol(rolEnum,departamento);
+        personaRepository.save(persona);
+        return persona;
     }
-
     @Transactional (readOnly = true)
     public List<Persona> todasPersonas(){
         return personaRepository.findAll();
     }
-
     @Transactional (readOnly = true)
     public boolean aptoParaCambiar(UUID idPersona) {
         if(personaRepository.existsById(idPersona)){
@@ -45,7 +44,6 @@ public class PersonaService {
         }
         return false;
     }
-
     @Transactional (readOnly = true)
     public Persona loginPersona(String email, String pass){
         Persona p = personaRepository.findByeMail(email);
@@ -80,4 +78,12 @@ public class PersonaService {
         return l;
     }
 
+    public Persona getPersonaById(UUID idPersona) throws Exception{
+        Persona persona = personaRepository.getById(idPersona);
+        if(persona==null) throw new Exception("El idPersona no existe");
+        return persona;
+    }
+    public List<Persona> getPersonasById(List<UUID> idPersonas) throws Exception{
+        return personaRepository.findAllById(idPersonas);
+    }
 }

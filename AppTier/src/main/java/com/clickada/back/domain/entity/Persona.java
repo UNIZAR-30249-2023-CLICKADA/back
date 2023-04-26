@@ -1,6 +1,5 @@
 package com.clickada.back.domain.entity;
 
-import com.clickada.back.domain.entity.auxClasses.Adscripcion;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import lombok.*;
@@ -22,58 +21,67 @@ public class Persona {
     @Column (unique = true)
     String eMail;
     String contrasenya;
-    Adscripcion adscripcion;
+    Departamento departamento;
     boolean departamentoDisponible;
     ArrayList<Rol> roles;
-
-    public Persona(String nombre, String eMail, String pass, Rol rol){
+    public Persona(String nombre, String eMail, String pass, Rol rol, Departamento departamento) throws Exception {
         this.idPersona = UUID.randomUUID();
         this.nombre = nombre;
         this.eMail = eMail;
         this.contrasenya = Base64.getEncoder().encodeToString(pass.getBytes());
         this.departamentoDisponible = rol.adscribible(rol);
+        if(this.departamentoDisponible){
+            if(departamento==null) {
+                throw new Exception("El departamento proporcionado no existe, y este rol necesita estar asignado a un departamento");
+            }
+            this.departamento = departamento;
+        }
         this.roles = new ArrayList<>();
         this.roles.add(rol);
     }
-    public void cambiarRol(Rol nuevoRol) {
+    public void cambiarRol(Rol nuevoRol,Departamento departamento) throws Exception {
         if (nuevoRol!= null){
-            this.roles.clear();
-            this.roles.add(nuevoRol);
             // gestionar el nuevo rol con los departamentos
             boolean adscribible = nuevoRol.adscribible(nuevoRol);
             if (departamentoDisponible && !adscribible) {
                 departamentoDisponible = false;
+                this.departamento = null;
             } else if (!departamentoDisponible && adscribible) {
+                if(departamento == null) throw new Exception("Este rol necesita estar asignado a un Departamento");
                 departamentoDisponible = true;
+                this.departamento = departamento;
+            } else if(departamentoDisponible && adscribible){
+                if(departamento!=null){
+                    this.departamento = departamento;
+                }
             }
+            this.roles.clear();
+            this.roles.add(nuevoRol);
         }
     }
 
-    public void anyadirRol() throws Exception {
-        if(this.rolPrincipal().equals(Rol.GERENTE)){
+    public void cambiarDepartamento(Departamento departamento){
+        if(this.departamentoDisponible && departamento!=null){
+            this.departamento = departamento;
+        }
+    }
+    public void anyadirRol(Departamento departamento) throws Exception {
+        if(this.rolPrincipal().equals(Rol.GERENTE) && departamento!=null){
             this.roles.add(Rol.DOCENTE_INVESTIGADOR);
+            this.departamento = departamento;
+            departamentoDisponible = true;
         }
         else {
-            throw new Exception("No es Gerente, no puede tener segundo Rol");
-        }
-        departamentoDisponible = true;
-    }
-
-    public void adscripcionADepartamento(Departamento departamento){
-        if(this.departamentoDisponible){
-            if(this.adscripcion == null){
-                this.adscripcion = new Adscripcion(departamento);
-            }else {
-                this.adscripcion.setDepartamento(departamento);
-            }
+            throw new Exception("No es Gerente o no existe el departamento y necesita uno");
         }
     }
     public boolean asignable(){
         return this.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR) ||
-                this.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) ||
-                (this.rolPrincipal().equals(Rol.GERENTE) && this.rolSecundario()!=null);
+                this.rolPrincipal().equals(Rol.INVESTIGADOR_CONTRATADO) || gerente_docente();
     }
-
+    public boolean gerente_docente(){
+        return this.roles.size()>1;
+    }
     public Rol rolPrincipal(){
         return this.roles.get(0);
     }

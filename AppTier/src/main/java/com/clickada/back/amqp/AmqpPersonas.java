@@ -27,8 +27,12 @@ public class AmqpPersonas {
                 String op = datos.get(0);
                 switch (op) {
                     case "cambiarRol" -> {
-                        if (personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2))) return "OK";
-                        return "Persona no encontrada o rol inválido. No se han hecho cambios";
+                        try {
+                        personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2),datos.get(3));
+                        return "OK";
+                        } catch (Exception e) {
+                            return "Persona no encontrada o rol inválido. No se han hecho cambios";
+                        }
                     }
                     case "todasPersonas" -> {
                         JSONArray lista = new JSONArray();
@@ -37,7 +41,7 @@ public class AmqpPersonas {
                             JSONObject persona = new JSONObject();
                             persona.put("idPersona",p.getIdPersona());
                             persona.put("nombre",p.getNombre());
-                            persona.put("adscripcion",p.getAdscripcion());
+                            persona.put("departamento",p.getDepartamento());
                             persona.put("departamentoDisponible",p.isDepartamentoDisponible());
                             persona.put("roles",p.getRoles());
                             persona.put("email",p.getEMail());
@@ -51,7 +55,7 @@ public class AmqpPersonas {
                             JSONObject persona = new JSONObject();
                             persona.put("idPersona",p.getIdPersona());
                             persona.put("nombre",p.getNombre());
-                            persona.put("adscripcion",p.getAdscripcion());
+                            persona.put("departamento",p.getDepartamento());
                             persona.put("departamentoDisponible",p.isDepartamentoDisponible());
                             persona.put("roles",p.getRoles());
                             persona.put("email",p.getEMail());

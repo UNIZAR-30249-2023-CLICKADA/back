@@ -1,6 +1,8 @@
 package com.clickada.back.infrastructure;
 
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
+import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
 import com.clickada.back.dtos.ReservaAutomaticaDto;
@@ -8,7 +10,6 @@ import com.clickada.back.dtos.ReservaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,11 +23,16 @@ import java.util.UUID;
 public class EspacioController {
     EspacioService espacioService;
     ReservaService reservaService;
+    PersonaService personaService;
+    DominioService dominioService;
 
     @Autowired
-    public EspacioController(EspacioService espacioService,ReservaService reservaService) {
+    public EspacioController(EspacioService espacioService,ReservaService reservaService,PersonaService personaService,
+                             DominioService dominioService) {
         this.espacioService = espacioService;
         this.reservaService = reservaService;
+        this.personaService = personaService;
+        this.dominioService = dominioService;
     }
     @GetMapping("/todosEspacios")
     ResponseEntity<?> todosEspacios(){
@@ -50,7 +56,7 @@ public class EspacioController {
             return new ResponseEntity<>("Ese tipo de uso no existe, pruebe con otro",HttpStatus.BAD_REQUEST);
         }
         try {
-            espacioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
+            dominioService.reservarEspacio(reservaDto.getIdPersona(), reservaDto.getIdEspacios(),
                     fecha,horaInicio,horaFinal,
                     tipoUso, reservaDto.getNumMaxPersonas(), reservaDto.getDetalles());
         }catch (Exception e){
@@ -68,10 +74,10 @@ public class EspacioController {
         LocalTime horaInicio = LocalTime.parse(reservaAutomaticaDto.getHoraInicio(), formatterTime);
         LocalTime horaFinal = LocalTime.parse(reservaAutomaticaDto.getHoraFinal(), formatterTime);
         try {
-            List<UUID> listEspacios = espacioService.buscarEspacios(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
+            List<UUID> listaEspacios = dominioService.reservaAutomaticaEspacio(reservaAutomaticaDto.getIdPersona(), reservaAutomaticaDto.getNumEspacios(),
                     fecha,horaInicio,horaFinal, reservaAutomaticaDto.getNumMaxPersonas(),reservaAutomaticaDto.getTipoUso(), reservaAutomaticaDto.getDetalles());
 
-            return new ResponseEntity<>(listEspacios, HttpStatus.OK);
+            return new ResponseEntity<>(listaEspacios,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
@@ -83,12 +89,25 @@ public class EspacioController {
         return new ResponseEntity<>("Eliminados datos de las bases de datos", HttpStatus.OK);
     }
 
+    @PutMapping("/cambiarPorcentajeUsoEspacio")
+    ResponseEntity<?> reservarEspacio(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam double porcentaje){
+        try{
+            //espacioService.cambiarPorcentajeEspacio(idPersona,idEspacio,porcentaje);
+            return new ResponseEntity<>("Porcentaje cambiado correctamente", HttpStatus.OK);
 
-    @PutMapping("/cambiarPorcentajeUso")
-    ResponseEntity<?> cambiarPorcentaje(@RequestParam UUID idPersona, @RequestParam UUID idEspacio, @RequestParam int porcentaje){
-        if (!espacioService.modificarPorcentajeOcupacion(idPersona,idEspacio,porcentaje)){
-            return  new ResponseEntity<>("No tiene permisos para hacer esta operación",HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
     }
+    @PutMapping("/cambiarPorcentajeUsoEdificio")
+    ResponseEntity<?> reservarEdificio(@RequestParam UUID idPersona, @RequestParam double porcentaje){
+        try{
+            espacioService.cambiarPorcentajeEdificio(idPersona,porcentaje);
+
+            return new ResponseEntity<>("Porcentaje cambiado correctamente", HttpStatus.OK);
+        }catch(Exception e){
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

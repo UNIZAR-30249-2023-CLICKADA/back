@@ -8,6 +8,7 @@ import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
+import com.clickada.back.domain.entity.auxClasses.Departamento;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -39,11 +41,11 @@ public class TestServicios {
     ReservaService reservaService;
 
     @Test
-    void aptoParaCambiar(){
+    void aptoParaCambiar() throws Exception {
         Persona gerente = new Persona("Señor Tst","unico@mail.com", "123",
-                Rol.GERENTE) ;
+                Rol.GERENTE,null) ;
         Persona estudiante = new Persona("Señor Tst","unico@mail.com", "123",
-                Rol.ESTUDIANTE) ;
+                Rol.ESTUDIANTE,null) ;
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante);
 
@@ -52,11 +54,11 @@ public class TestServicios {
 
     }
     @Test
-    void loginPersona(){
+    void loginPersona() throws Exception {
         Persona gerente = new Persona("Señor Tst","unico@mail.com", "123",
-                Rol.GERENTE) ;
+                Rol.GERENTE,null) ;
         Persona estudiante = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.ESTUDIANTE) ;
+                Rol.ESTUDIANTE,null) ;
         when(personaRepository.findByeMail(any())).thenReturn(null).thenReturn(gerente).thenReturn(estudiante);
         when(personaRepository.getById(any())).thenReturn(gerente).thenReturn(estudiante);
 
@@ -66,19 +68,19 @@ public class TestServicios {
     }
 
     @Test
-    void permisos_de_reserva(){
+    void permisos_de_reserva() throws Exception {
         Persona estudiante = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.ESTUDIANTE) ;
+                Rol.ESTUDIANTE,null) ;
         Persona conserje = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.CONSERJE) ;
+                Rol.CONSERJE,null) ;
         Persona TECNICO_LABORATORIO = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.TECNICO_LABORATORIO) ;
+                Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS) ;
         Persona DOCENTE_INVESTIGADOR = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.DOCENTE_INVESTIGADOR) ;
+                Rol.DOCENTE_INVESTIGADOR, Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES) ;
         Persona INVESTIGADOR_CONTRATADO = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.INVESTIGADOR_CONTRATADO) ;
+                Rol.INVESTIGADOR_CONTRATADO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS) ;
         Persona gerente = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.GERENTE) ;
+                Rol.GERENTE,null) ;
         when(personaRepository.existsById(any())).thenReturn(true);
         when(personaRepository.getById(estudiante.getIdPersona())).thenReturn(estudiante);
         when(personaRepository.getById(conserje.getIdPersona())).thenReturn(conserje);
