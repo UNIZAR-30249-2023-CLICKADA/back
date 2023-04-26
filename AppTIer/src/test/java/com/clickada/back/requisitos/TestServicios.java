@@ -23,7 +23,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.postgresql.hostchooser.HostRequirement.any;
 
 @SpringBootTest
 public class TestServicios {
@@ -74,7 +73,7 @@ public class TestServicios {
         Persona conserje = new Persona("Señor Tst","unico@mail.com", "1232",
                 Rol.CONSERJE,null) ;
         Persona TECNICO_LABORATORIO = new Persona("Señor Tst","unico@mail.com", "1232",
-                Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS) ;
+                Rol.TECNICO_LABORATORIO, Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS) ;
         Persona DOCENTE_INVESTIGADOR = new Persona("Señor Tst","unico@mail.com", "1232",
                 Rol.DOCENTE_INVESTIGADOR, Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES) ;
         Persona INVESTIGADOR_CONTRATADO = new Persona("Señor Tst","unico@mail.com", "1232",
