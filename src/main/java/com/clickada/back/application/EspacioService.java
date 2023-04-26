@@ -153,7 +153,7 @@ public class EspacioService {
                 for (Reserva reserva : reservaList) {
                     if (reserva.getIdEspacios().contains(idEspacio)) {//si esteidEspacio espacio esta reservado ese mismo dia tambien
                         if (!reserva.getPeriodoReserva().periodosCompatibles(periodoReserva)) {
-                            espacioListDisponible.remove(espacioList.indexOf(espacioRepository.getById(idEspacio)));
+                            espacioListDisponible.remove(espacioList.indexOf(idEspacio));
                         }
                     }
                 }

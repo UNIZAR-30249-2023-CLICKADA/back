@@ -16,6 +16,7 @@ import com.clickada.back.domain.entity.auxClasses.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -179,14 +180,47 @@ public class TestDominioService {
     }
     @Test
     public void requisito14_buscarEspacio() throws Exception{
-        //cambio que no afecta ninguna reserva
-        /*List<Espacio> todosEspacios = espacioService.todosEspacios();
-        Espacio sala_comun = todosEspacios.stream().filter(espacio -> espacio.getCategoriaEspacio().equals(CategoriaEspacio.SALA_COMUN)).findFirst().get();
-        List<Persona> todasPersonas = personaService.todasPersonas();
-        Persona gerente = todasPersonas.stream().filter(persona -> persona.rolPrincipal().equals(Rol.GERENTE)).findFirst().get();
+        //DEMASIADOS ESPACIOS PARA LOS QUE HAY DISPONIBLES
 
-        assertEquals(100,sala_comun.getPorcentajeUsoPermitido());*/
+        Exception thrown = assertThrows(Exception.class,()->{
+            dominioService.reservaAutomaticaEspacio(gerente.getIdPersona(),3,LocalDate.now().plusDays(1),
+                    LocalTime.of(18,0),LocalTime.of(19,0),30,TipoUso.DOCENCIA,
+                    "Reservar mas espacios de los que hay disponibles");
+        });
+        assertEquals("No existen esapcios suficientes disponibles con esas caracteristicas",thrown.getMessage());
 
+        // ESPACIOS DISPONIBLES, PERO NO HAY PARA TANTAS PERSONAS
+        thrown = assertThrows(Exception.class,()->{
+            dominioService.reservaAutomaticaEspacio(gerente.getIdPersona(),1,LocalDate.now().plusDays(1),
+                    LocalTime.of(18,0),LocalTime.of(19,0),100,TipoUso.DOCENCIA,
+                    "Reservar mas espacios de los que hay disponibles");
+        });
+        assertEquals("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan",thrown.getMessage());
+        Espacio sala_comun2 = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
+        Espacio sala_comun3 = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
+
+        espacioRepository.save(sala_comun2);
+        espacioRepository.save(sala_comun3);
+        //Espacios y personas correctas
+        ArrayList<UUID> resultado = dominioService.reservaAutomaticaEspacio(gerente.getIdPersona(),3,LocalDate.now(),
+                LocalTime.of(18,0),LocalTime.of(19,0),180,TipoUso.DOCENCIA,
+                "Reservar correcta");
+        ArrayList<UUID> listaLocal  = new ArrayList<>(List.of(sala_comun.getIdEspacio(),sala_comun2.getIdEspacio(),
+                sala_comun3.getIdEspacio()));
+        assertEquals(listaLocal.size(),resultado.size());
+        listaLocal.forEach(idEspacio->assertTrue(resultado.contains(idEspacio)));
+        //hacemos una reserva en la sala_comun2 y no nos tendria que dejar
+        dominioService.reservarEspacio(gerente.getIdPersona(),new ArrayList<>(List.of(sala_comun.getIdEspacio())),
+                LocalDate.now().plusDays(1),LocalTime.of(18,30),LocalTime.of(19,30),
+                TipoUso.DOCENCIA,50,"Reserva de 50 personas para una sala comun");
+       thrown = assertThrows(Exception.class,()->{
+            dominioService.reservaAutomaticaEspacio(gerente.getIdPersona(),3,LocalDate.now().plusDays(1),
+                    LocalTime.of(18,0),LocalTime.of(19,0),180,TipoUso.DOCENCIA,
+                    "Reservar mas espacios de los que hay disponibles");
+        });
+        assertEquals("No existen esapcios suficientes disponibles con esas caracteristicas",thrown.getMessage());
     }
     @Test
     public void requisito15_sinReservasImplicadas() throws Exception{
