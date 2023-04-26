@@ -2,7 +2,7 @@
 
 #### Para ejecutar el backend:
 
-1.- Es necesario tener correctamente instalado Java y Apache Maven.
+1.- Es necesario tener correctamente instalado Java, con la variable de entorno JAVA_HOME definida.
 
 2.- Compilar e iniciar la aplicación AppTier, ejecutando desde el directorio back/AppTier:
  
