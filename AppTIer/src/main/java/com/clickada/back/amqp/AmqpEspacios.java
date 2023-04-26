@@ -83,7 +83,7 @@ public class AmqpEspacios {
                 }
                 case "cambiarPorcentajeEdificio" -> {
                     try {
-                        espacioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
+                        dominioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
                                 Double.parseDouble(datos.get(2)));
                         return "Porcentaje cambiado correctamente";
                     } catch (Exception e) {

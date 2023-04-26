@@ -18,6 +18,7 @@ import java.util.UUID;
 @Entity
 public class Edificio {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     UUID idEdificio;
 
     //Horario disponible de reserva
