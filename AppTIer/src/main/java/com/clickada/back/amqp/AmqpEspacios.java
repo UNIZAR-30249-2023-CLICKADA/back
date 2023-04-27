@@ -4,11 +4,14 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.dtos.EspacioDto;
+import com.clickada.back.dtos.MapperDtos;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,11 @@ public class AmqpEspacios {
                 case "todosEspacios" -> {
                     JSONArray lista = new JSONArray();
                     List<Espacio> espacios = espacioService.todosEspacios();
-                    for (Espacio e : espacios) {
+                    MapperDtos mapperDtos = new MapperDtos();
+                    List<EspacioDto> espacioDtos = mapperDtos.listaEspacioDto(espacios);
+                    Gson gson = new Gson();
+                    return gson.toJson(espacioDtos);
+                    /*for (Espacio e : espacios) {
                         JSONObject esp = new JSONObject();
                         esp.put("idEspacio", e.getIdEspacio());
                         esp.put("categoriaEspacio", e.getCategoriaEspacio());
@@ -58,7 +65,8 @@ public class AmqpEspacios {
 
                         lista.put(esp);
                     }
-                    return lista.toString();
+                    return lista.toString();*/
+                    //return json;
                 }
                 case "cambiarPorcentajeEspacio" -> {
                     try {
