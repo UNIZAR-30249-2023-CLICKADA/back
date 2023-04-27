@@ -37,6 +37,18 @@ public class ReservaController {
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
+    @GetMapping("/todasReservas")
+    ResponseEntity<?> todasReservas() throws Exception {
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("todasReservas"); //Operación
+        String res = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
+
+        if (res == null) {
+            throw new TimeoutException();
+        }
+        return new ResponseEntity<>(res,HttpStatus.OK);
+    }
+
     @PostMapping("/reservarEspacio")
     String reservar(@RequestBody ReservaDto reservaDto) throws TimeoutException {
 

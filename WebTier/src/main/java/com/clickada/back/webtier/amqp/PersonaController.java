@@ -95,28 +95,3 @@ public class PersonaController {
     // excepción si la respuesta no llega en X segundos).
 
 }
-
-    // Si salta una excepción de Timeout en cualquier petición de este Controller devolvemos
-    // un código de error y un mensaje explicándolo
-
-/*
-
-    @PutMapping("/cambiarReservabilidad")
-    ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio,
-                                            @RequestParam boolean reservable, @RequestParam String categoriaReserva) throws Exception {
-        /*if (personaService.aptoParaCambiar(idPersona)){
-            try{
-                if(espacioService.cambiarReservabilidadEspacio(idEspacio,new Reservabilidad(reservable,categoriaReserva),idPersona)){
-                    return new ResponseEntity<>("Reservabilidad cambiada correctamente", HttpStatus.OK);
-                }
-                return new ResponseEntity<>("No existe el espacio para cambiar la reservabilidad",HttpStatus.BAD_REQUEST);
-            }catch (Exception e){
-                return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-            }
-
-        }
-
-        return new ResponseEntity<>("La persona no es apta para cambiar nada",HttpStatus.BAD_REQUEST);*/
-
-
-

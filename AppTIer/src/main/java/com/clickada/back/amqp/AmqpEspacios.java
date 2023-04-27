@@ -4,6 +4,7 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -73,6 +74,16 @@ public class AmqpEspacios {
                     try {
                         dominioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
                                 Double.parseDouble(datos.get(2)));
+                        return "Porcentaje cambiado correctamente";
+                    } catch (Exception e) {
+                        return "ERR:" + e.getMessage();
+                    }
+                }
+                case "cambiarReservabilidad" -> {
+                    try {
+                        dominioService.cambiarReservabilidadEspacio(UUID.fromString(datos.get(2)),
+                                new Reservabilidad(Boolean.parseBoolean(datos.get(3)),
+                                        datos.get(4)),UUID.fromString(datos.get(1)));
                         return "Porcentaje cambiado correctamente";
                     } catch (Exception e) {
                         return "ERR:" + e.getMessage();

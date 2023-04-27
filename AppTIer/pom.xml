@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.clickada</groupId>
-	<artifactId>back</artifactId>
+	<artifactId>back.AppTier</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>back</name>
 	<description>Back Spring Boot Project for Clickada</description>

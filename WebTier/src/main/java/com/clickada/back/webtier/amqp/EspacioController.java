@@ -66,4 +66,22 @@ public class EspacioController {
         }
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
+
+    @PutMapping("/cambiarReservabilidad")
+    ResponseEntity<?> cambiarReservabilidad(@RequestParam UUID idPersona,  @RequestParam UUID idEspacio,
+                                            @RequestParam boolean reservable, @RequestParam String categoriaReserva) throws Exception {
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("cambiarReservabilidad"); //Operación
+        datos.add(idPersona.toString());
+        datos.add(idEspacio.toString());
+        datos.add(String.valueOf(reservable));
+        datos.add(categoriaReserva);
+
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("espacios", datos);
+
+        if (resp !=null && resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(resp,HttpStatus.OK);
+    }
 }

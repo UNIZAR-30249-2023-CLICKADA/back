@@ -31,7 +31,7 @@ public class AmqpReservas {
     @Autowired
     DominioService dominioService;
 
-    @RabbitListener(queues="reservas")
+    @RabbitListener(queues = "reservas")
     public String receive(ArrayList<String> datos) {
         if (!datos.isEmpty()) {
             String op = datos.get(0);
@@ -76,8 +76,8 @@ public class AmqpReservas {
 
                     try {
                         Persona p = personaService.getPersonaById(UUID.fromString(datos.get(1)));
-                        List<UUID> listEspacios = espacioService.buscarEspacios(p,new ArrayList<>(),
-                                Integer.parseInt(datos.get(2)),horaInicio,horaFinal,Integer.parseInt(datos.get(3)));
+                        List<UUID> listEspacios = espacioService.buscarEspacios(p, new ArrayList<>(),
+                                Integer.parseInt(datos.get(2)), horaInicio, horaFinal, Integer.parseInt(datos.get(3)));
 
                         JSONArray jsonEspacios = new JSONArray();
                         for (UUID listEspacio : listEspacios) {
@@ -104,19 +104,50 @@ public class AmqpReservas {
                             res.put("tipoDeuso", r.getTipoDeUso());
                             res.put("numOcupantes", r.getNumOcupantes());
                             res.put("detallesReserva", r.getDetallesReserva());
-                            res.put("fecha",r.getFecha());
+                            res.put("fecha", r.getFecha());
 
                             JSONArray idsEsp = new JSONArray();
                             List<UUID> lis = r.getIdEspacios();
                             for (UUID id : lis) {
                                 idsEsp.put(id.toString());
                             }
-                            res.put("idEspacios",idsEsp);
+                            res.put("idEspacios", idsEsp);
                             lista.put(res);
                         }
                         return lista.toString();
                     } catch (Exception e) {
-                        return "error";
+                        return e.getMessage();
+                    }
+                }
+                case "todasReservas" -> {
+                    try {
+                        List<Reserva> listReservas = reservaService.listarTodasReservas();
+                        JSONArray l = new JSONArray();
+
+                        for (Reserva r : listReservas) {
+                            JSONObject res = new JSONObject();
+                            res.put("idReserva", r.getIdReserva().toString());
+                            JSONArray periodo = new JSONArray();
+                            periodo.put(new JSONObject().put("horaInicio", String.valueOf(r.getPeriodoReserva().getHoraInicio())));
+                            periodo.put(new JSONObject().put("horaFin", String.valueOf(r.getPeriodoReserva().getHoraFin())));
+                            res.put("periodoReserva", periodo);
+                            res.put("idPersona", r.getIdPersona().toString());
+                            res.put("tipoDeuso", r.getTipoDeUso());
+                            res.put("numOcupantes", r.getNumOcupantes());
+                            res.put("detallesReserva", r.getDetallesReserva());
+                            res.put("fecha", r.getFecha());
+
+                            JSONArray idsEsp = new JSONArray();
+                            List<UUID> lis = r.getIdEspacios();
+                            for (UUID id : lis) {
+                                idsEsp.put(id.toString());
+                            }
+                            res.put("idEspacios", idsEsp);
+                            l.put(res);
+                        }
+                        return l.toString();
+                    } catch (Exception e) {
+                        return e.getMessage();
                     }
                 }
             }
