@@ -63,12 +63,16 @@ public class PersonaService {
                 case ESTUDIANTE -> l.add(CategoriaReserva.SALA_COMUN);
                 case CONSERJE -> {
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
+                    l.add(CategoriaReserva.LABORATORIO); l.add(CategoriaReserva.SEMINARIO);
                 }
                 case DOCENTE_INVESTIGADOR, INVESTIGADOR_CONTRATADO -> {
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
                     l.add(CategoriaReserva.LABORATORIO);
                 }
-                case TECNICO_LABORATORIO -> l.add(CategoriaReserva.SALA_COMUN);
+                case TECNICO_LABORATORIO -> {
+                    l.add(CategoriaReserva.SALA_COMUN); l.add(CategoriaReserva.SEMINARIO);
+                    l.add(CategoriaReserva.LABORATORIO);
+                }
                 case GERENTE -> {
                     l.add(CategoriaReserva.SALA_COMUN); l.add(CategoriaReserva.LABORATORIO);
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SEMINARIO);
