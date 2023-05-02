@@ -3,6 +3,11 @@ import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Persona;
 
+import com.clickada.back.domain.entity.Reserva;
+import com.clickada.back.dtos.MapperDtos;
+import com.clickada.back.dtos.PersonaDto;
+import com.clickada.back.dtos.ReservaDto;
+import com.google.gson.Gson;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,19 +40,13 @@ public class AmqpPersonas {
                         }
                     }
                     case "todasPersonas" -> {
-                        JSONArray lista = new JSONArray();
-                        List<Persona> pl = personaService.todasPersonas();
-                        for(Persona p : pl){
-                            JSONObject persona = new JSONObject();
-                            persona.put("idPersona",p.getIdPersona());
-                            persona.put("nombre",p.getNombre());
-                            persona.put("departamento",p.getDepartamento());
-                            persona.put("departamentoDisponible",p.isDepartamentoDisponible());
-                            persona.put("roles",p.getRoles());
-                            persona.put("email",p.getEMail());
-                            lista.put(persona);
-                        }
-                        return lista.toString();
+
+
+                        List<Persona> listPersonas = personaService.todasPersonas();
+                        MapperDtos mapperDtos = new MapperDtos();
+                        List<PersonaDto> personaDtos = mapperDtos.listaPersonaDto(listPersonas);
+                        Gson gson = new Gson();
+                        return gson.toJson(personaDtos);
                     }
                     case "loginPersona" -> {
                         Persona p = personaService.loginPersona(datos.get(1),datos.get(2));

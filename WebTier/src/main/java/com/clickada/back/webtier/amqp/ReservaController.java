@@ -43,9 +43,10 @@ public class ReservaController {
         datos.add("todasReservas"); //Operación
         String res = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
 
-        if (res == null) {
-            throw new TimeoutException();
+        if (res !=null && res.contains("ERR:")) {
+            return new ResponseEntity<>(res.substring(4),HttpStatus.BAD_REQUEST);
         }
+        else if (res == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
         return new ResponseEntity<>(res,HttpStatus.OK);
     }
 

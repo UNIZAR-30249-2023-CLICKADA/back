@@ -1,4 +1,4 @@
-package com.clickada.back.domain;
+/*package com.clickada.back.domain;
 
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
@@ -21,7 +21,7 @@ public class LoadEspacios {
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository,EdificioRepository edificioRepository,
                                     PersonaRepository personaRepository,ReservaRepository reservaRepository) throws Exception {
-       /* espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
+        espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
         edificioRepository.deleteAllInBatch();
         personaRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
@@ -53,7 +53,8 @@ public class LoadEspacios {
         personaRepository.save(tecnico);
         personaRepository.save(estudiante);
         personaRepository.save(conserje);
-        personaRepository.save(gerente);*/
+        personaRepository.save(gerente);
         return null;
     }
 }
+*/

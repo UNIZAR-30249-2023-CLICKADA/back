@@ -4,9 +4,14 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.application.ReservaService;
+import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.TipoUso;
+import com.clickada.back.dtos.EspacioDto;
+import com.clickada.back.dtos.MapperDtos;
+import com.clickada.back.dtos.ReservaDto;
+import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -91,63 +96,25 @@ public class AmqpReservas {
                 case "reservasVivas" -> {
                     try {
                         List<Reserva> listReservas = reservaService.obtenerReservasVivas(UUID.fromString(datos.get(1)));
-                        JSONArray lista = new JSONArray();
+                        MapperDtos mapperDtos = new MapperDtos();
+                        List<ReservaDto> reservaDtos = mapperDtos.listaReservaDto(listReservas);
+                        Gson gson = new Gson();
+                        return gson.toJson(reservaDtos);
 
-                        for (Reserva r : listReservas) {
-                            JSONObject res = new JSONObject();
-                            res.put("idReserva", r.getIdReserva().toString());
-                            JSONArray periodo = new JSONArray();
-                            periodo.put(new JSONObject().put("horaInicio", String.valueOf(r.getPeriodoReserva().getHoraInicio())));
-                            periodo.put(new JSONObject().put("horaFin", String.valueOf(r.getPeriodoReserva().getHoraFin())));
-                            res.put("periodoReserva", periodo);
-                            res.put("idPersona", r.getIdPersona().toString());
-                            res.put("tipoDeuso", r.getTipoDeUso());
-                            res.put("numOcupantes", r.getNumOcupantes());
-                            res.put("detallesReserva", r.getDetallesReserva());
-                            res.put("fecha", r.getFecha());
-
-                            JSONArray idsEsp = new JSONArray();
-                            List<UUID> lis = r.getIdEspacios();
-                            for (UUID id : lis) {
-                                idsEsp.put(id.toString());
-                            }
-                            res.put("idEspacios", idsEsp);
-                            lista.put(res);
-                        }
-                        return lista.toString();
                     } catch (Exception e) {
-                        return e.getMessage();
+                        return "ERR:" + e.getMessage();
                     }
                 }
                 case "todasReservas" -> {
                     try {
                         List<Reserva> listReservas = reservaService.listarTodasReservas();
-                        JSONArray l = new JSONArray();
+                        MapperDtos mapperDtos = new MapperDtos();
+                        List<ReservaDto> reservaDtos = mapperDtos.listaReservaDto(listReservas);
+                        Gson gson = new Gson();
+                        return gson.toJson(reservaDtos);
 
-                        for (Reserva r : listReservas) {
-                            JSONObject res = new JSONObject();
-                            res.put("idReserva", r.getIdReserva().toString());
-                            JSONArray periodo = new JSONArray();
-                            periodo.put(new JSONObject().put("horaInicio", String.valueOf(r.getPeriodoReserva().getHoraInicio())));
-                            periodo.put(new JSONObject().put("horaFin", String.valueOf(r.getPeriodoReserva().getHoraFin())));
-                            res.put("periodoReserva", periodo);
-                            res.put("idPersona", r.getIdPersona().toString());
-                            res.put("tipoDeuso", r.getTipoDeUso());
-                            res.put("numOcupantes", r.getNumOcupantes());
-                            res.put("detallesReserva", r.getDetallesReserva());
-                            res.put("fecha", r.getFecha());
-
-                            JSONArray idsEsp = new JSONArray();
-                            List<UUID> lis = r.getIdEspacios();
-                            for (UUID id : lis) {
-                                idsEsp.put(id.toString());
-                            }
-                            res.put("idEspacios", idsEsp);
-                            l.put(res);
-                        }
-                        return l.toString();
                     } catch (Exception e) {
-                        return e.getMessage();
+                        return "ERR:" + e.getMessage();
                     }
                 }
             }
