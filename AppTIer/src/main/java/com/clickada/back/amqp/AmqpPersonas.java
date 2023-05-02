@@ -1,4 +1,5 @@
 package com.clickada.back.amqp;
+import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Persona;
@@ -17,6 +18,8 @@ public class AmqpPersonas {
 
     @Autowired
     PersonaService personaService;
+    @Autowired
+    DominioService dominioService;
 
     @Autowired
     EspacioService espacioService;
@@ -28,7 +31,8 @@ public class AmqpPersonas {
                 switch (op) {
                     case "cambiarRol" -> {
                         try {
-                        personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2),datos.get(3));
+                        dominioService.cambiarRol(UUID.fromString(datos.get(1)), UUID.fromString(datos.get(2)),
+                                datos.get(3),datos.get(4));
                         return "OK";
                         } catch (Exception e) {
                             return "Persona no encontrada o rol inválido. No se han hecho cambios";

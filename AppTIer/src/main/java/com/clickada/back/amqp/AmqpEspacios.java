@@ -4,6 +4,7 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Espacio;
+import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import com.clickada.back.dtos.EspacioDto;
 import com.clickada.back.dtos.MapperDtos;
 import org.json.JSONArray;
@@ -39,34 +40,6 @@ public class AmqpEspacios {
                     List<EspacioDto> espacioDtos = mapperDtos.listaEspacioDto(espacios);
                     Gson gson = new Gson();
                     return gson.toJson(espacioDtos);
-                    /*for (Espacio e : espacios) {
-                        JSONObject esp = new JSONObject();
-                        esp.put("idEspacio", e.getIdEspacio());
-                        esp.put("categoriaEspacio", e.getCategoriaEspacio());
-                        esp.put("tamanyo", e.getTamanyo());
-                        esp.put("numMaxOcupantes", e.getNumMaxOcupantes());
-                        esp.put("porcentajeUsoPermitido", e.getPorcentajeUsoPermitido());
-                        esp.put("totalAsistentesPermitidos", e.getTotalAsistentesPermitidos());
-                        esp.put("categoriaEspacio", e.getCategoriaEspacio());
-                        JSONArray propiet = new JSONArray();
-                        propiet.put(new JSONObject().put("eina", String.valueOf(e.getPropietarioEspacio().getEina())));
-                        propiet.put(new JSONObject().put("departamento", String.valueOf(e.getPropietarioEspacio().getDepartamento())));
-                        propiet.put(new JSONObject().put("personas", String.valueOf(e.getPropietarioEspacio().getPersonas())));
-                        esp.put("propietarioEspacio", propiet);
-
-                        JSONArray reservab = new JSONArray();
-                        reservab.put(new JSONObject().put("categoríaReserva", String.valueOf(e.getReservabilidad().categoriaReserva)));
-                        reservab.put(new JSONObject().put("reservable", String.valueOf(e.getReservabilidad().reservable)));
-                        esp.put("reservabilidad", reservab);
-
-                        esp.put("horaInicio", e.getHoraInicio());
-                        esp.put("horaFin", e.getHoraFin());
-                        esp.put("horaInicio", e.getHoraInicio());
-
-                        lista.put(esp);
-                    }
-                    return lista.toString();*/
-                    //return json;
                 }
                 case "cambiarPorcentajeEspacio" -> {
                     try {
@@ -82,6 +55,16 @@ public class AmqpEspacios {
                         dominioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
                                 Double.parseDouble(datos.get(2)));
                         return "Porcentaje cambiado correctamente";
+                    } catch (Exception e) {
+                        return "ERR:" + e.getMessage();
+                    }
+                }
+                case "cambiarReservabilidadEspacio" -> {
+                    try {
+                        dominioService.cambiarReservabilidadEspacio(UUID.fromString(datos.get(4)),
+                                new Reservabilidad(Boolean.parseBoolean(datos.get(2)),datos.get(3)),
+                                UUID.fromString(datos.get(1)));
+                        return "Reservabilidad cambiada correctamente";
                     } catch (Exception e) {
                         return "ERR:" + e.getMessage();
                     }
