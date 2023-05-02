@@ -72,16 +72,8 @@ public class DominioService {
         Persona persona = personaService.getPersonaById(idPersona);
         personaService.aptoParaCambiar(idPersona);
         espacioService.cambiarReservabilidadEspacio(idEspacio,reservabilidad,persona);
-        List<Reserva> reservasVivasEspacio = reservaService.reservasVivasEspacios(List.of(idEspacio));
-        if(reservasVivasEspacio.size()>0){
-            List<UUID> listIdPersona = new ArrayList<>();
-            reservasVivasEspacio.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
-            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
-
-            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacio);
-
-            reservaService.comprobarReservasEspacios(reservasVivasEspacio,espaciosImplicados,personasImplicadas);
-        }
+        List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
+        comprobarReservas(reservasVivasEspacios);
     }
     @Transactional
     public void cambiarPropietarioEspacio(UUID idEspacio, PropietarioEspacio propietarioEspacio, UUID idPersona) throws Exception{
@@ -98,22 +90,16 @@ public class DominioService {
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarPorcentajeEspacio(persona,idEspacio,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
-        if(reservasVivasEspacios.size()>0){
-            List<UUID> listIdPersona = new ArrayList<>();
-            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
-
-            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
-
-            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
-
-            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
-        }
+        comprobarReservas(reservasVivasEspacios);
     }
     @Transactional
     public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
         Persona persona = personaService.getPersonaById(idPersona);
         List<UUID> espaciosAfectados = espacioService.cambiarPorcentajeEdificio(persona,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(espaciosAfectados);
+        comprobarReservas(reservasVivasEspacios);
+    }
+    private void comprobarReservas(List<Reserva> reservasVivasEspacios) throws Exception {
         if(reservasVivasEspacios.size()>0){
             List<UUID> listIdPersona = new ArrayList<>();
             reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
