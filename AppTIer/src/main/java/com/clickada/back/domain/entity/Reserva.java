@@ -42,5 +42,4 @@ public class Reserva {
         this.detallesReserva = detallesReserva;
         this.fecha = fecha;
     }
-
 }

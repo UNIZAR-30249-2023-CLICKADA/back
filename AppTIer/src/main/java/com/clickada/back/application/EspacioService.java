@@ -22,17 +22,15 @@ import java.util.*;
 public class EspacioService {
     EspacioRepository espacioRepository;
     PersonaRepository personaRepository;
-    ReservaRepository  reservaRepository;
     EdificioRepository edificioRepository;
     EnviaMail servicioCorreo;
 
     @Autowired
     public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
-                          ReservaRepository reservaRepository,EdificioRepository edificioRepository,
+                          EdificioRepository edificioRepository,
                           EnviaMail servicioCorreo){
         this.espacioRepository = espacioRepository;
         this.personaRepository = personaRepository;
-        this.reservaRepository = reservaRepository;
         this.edificioRepository = edificioRepository;
         this.servicioCorreo = servicioCorreo;
     }
@@ -47,6 +45,7 @@ public class EspacioService {
         if (espacio==null) {
             throw new Exception("El espacio no existe");
         }
+        Reservabilidad reservabilidad_antigua = espacio.getReservabilidad();
         espacio.modificarReservabilidad(persona,reservabilidad);
         espacioRepository.save(espacio);
     }
@@ -113,7 +112,7 @@ public class EspacioService {
         List<UUID> espaciosFiltrados = new ArrayList<>();
         int totalAsistentesPermitidos = 0;
             for(Espacio espacio: listaEspacios) {
-                if ((espacio != null && espacio.getReservabilidad() != null) && (espacio.aptoCambioRol(persona))){
+                if ((espacio != null && espacio.getReservabilidad() != null) && (espacio.aptoCambioRol_Y_Reservabilidad(persona))){
                     espaciosFiltrados.add(espacio.getIdEspacio());
                 }
             }

@@ -81,21 +81,24 @@ public class TestServicios {
         Persona gerente = new Persona("Señor Tst","unico@mail.com", "1232",
                 Rol.GERENTE,null) ;
         when(personaRepository.existsById(any())).thenReturn(true);
-        when(personaRepository.getById(estudiante.getIdPersona())).thenReturn(estudiante);
-        when(personaRepository.getById(conserje.getIdPersona())).thenReturn(conserje);
-        when(personaRepository.getById(TECNICO_LABORATORIO.getIdPersona())).thenReturn(TECNICO_LABORATORIO);
-        when(personaRepository.getById(DOCENTE_INVESTIGADOR.getIdPersona())).thenReturn(DOCENTE_INVESTIGADOR);
-        when(personaRepository.getById(INVESTIGADOR_CONTRATADO.getIdPersona())).thenReturn(INVESTIGADOR_CONTRATADO);
-        when(personaRepository.getById(gerente.getIdPersona())).thenReturn(gerente);
+        when(personaRepository.getById(any())).thenReturn(estudiante)
+                .thenReturn(conserje)
+                .thenReturn(INVESTIGADOR_CONTRATADO)
+                .thenReturn(TECNICO_LABORATORIO)
+                .thenReturn(DOCENTE_INVESTIGADOR)
+                .thenReturn(gerente);
         // Act
         List<CategoriaReserva> result = personaService.permisosDeReserva(estudiante.getIdPersona());
         // Assert
         assertTrue(result.contains(CategoriaReserva.SALA_COMUN));
+        assertEquals(1,result.size());
 
         result = personaService.permisosDeReserva(conserje.getIdPersona());
         // Assert
         assertTrue(result.contains(CategoriaReserva.SALA_COMUN));
         assertTrue(result.contains(CategoriaReserva.AULA));
+        assertTrue(result.contains(CategoriaReserva.LABORATORIO));
+        assertTrue(result.contains(CategoriaReserva.SEMINARIO));
         result = personaService.permisosDeReserva(INVESTIGADOR_CONTRATADO.getIdPersona());
         // Assert
         assertTrue(result.contains(CategoriaReserva.SALA_COMUN));

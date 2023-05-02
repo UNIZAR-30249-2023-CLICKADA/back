@@ -70,7 +70,7 @@ public class ReservaService {
         for(Reserva reserva: reservasPersona){
             for(UUID idEspacio: reserva.getIdEspacios()){
                 Espacio espacio = espacioList.stream().filter(espacio1 -> espacio1.getIdEspacio().equals(idEspacio)).toList().get(0);
-                if(!espacio.aptoCambioRol(cambioRol)){
+                if(!espacio.aptoCambioRol_Y_Reservabilidad(cambioRol)){
                     String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
 
 
@@ -103,19 +103,30 @@ public class ReservaService {
             for(UUID idEspacio : reserva.getIdEspacios()){
                 Espacio espacio = espacioList.stream()
                         .filter(espacio1 -> espacio1.getIdEspacio().equals(idEspacio)).toList().get(0);
+                Persona personasReserva = personasImplicadas.stream()
+                        .filter(persona -> persona.getIdPersona().equals(reserva.getIdPersona()))
+                        .toList().get(0);
                 totalAsistentesPermitidos+=espacio.getTotalAsistentesPermitidos();
+                if(!espacio.aptoCambioRol_Y_Reservabilidad(personasReserva)){
+                    enviarCorreo(personasImplicadas,reserva);
+                    break;
+                }
             }
             if(totalAsistentesPermitidos<reserva.getNumOcupantes()){
-                Persona persona = personasImplicadas.stream()
-                        .filter(persona1 -> persona1.getIdPersona().equals(reserva.getIdPersona())).toList().get(0);
-                String mail = persona.getEMail();
-
-                Executors.newSingleThreadExecutor()
-                        .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
-                                reserva.getPeriodoReserva().getHoraInicio()));
-
-                reservaRepository.delete(reserva);
+                enviarCorreo(personasImplicadas,reserva);
             }
         }
+    }
+
+    private void enviarCorreo( List<Persona> personasImplicadas, Reserva reserva){
+        Persona persona = personasImplicadas.stream()
+                .filter(persona1 -> persona1.getIdPersona().equals(reserva.getIdPersona())).toList().get(0);
+        String mail = persona.getEMail();
+
+        Executors.newSingleThreadExecutor()
+                .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
+                        reserva.getPeriodoReserva().getHoraInicio()));
+
+        reservaRepository.delete(reserva);
     }
 }

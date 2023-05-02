@@ -152,7 +152,7 @@ public class Espacio{
             }
         }
     }
-    public boolean aptoCambioRol(Persona persona)throws Exception{
+    public boolean aptoCambioRol_Y_Reservabilidad(Persona persona)throws Exception{
         if(!this.getReservabilidad().reservable){
             return false;
         }

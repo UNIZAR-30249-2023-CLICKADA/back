@@ -348,14 +348,31 @@ public class TestDominioService {
 
         reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
         assertEquals(0,reservasVivas.size());
-        //conserje a investigador mal sin departamento
-        //assertEquals("Este rol necesita estar asignado a un Departamento",thrown.getMessage());
-        //conserje a investigador bien con departamento
-        // a docente sin departamento bien
-        //a tecnico bien
-        //a gerente bien
-        //anyadir rol nulo "No es Gerente o no existe el departamento y necesita uno"
-        //anyadir rol
+
+    }
+    @Test
+    public void cambioReservabilidadDesdeDominioService() throws Exception{
+        /*Exception thrown = assertThrows(Exception.class,()-> {
+
+        });
+        assertEquals("Se ncesita un rol gerente para cambiar el rol de cualquier persona",thrown.getMessage());*/
+        //estudiante a consejer bien
+        dominioService.reservarEspacio(estudiante.getIdPersona(),
+                new ArrayList<>(List.of(sala_comun.getIdEspacio())),LocalDate.now().plusDays(1),
+                LocalTime.of(18,0),LocalTime.of(19,0),TipoUso.DOCENCIA,40,
+                "Reservar mas espacios de los que hay disponibles");
+        List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(1,reservasVivas.size());
+
+        dominioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),new Reservabilidad(true,CategoriaReserva.SEMINARIO),
+                gerente.getIdPersona());
+        sala_comun = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(sala_comun.getIdEspacio())).toList().get(0);
+        assertTrue(sala_comun.getReservabilidad().reservable);
+        assertEquals(CategoriaReserva.SEMINARIO,sala_comun.getReservabilidad().categoriaReserva);
+
+        reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(0,reservasVivas.size());
 
     }
 }
