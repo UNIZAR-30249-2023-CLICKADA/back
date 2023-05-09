@@ -61,7 +61,7 @@ public class PersonaController {
 
         if (resp == null) {throw new TimeoutException();}
         else if (resp.equals("Login fallido")) {return new ResponseEntity<>("Login Fallido", HttpStatus.BAD_REQUEST);}
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @PutMapping("/permisosReserva")

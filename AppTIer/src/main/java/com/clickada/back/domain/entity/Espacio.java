@@ -24,6 +24,7 @@ public class Espacio{
 
     double tamanyo; //Tamaño del espacio en m2
 
+    String nombre;
 
     Reservabilidad reservabilidad;
 

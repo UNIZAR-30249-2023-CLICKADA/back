@@ -1,4 +1,4 @@
-/*package com.clickada.back.domain;
+package com.clickada.back.domain;
 
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
@@ -21,12 +21,12 @@ public class LoadEspacios {
     @Bean
     CommandLineRunner initDatabase2(EspacioRepository espacioRepository,EdificioRepository edificioRepository,
                                     PersonaRepository personaRepository,ReservaRepository reservaRepository) throws Exception {
-        espacioRepository.deleteAllInBatch();//Limpiar primero para evitar duplicados
-        edificioRepository.deleteAllInBatch();
-        personaRepository.deleteAllInBatch();
-        reservaRepository.deleteAllInBatch();
+/*
+        //edificioRepository.deleteAllInBatch();
 
-        Persona investigador = new Persona("Juan", "juan@clickada.com","123", Rol.INVESTIGADOR_CONTRATADO, Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
+
+
+        /*Persona investigador = new Persona("Juan", "juan@clickada.com","123", Rol.INVESTIGADOR_CONTRATADO, Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Persona docente = new Persona("docente","docente@clickada.com","123",Rol.DOCENTE_INVESTIGADOR,Departamento.INGENIERIA_ELECTRONICA_Y_COMUNICACIONES);
         Persona tecnico = new Persona("tecnico","tecnico@clickada.com","123",Rol.TECNICO_LABORATORIO,Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS);
         Persona estudiante = new Persona("estudiante", "estudiante@clickada.com","123",Rol.ESTUDIANTE,null);
@@ -36,8 +36,8 @@ public class LoadEspacios {
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
                 new ArrayList<>(List.of(LocalDate.now().plusDays(2))),100);
-        Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
-                CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
+       // Espacio sala_comun = new Espacio(new Reservabilidad(true, CategoriaReserva.SALA_COMUN),150, 60,
+               // CategoriaEspacio.SALA_COMUN,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio aula = new Espacio(new Reservabilidad(false,CategoriaReserva.AULA),150, 60,
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         Espacio seminario = new Espacio(new Reservabilidad(false,CategoriaReserva.SEMINARIO),150, 60,
@@ -46,18 +46,17 @@ public class LoadEspacios {
                 CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         edificioRepository.save(edificio);
 
-        espacioRepository.save(sala_comun);
-        espacioRepository.save(aula);
-        espacioRepository.save(seminario);
-        espacioRepository.save(despacho);
+       // espacioRepository.save(sala_comun);
+        //espacioRepository.save(aula);
+        //espacioRepository.save(seminario);
+        //espacioRepository.save(despacho);
 
-        personaRepository.save(investigador);
+       /* personaRepository.save(investigador);
         personaRepository.save(docente);
         personaRepository.save(tecnico);
         personaRepository.save(estudiante);
         personaRepository.save(conserje);
-        personaRepository.save(gerente);
+        personaRepository.save(gerente);*/
         return null;
     }
 }
-*/

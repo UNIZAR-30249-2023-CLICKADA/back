@@ -40,8 +40,6 @@ public class AmqpPersonas {
                         }
                     }
                     case "todasPersonas" -> {
-
-
                         List<Persona> listPersonas = personaService.todasPersonas();
                         MapperDtos mapperDtos = new MapperDtos();
                         List<PersonaDto> personaDtos = mapperDtos.listaPersonaDto(listPersonas);
@@ -51,14 +49,10 @@ public class AmqpPersonas {
                     case "loginPersona" -> {
                         Persona p = personaService.loginPersona(datos.get(1),datos.get(2));
                         if (p!=null){
-                            JSONObject persona = new JSONObject();
-                            persona.put("idPersona",p.getIdPersona());
-                            persona.put("nombre",p.getNombre());
-                            persona.put("departamento",p.getDepartamento());
-                            persona.put("departamentoDisponible",p.isDepartamentoDisponible());
-                            persona.put("roles",p.getRoles());
-                            persona.put("email",p.getEMail());
-                            return persona.toString();
+                            MapperDtos mapperDtos = new MapperDtos();
+                            PersonaDto pers = mapperDtos.dePersonaAPersonaDto(p);
+                            Gson gson = new Gson();
+                            return gson.toJson(pers);
                         }
                         else { return "Login fallido";  }
                     }

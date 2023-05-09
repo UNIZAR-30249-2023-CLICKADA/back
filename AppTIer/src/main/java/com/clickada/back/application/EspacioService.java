@@ -64,7 +64,7 @@ public class EspacioService {
         if(persona!= null){ // Comprueba permisos de ese rol
             for(UUID idEspacio: reserva.getIdEspacios()){
                 Espacio espacio = espacioRepository.getById(idEspacio);
-                if(!espacioRepository.existsById(idEspacio)) throw new Exception("El espacio que se quiere reservar no existe");
+                if(espacio == null) throw new Exception("El espacio que se quiere reservar no existe");
                 if(espacio.getReservabilidad() == null) throw new Exception("El espacio que se quiere reservar no tiene reservabilidad");
                 espacio.aptoParaReservar(persona);
                 totalAsistentesPermitidos+=espacio.getTotalAsistentesPermitidos();
