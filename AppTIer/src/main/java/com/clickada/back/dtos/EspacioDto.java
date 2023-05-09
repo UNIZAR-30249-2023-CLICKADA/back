@@ -17,10 +17,16 @@ import java.util.UUID;
 public class EspacioDto {
     @Id
     UUID idEspacio;
+
     CategoriaEspacio categoriaEspacio;
+
     double tamanyo; //Tamaño del espacio en m2
+
+
     Reservabilidad reservabilidad;
+
     int numMaxOcupantes;
+
     double porcentajeUsoPermitido;
     String horaInicio;
     String horaFin;

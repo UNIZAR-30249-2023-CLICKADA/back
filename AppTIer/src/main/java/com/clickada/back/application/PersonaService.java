@@ -4,6 +4,7 @@ import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.PersonaRepository;
 import com.clickada.back.domain.entity.auxClasses.CategoriaReserva;
 import com.clickada.back.domain.entity.auxClasses.Departamento;
+import com.clickada.back.domain.entity.auxClasses.PropietarioEspacio;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,12 +63,16 @@ public class PersonaService {
                 case ESTUDIANTE -> l.add(CategoriaReserva.SALA_COMUN);
                 case CONSERJE -> {
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
+                    l.add(CategoriaReserva.LABORATORIO); l.add(CategoriaReserva.SEMINARIO);
                 }
                 case DOCENTE_INVESTIGADOR, INVESTIGADOR_CONTRATADO -> {
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SALA_COMUN);
                     l.add(CategoriaReserva.LABORATORIO);
                 }
-                case TECNICO_LABORATORIO -> l.add(CategoriaReserva.SALA_COMUN);
+                case TECNICO_LABORATORIO -> {
+                    l.add(CategoriaReserva.SALA_COMUN); l.add(CategoriaReserva.SEMINARIO);
+                    l.add(CategoriaReserva.LABORATORIO);
+                }
                 case GERENTE -> {
                     l.add(CategoriaReserva.SALA_COMUN); l.add(CategoriaReserva.LABORATORIO);
                     l.add(CategoriaReserva.AULA); l.add(CategoriaReserva.SEMINARIO);
@@ -84,5 +89,14 @@ public class PersonaService {
     }
     public List<Persona> getPersonasById(List<UUID> idPersonas) throws Exception{
         return personaRepository.findAllById(idPersonas);
+    }
+
+    public void comprobarPropietarios(PropietarioEspacio propietarioEspacio) throws Exception {
+        List<Persona> personas = personaRepository.findAllById(propietarioEspacio.personas);
+        for(Persona persona : personas){
+            if(!persona.asignable()){
+                throw new Exception("La persona/as tienen que ser investiador contratado o bien");
+            }
+        }
     }
 }

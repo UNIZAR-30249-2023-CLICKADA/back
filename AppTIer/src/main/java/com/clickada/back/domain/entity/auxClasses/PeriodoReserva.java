@@ -24,8 +24,5 @@ public class PeriodoReserva implements Serializable {
                 periodoReserva.getHoraFin().isAfter(horaInicio)) || (
                 periodoReserva.equals(this)
                 ));
-        //hora inicio p1 esta entre la hora inicio p2 y hora fin p2
-        //hora fin p1 esta entre hora inicio p2 y hora fin p2
-
     }
 }

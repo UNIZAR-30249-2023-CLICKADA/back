@@ -88,6 +88,9 @@ public class Espacio{
         this.horaInicio = horaInicioNueva;
     }
     public void asignarAEspacio(PropietarioEspacio propietarioEspacio) throws Exception {
+        if(!propietarioEspacio.esEina() && !propietarioEspacio.esDepartamento() && !propietarioEspacio.esPersonas()){
+            throw new Exception("El propietario de espacio en null");
+        }
         if(propietarioEspacio.esEina()){
             if(     !this.categoriaEspacio.equals(CategoriaEspacio.AULA) &&
                     !this.categoriaEspacio.equals(CategoriaEspacio.SALA_COMUN) &&
@@ -106,11 +109,6 @@ public class Espacio{
         if(propietarioEspacio.esPersonas()){
             if(!this.categoriaEspacio.equals(CategoriaEspacio.DESPACHO)){
                 throw new Exception("Solo los despachos pueden tener como propietario a persona/as");
-            }
-            for(Persona persona : propietarioEspacio.personas){
-                if(!persona.asignable()){
-                    throw new Exception("La persona/as tienen que ser investiador contratado o bien");
-                }
             }
         }
         this.propietarioEspacio = propietarioEspacio;
@@ -154,7 +152,7 @@ public class Espacio{
             }
         }
     }
-    public boolean aptoCambioRol(Persona persona)throws Exception{
+    public boolean aptoCambioRol_Y_Reservabilidad(Persona persona)throws Exception{
         if(!this.getReservabilidad().reservable){
             return false;
         }

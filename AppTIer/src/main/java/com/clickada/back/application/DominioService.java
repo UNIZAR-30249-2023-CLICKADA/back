@@ -3,9 +3,7 @@ package com.clickada.back.application;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
-import com.clickada.back.domain.entity.auxClasses.PeriodoReserva;
-import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
-import com.clickada.back.domain.entity.auxClasses.TipoUso;
+import com.clickada.back.domain.entity.auxClasses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,39 +57,49 @@ public class DominioService {
             throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
         }
         Persona gerente = personaService.getPersonaById(idGerente);
+        Persona persona_antigua = personaService.getPersonaById(idPersona);
+        Departamento departamentoAntiguo = persona_antigua.getDepartamento();
+        boolean asignable = persona_antigua.asignable();
         Persona persona = personaService.cambiarRol(idPersona, rol, departamentoString);
         List<Reserva> reservasVivasPersona = reservaService.reservasVivasPersona(gerente,persona);
         List<Espacio> espaciosList = espacioService.obtenerEspaciosReservas(reservasVivasPersona);
-
         reservaService.comprobarReservas(persona,reservasVivasPersona,espaciosList);
+        //comprobar Despachos (lo unico que le puede afectar un cambio de rol)
+        espacioService.comprobarDespachos(asignable,departamentoAntiguo,persona);
     }
     @Transactional
     public void cambiarReservabilidadEspacio(UUID idEspacio, Reservabilidad reservabilidad, UUID idPersona) throws Exception {
         Persona persona = personaService.getPersonaById(idPersona);
+        personaService.aptoParaCambiar(idPersona);
         espacioService.cambiarReservabilidadEspacio(idEspacio,reservabilidad,persona);
+        List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
+        comprobarReservas(reservasVivasEspacios);
     }
-
+    @Transactional
+    public void cambiarPropietarioEspacio(UUID idEspacio, PropietarioEspacio propietarioEspacio, UUID idPersona) throws Exception{
+        if(!personaService.aptoParaCambiar(idPersona)) {
+            throw new Exception("Se ncesita un rol gerente para cambiar el rol de cualquier persona");
+        }
+        if(propietarioEspacio.esPersonas()){
+            personaService.comprobarPropietarios(propietarioEspacio);
+        }
+        espacioService.cambiarPropietarioEspacio(idEspacio,propietarioEspacio);
+    }
     @Transactional
     public void cambiarPorcentajeEspacio(UUID idPersona, UUID idEspacio,double porcentajeNuevo) throws Exception{
         Persona persona = personaService.getPersonaById(idPersona);
         espacioService.cambiarPorcentajeEspacio(persona,idEspacio,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(List.of(idEspacio));
-        if(reservasVivasEspacios.size()>0){
-            List<UUID> listIdPersona = new ArrayList<>();
-            reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));
-
-            List<Persona> personasImplicadas = personaService.getPersonasById(listIdPersona);
-
-            List<Espacio> espaciosImplicados = espacioService.obtenerEspaciosReservas(reservasVivasEspacios);
-
-            reservaService.comprobarReservasEspacios(reservasVivasEspacios,espaciosImplicados,personasImplicadas);
-        }
+        comprobarReservas(reservasVivasEspacios);
     }
     @Transactional
     public void cambiarPorcentajeEdificio(UUID idPersona,double porcentajeNuevo) throws Exception{
         Persona persona = personaService.getPersonaById(idPersona);
         List<UUID> espaciosAfectados = espacioService.cambiarPorcentajeEdificio(persona,porcentajeNuevo);
         List<Reserva> reservasVivasEspacios = reservaService.reservasVivasEspacios(espaciosAfectados);
+        comprobarReservas(reservasVivasEspacios);
+    }
+    private void comprobarReservas(List<Reserva> reservasVivasEspacios) throws Exception {
         if(reservasVivasEspacios.size()>0){
             List<UUID> listIdPersona = new ArrayList<>();
             reservasVivasEspacios.forEach(reserva -> listIdPersona.add(reserva.getIdPersona()));

@@ -4,15 +4,14 @@ import com.clickada.back.application.DominioService;
 import com.clickada.back.application.EspacioService;
 import com.clickada.back.application.PersonaService;
 import com.clickada.back.domain.entity.Espacio;
-import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import com.clickada.back.dtos.EspacioDto;
 import com.clickada.back.dtos.MapperDtos;
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +35,38 @@ public class AmqpEspacios {
                 case "todosEspacios" -> {
                     JSONArray lista = new JSONArray();
                     List<Espacio> espacios = espacioService.todosEspacios();
-                        MapperDtos mapperDtos = new MapperDtos();
-                        List<EspacioDto> espacioDtos = mapperDtos.listaEspacioDto(espacios);
-                        Gson gson = new Gson();
-                        return gson.toJson(espacioDtos);
+                    MapperDtos mapperDtos = new MapperDtos();
+                    List<EspacioDto> espacioDtos = mapperDtos.listaEspacioDto(espacios);
+                    Gson gson = new Gson();
+                    return gson.toJson(espacioDtos);
+                    /*for (Espacio e : espacios) {
+                        JSONObject esp = new JSONObject();
+                        esp.put("idEspacio", e.getIdEspacio());
+                        esp.put("categoriaEspacio", e.getCategoriaEspacio());
+                        esp.put("tamanyo", e.getTamanyo());
+                        esp.put("numMaxOcupantes", e.getNumMaxOcupantes());
+                        esp.put("porcentajeUsoPermitido", e.getPorcentajeUsoPermitido());
+                        esp.put("totalAsistentesPermitidos", e.getTotalAsistentesPermitidos());
+                        esp.put("categoriaEspacio", e.getCategoriaEspacio());
+                        JSONArray propiet = new JSONArray();
+                        propiet.put(new JSONObject().put("eina", String.valueOf(e.getPropietarioEspacio().getEina())));
+                        propiet.put(new JSONObject().put("departamento", String.valueOf(e.getPropietarioEspacio().getDepartamento())));
+                        propiet.put(new JSONObject().put("personas", String.valueOf(e.getPropietarioEspacio().getPersonas())));
+                        esp.put("propietarioEspacio", propiet);
+
+                        JSONArray reservab = new JSONArray();
+                        reservab.put(new JSONObject().put("categoríaReserva", String.valueOf(e.getReservabilidad().categoriaReserva)));
+                        reservab.put(new JSONObject().put("reservable", String.valueOf(e.getReservabilidad().reservable)));
+                        esp.put("reservabilidad", reservab);
+
+                        esp.put("horaInicio", e.getHoraInicio());
+                        esp.put("horaFin", e.getHoraFin());
+                        esp.put("horaInicio", e.getHoraInicio());
+
+                        lista.put(esp);
+                    }
+                    return lista.toString();*/
+                    //return json;
                 }
                 case "cambiarPorcentajeEspacio" -> {
                     try {
@@ -54,16 +81,6 @@ public class AmqpEspacios {
                     try {
                         dominioService.cambiarPorcentajeEdificio(UUID.fromString(datos.get(1)),
                                 Double.parseDouble(datos.get(2)));
-                        return "Porcentaje cambiado correctamente";
-                    } catch (Exception e) {
-                        return "ERR:" + e.getMessage();
-                    }
-                }
-                case "cambiarReservabilidad" -> {
-                    try {
-                        dominioService.cambiarReservabilidadEspacio(UUID.fromString(datos.get(2)),
-                                new Reservabilidad(Boolean.parseBoolean(datos.get(3)),
-                                        datos.get(4)),UUID.fromString(datos.get(1)));
                         return "Porcentaje cambiado correctamente";
                     } catch (Exception e) {
                         return "ERR:" + e.getMessage();

@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
@@ -63,6 +64,7 @@ public class TestDominioService {
     private Espacio sala_comun;
     private Espacio aula;
     private Espacio seminario;
+    private Espacio despacho;
     private final double porcentaje_MAX = 100;
     private double epsilon = 0.000001d;
     @Before
@@ -88,12 +90,14 @@ public class TestDominioService {
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         seminario = new Espacio(new Reservabilidad(false,CategoriaReserva.SEMINARIO),150, 60,
                 CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
+        despacho = new Espacio(new Reservabilidad(false,CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         edificioRepository.save(edificio);
 
         espacioRepository.save(sala_comun);
         espacioRepository.save(aula);
         espacioRepository.save(seminario);
-
+        espacioRepository.save(despacho);
         personaRepository.deleteAllInBatch();
         personaRepository.save(investigador);
         personaRepository.save(docente);
@@ -125,11 +129,14 @@ public class TestDominioService {
                 CategoriaEspacio.AULA,edificio,new PropietarioEspacio(Eina.EINA));
         seminario = new Espacio(new Reservabilidad(false,CategoriaReserva.SEMINARIO),150, 60,
                 CategoriaEspacio.SEMINARIO,edificio,new PropietarioEspacio(Eina.EINA));
+        despacho = new Espacio(new Reservabilidad(false,CategoriaReserva.DESPACHO),150, 60,
+                CategoriaEspacio.DESPACHO,edificio,new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         edificioRepository.save(edificio);
 
         espacioRepository.save(sala_comun);
         espacioRepository.save(aula);
         espacioRepository.save(seminario);
+        espacioRepository.save(despacho);
 
         personaRepository.save(investigador);
         personaRepository.save(docente);
@@ -215,6 +222,44 @@ public class TestDominioService {
                     "Reservar mas espacios de los que hay disponibles");
         });
         assertEquals("No existen esapcios suficientes disponibles con esas caracteristicas",thrown.getMessage());
+    }
+    @Test
+    public void requisito14_CambioRolYPropietarioEspacio() throws Exception{
+        Departamento departamentoDocente = docente.getDepartamento();
+        //asignamos al despacho como propietario un investigador
+        assertTrue(despacho.getPropietarioEspacio().esDepartamento());
+        PropietarioEspacio nuevoPropietario = new PropietarioEspacio(List.of(investigador,docente));
+        dominioService.cambiarPropietarioEspacio(despacho.getIdEspacio(),nuevoPropietario,gerente.getIdPersona());
+        despacho = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(despacho.getIdEspacio())).toList().get(0);
+        assertTrue(despacho.getPropietarioEspacio().esPersonas());
+        assertEquals(2,despacho.getPropietarioEspacio().personas.size());
+        //CAMBIAMOS ROL AL INVESTIGADOR a CONSERJE
+
+        dominioService.cambiarRol(gerente.getIdPersona(),investigador.getIdPersona(),"Conserje",null);
+
+        investigador = personaService.todasPersonas().stream().filter(persona ->
+                persona.getIdPersona().equals(investigador.getIdPersona())).toList().get(0);
+        assertEquals(Rol.CONSERJE,investigador.rolPrincipal());
+        assertFalse(investigador.asignable());
+
+        despacho = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(despacho.getIdEspacio())).toList().get(0);
+        assertTrue(despacho.getPropietarioEspacio().esPersonas());
+        assertEquals(1,despacho.getPropietarioEspacio().personas.size());//ahora solo esta el docente como propietario
+
+        //Cambiamos rol al docente y se tendria que asignar como propietario de espacio el departamento del docente
+        dominioService.cambiarRol(gerente.getIdPersona(),docente.getIdPersona(),"Conserje",null);
+
+        docente = personaService.todasPersonas().stream().filter(persona ->
+                persona.getIdPersona().equals(docente.getIdPersona())).toList().get(0);
+        assertEquals(Rol.CONSERJE,docente.rolPrincipal());
+
+        despacho = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(despacho.getIdEspacio())).toList().get(0);
+        assertFalse(despacho.getPropietarioEspacio().esPersonas());
+        assertTrue(despacho.getPropietarioEspacio().esDepartamento());
+        assertEquals(departamentoDocente,despacho.getPropietarioEspacio().getDepartamento());
     }
     @Test
     public void requisito15_sinReservasImplicadas() throws Exception{
@@ -303,14 +348,31 @@ public class TestDominioService {
 
         reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
         assertEquals(0,reservasVivas.size());
-        //conserje a investigador mal sin departamento
-        //assertEquals("Este rol necesita estar asignado a un Departamento",thrown.getMessage());
-        //conserje a investigador bien con departamento
-        // a docente sin departamento bien
-        //a tecnico bien
-        //a gerente bien
-        //anyadir rol nulo "No es Gerente o no existe el departamento y necesita uno"
-        //anyadir rol
+
+    }
+    @Test
+    public void cambioReservabilidadDesdeDominioService() throws Exception{
+        /*Exception thrown = assertThrows(Exception.class,()-> {
+
+        });
+        assertEquals("Se ncesita un rol gerente para cambiar el rol de cualquier persona",thrown.getMessage());*/
+        //estudiante a consejer bien
+        dominioService.reservarEspacio(estudiante.getIdPersona(),
+                new ArrayList<>(List.of(sala_comun.getIdEspacio())),LocalDate.now().plusDays(1),
+                LocalTime.of(18,0),LocalTime.of(19,0),TipoUso.DOCENCIA,40,
+                "Reservar mas espacios de los que hay disponibles");
+        List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(1,reservasVivas.size());
+
+        dominioService.cambiarReservabilidadEspacio(sala_comun.getIdEspacio(),new Reservabilidad(true,CategoriaReserva.SEMINARIO),
+                gerente.getIdPersona());
+        sala_comun = espacioService.todosEspacios().stream().filter(espacio ->
+                espacio.getIdEspacio().equals(sala_comun.getIdEspacio())).toList().get(0);
+        assertTrue(sala_comun.getReservabilidad().reservable);
+        assertEquals(CategoriaReserva.SEMINARIO,sala_comun.getReservabilidad().categoriaReserva);
+
+        reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(0,reservasVivas.size());
 
     }
 }
