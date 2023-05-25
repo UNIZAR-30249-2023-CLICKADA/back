@@ -39,6 +39,14 @@ public class AmqpPersonas {
                             return "Persona no encontrada o rol inválido. No se han hecho cambios";
                         }
                     }
+                    case "cambiarDpto" -> {
+                        try {
+                            personaService.cambiarDpto(UUID.fromString(datos.get(1)),UUID.fromString(datos.get(2)),datos.get(3));
+                            return "OK";
+                        } catch (Exception e) {
+                            return e.toString();
+                        }
+                    }
                     case "todasPersonas" -> {
                         List<Persona> listPersonas = personaService.todasPersonas();
                         MapperDtos mapperDtos = new MapperDtos();

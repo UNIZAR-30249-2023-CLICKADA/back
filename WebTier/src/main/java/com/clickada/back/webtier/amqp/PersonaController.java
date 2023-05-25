@@ -35,6 +35,38 @@ public class PersonaController {
         return response;
     }
 
+    @PutMapping("/cambiarDepartamento")
+    String cambiarDepartamentoPersona(@RequestParam UUID idGerente,@RequestParam UUID idPersona, @RequestParam String nuevoDpto) throws TimeoutException {
+
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("cambiarDpto"); //Operación
+        datos.add(idGerente.toString());
+        datos.add(idPersona.toString());
+        datos.add(nuevoDpto);
+        String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
+
+        if (response == null) {
+            throw new TimeoutException();
+        }
+        return response;
+    }
+
+    @PutMapping("/agregarPersona")
+    String agregarPersona(@RequestParam UUID idGerente,@RequestParam UUID idPersona, @RequestParam String nuevoDpto) throws TimeoutException {
+
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("cambiarDpto"); //Operación
+        datos.add(idGerente.toString());
+        datos.add(idPersona.toString());
+        datos.add(nuevoDpto);
+        String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
+
+        if (response == null) {
+            throw new TimeoutException();
+        }
+        return response;
+    }
+
 
     @GetMapping("/todasPersonas")
     ResponseEntity<String> todasPersonas() throws TimeoutException {

@@ -33,6 +33,25 @@ public class PersonaService {
         personaRepository.save(persona);
         return persona;
     }
+    @Transactional
+    public Persona cambiarDpto(UUID idGerente,UUID idPersona, String departamentoString) throws Exception {
+        String rol = String.valueOf(Rol.getRolByString(idGerente.toString()));
+        if(!personaRepository.existsById(idGerente) || personaRepository.getById(idGerente).rolPrincipal().toString().equals("Gerente")) {
+            throw new Exception("No se permite el cambio de departamento");
+        }
+        Departamento departamento = Departamento.getDepartamentoByString(departamentoString);
+        if(!personaRepository.existsById(idPersona) || departamento == null) {
+            throw new Exception("No existe el departamento o la persona");
+        }
+        Persona persona = personaRepository.getById(idPersona);
+        if(!persona.isDepartamentoDisponible()){
+            throw new Exception("La persona indicada no puede estar adscrita a un departamento");
+        }
+        persona.cambiarDepartamento(departamento);
+        personaRepository.save(persona);
+        return persona;
+    }
+
     @Transactional (readOnly = true)
     public List<Persona> todasPersonas(){
         return personaRepository.findAll();
