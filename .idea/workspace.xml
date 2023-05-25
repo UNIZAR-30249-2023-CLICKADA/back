@@ -5,53 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee868f9d-e4bb-47a8-8ca0-d58d2014f05b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/AppTier/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AppTier/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/down.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/down.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/BackApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/BackApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/EspacioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/EspacioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/PersonaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/PersonaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/application/ReservaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/application/ReservaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/EspacioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/EspacioRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/LoadEspacios.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/LoadEspacios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/LoadPersonas.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/LoadPersonas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/PersonaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/PersonaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/ReservaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/ReservaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Espacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Espacio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Persona.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Persona.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/Reserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/Reserva.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Adscripcion.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Adscripcion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaEspacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaEspacio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaReserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/CategoriaReserva.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Departamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Departamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Edificio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Edificio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Eina.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Eina.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/PeriodoReserva.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/PeriodoReserva.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Politica.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Politica.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/PropietarioEspacio.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/PropietarioEspacio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Reservabilidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Reservabilidad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/Rol.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/Rol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/domain/entity/auxClasses/TipoUso.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/domain/entity/auxClasses/TipoUso.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/dtos/ReservaAutomaticaDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/dtos/ReservaAutomaticaDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/dtos/ReservaDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/dtos/ReservaDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/EnviaMail.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/EnviaMail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/EspacioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/EspacioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/PersonaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/PersonaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/clickada/back/infrastructure/ReservaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/java/com/clickada/back/infrastructure/ReservaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/BackApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/BackApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/requisitos/TestRequisitos.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/requisitos/TestRequisitos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/clickada/back/requisitos/TestServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/src/test/java/com/clickada/back/requisitos/TestServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/up.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AppTier/up.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,11 +39,6 @@
         <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="workspaceImportEnabled" value="true" />
-      </MavenImportingSettings>
-    </option>
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -108,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "openjdk-19",
-    "last_opened_file_path": "C:/Users/Usuario/Documents/GitHub/back/AppTier",
+    "last_opened_file_path": "/home/icanete/Documentos/lis/back/AppTIer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -131,7 +81,7 @@
       <recent name="com.clickada.back.domain" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BackApplication">
+  <component name="RunManager" selected="JUnit.TodosTests">
     <configuration name="BackApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="back" />
       <extension name="coverage">
@@ -232,12 +182,9 @@
       <item itemvalue="JUnit.BackApplicationTests" />
       <item itemvalue="JUnit.PersonaTest" />
       <item itemvalue="JUnit.PersonaTest.testLoginPersona" />
-      <item itemvalue="Spring Boot.WebTierApplication" />
-      <item itemvalue="Spring Boot.BackApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.BackApplication" />
         <item itemvalue="JUnit.TestRequisitos.requisito25" />
         <item itemvalue="JUnit.BackApplicationTests" />
         <item itemvalue="JUnit.PersonaTest" />
@@ -288,6 +235,21 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -309,21 +271,6 @@
         </entry>
       </map>
     </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="HEAD" />
-                </option>
-              </RecentGroup>
-            </list>
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
@@ -337,16 +284,16 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/back$TodosTests.ic" NAME="TodosTests Coverage Results" MODIFIED="1681850979737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/back$PersonaTest.ic" NAME="PersonaTest Coverage Results" MODIFIED="1680678205106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>com.clickada.back.requisitos.*</FILTER>
-      <FILTER>com.clickada.back.domain.entity.Persona</FILTER>
-    </SUITE>
     <SUITE FILE_PATH="coverage/back$BackApplicationTests.ic" NAME="BackApplicationTests Coverage Results" MODIFIED="1680678333447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.clickada.back.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/back$BackApplication.ic" NAME="BackApplication Coverage Results" MODIFIED="1679949734778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.clickada.back.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/back$TodosTests.ic" NAME="TodosTests Coverage Results" MODIFIED="1681850979737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/back$PersonaTest.ic" NAME="PersonaTest Coverage Results" MODIFIED="1680678205106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.clickada.back.requisitos.*</FILTER>
+      <FILTER>com.clickada.back.domain.entity.Persona</FILTER>
     </SUITE>
   </component>
 </project>

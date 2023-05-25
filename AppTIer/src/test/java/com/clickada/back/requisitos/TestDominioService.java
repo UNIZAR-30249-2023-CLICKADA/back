@@ -27,10 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -374,5 +371,24 @@ public class TestDominioService {
         reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
         assertEquals(0,reservasVivas.size());
 
+    }
+    //creamos reserva y la eliminamos siendo gerente
+    @Test
+    public void eliminarReserva() throws Exception {
+        dominioService.reservarEspacio(estudiante.getIdPersona(),
+                new ArrayList<>(List.of(sala_comun.getIdEspacio())),LocalDate.now().plusDays(1),
+                LocalTime.of(18,0),LocalTime.of(19,0),TipoUso.DOCENCIA,40,
+                "Reservar mas espacios de los que hay disponibles");
+        List<Reserva> reservasVivas = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(1,reservasVivas.size());
+        Exception thrown = assertThrows(Exception.class,()-> {
+            dominioService.eliminarReserva(estudiante.getIdPersona(), reservasVivas.get(0).getIdReserva());
+        });
+        assertEquals("Se necesita un rol gerente para eliminar una reserva",thrown.getMessage());
+
+        dominioService.eliminarReserva(gerente.getIdPersona(),reservasVivas.get(0).getIdReserva());
+
+        List<Reserva> finalReservasVivas  = reservaService.obtenerReservasVivas(gerente.getIdPersona());
+        assertEquals(0,finalReservasVivas.size());
     }
 }

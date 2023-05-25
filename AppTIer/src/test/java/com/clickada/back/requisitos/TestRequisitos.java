@@ -770,4 +770,5 @@ public class TestRequisitos {
         assertEquals("Esa persona no existe",thrown.getMessage());
 
     }
+
 }

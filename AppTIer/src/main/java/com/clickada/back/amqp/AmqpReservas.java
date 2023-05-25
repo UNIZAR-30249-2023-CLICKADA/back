@@ -117,6 +117,16 @@ public class AmqpReservas {
                         return "ERR:" + e.getMessage();
                     }
                 }
+                case "eliminarReserva" -> {
+                    try {
+                        dominioService.eliminarReserva(UUID.fromString(datos.get(1)),UUID.fromString(datos.get(2)));
+                        Gson gson = new Gson();
+                        return gson.toJson("Reserva eliminada correctamente");
+
+                    } catch (Exception e) {
+                        return "ERR:" + e.getMessage();
+                    }
+                }
             }
         }
         return "Operación no válida";

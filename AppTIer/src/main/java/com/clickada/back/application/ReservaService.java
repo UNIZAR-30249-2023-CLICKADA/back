@@ -5,6 +5,7 @@ import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
+import com.clickada.back.domain.entity.auxClasses.Reservabilidad;
 import com.clickada.back.domain.entity.auxClasses.Rol;
 import com.clickada.back.infrastructure.EnviaMail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +73,10 @@ public class ReservaService {
                 Espacio espacio = espacioList.stream().filter(espacio1 -> espacio1.getIdEspacio().equals(idEspacio)).toList().get(0);
                 if(!espacio.aptoCambioRol_Y_Reservabilidad(cambioRol)){
                     String mail = this.personaRepository.getById(reserva.getIdPersona()).getEMail();
-
+                    String nombre = this.personaRepository.getById(reserva.getIdPersona()).getNombre();
 
                     Executors.newSingleThreadExecutor()
-                            .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
+                            .execute(() -> servicioCorreo.enviarCorreo(mail,1,nombre,reserva.getFecha(),
                                     reserva.getPeriodoReserva().getHoraInicio()));
 
                     reservaRepository.delete(reserva);
@@ -124,9 +125,22 @@ public class ReservaService {
         String mail = persona.getEMail();
 
         Executors.newSingleThreadExecutor()
-                .execute(() -> servicioCorreo.enviarCorreo(mail,1,"nombre",reserva.getFecha(),
+                .execute(() -> servicioCorreo.enviarCorreo(mail,1,persona.getNombre(),reserva.getFecha(),
                         reserva.getPeriodoReserva().getHoraInicio()));
 
         reservaRepository.delete(reserva);
+    }
+
+    public void eliminarReserva(UUID idReserva, Persona gerente) throws Exception {
+        if(!reservaRepository.existsById(idReserva)){
+            throw new Exception("La reserva que se quiere eliminar no existe");
+        }
+        Reserva reserva = reservaRepository.getById(idReserva);
+        reservaRepository.deleteById(idReserva);
+        String mail = gerente.getEMail();
+
+        Executors.newSingleThreadExecutor()
+                .execute(() -> servicioCorreo.enviarCorreo(mail,1,gerente.getNombre(),reserva.getFecha(),
+                        reserva.getPeriodoReserva().getHoraInicio()));
     }
 }

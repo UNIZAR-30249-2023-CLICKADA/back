@@ -37,6 +37,14 @@ public class DominioService {
         reservaService.reservar(reservaCompletada);
     }
     @Transactional
+    public void eliminarReserva(UUID idPersona, UUID idReserva) throws Exception {
+        if(!personaService.aptoParaCambiar(idPersona)) {
+            throw new Exception("Se necesita un rol gerente para eliminar una reserva");
+        }
+        Persona gerente = personaService.getPersonaById(idPersona);
+        reservaService.eliminarReserva(idReserva,gerente);
+    }
+    @Transactional
     public ArrayList<UUID> reservaAutomaticaEspacio(UUID idPersona, int numEspacios, LocalDate fecha, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas, TipoUso tipoDeUso, String detalles) throws Exception {
         if(numEspacios>3){
             throw new Exception("Demasiados espacios para la reserva automatica");

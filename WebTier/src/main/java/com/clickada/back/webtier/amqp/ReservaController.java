@@ -94,5 +94,19 @@ public class ReservaController {
         return resp;
     }
 
+    @DeleteMapping("/eliminarReserva")
+    String reservarAutomatica(@RequestParam UUID idPersona, @RequestParam UUID idReserva) throws TimeoutException {
 
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add("eliminarReserva"); //Operación
+        datos.add(String.valueOf(idPersona));
+        datos.add(String.valueOf(idReserva));
+
+        String resp = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
+
+        if (resp == null) {
+            throw new TimeoutException();
+        }
+        return resp;
+    }
 }
