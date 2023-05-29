@@ -145,7 +145,7 @@ public class Espacio{
                         persona.rolPrincipal().equals(Rol.DOCENTE_INVESTIGADOR))){
             if(!this.getPropietarioEspacio().esDepartamento()){
                 throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
-                        "laboratiorios que esten adscritos a un departamento");
+                        "laboratorios que esten adscritos a un departamento");
             }
             if(!this.getPropietarioEspacio().departamento.equals(persona.getDepartamento())){
                 throw new Exception("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +

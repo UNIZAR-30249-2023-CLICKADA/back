@@ -31,10 +31,23 @@ public class AmqpPersonas {
             if(!datos.isEmpty()){
                 String op = datos.get(0);
                 switch (op) {
+                    case "agregarPersona" -> {
+                        try {
+                            Persona p = personaService.agregarPersona(UUID.fromString(datos.get(1)), datos.get(2),datos.get(3),datos.get(4));
+                            if (p!=null){
+                                MapperDtos mapperDtos = new MapperDtos();
+                                PersonaDto pers = mapperDtos.dePersonaAPersonaDto(p);
+                                Gson gson = new Gson();
+                                return gson.toJson(pers);
+                            }
+                        } catch (Exception e) {
+                            return "ERR:" + e.getMessage();
+                        }
+                    }
                     case "cambiarRol" -> {
                         try {
-                        personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2),datos.get(3));
-                        return "OK";
+                            personaService.cambiarRol(UUID.fromString(datos.get(1)), datos.get(2),datos.get(3));
+                            return "OK";
                         } catch (Exception e) {
                             return "Persona no encontrada o rol inválido. No se han hecho cambios";
                         }
@@ -44,7 +57,7 @@ public class AmqpPersonas {
                             personaService.cambiarDpto(UUID.fromString(datos.get(1)),UUID.fromString(datos.get(2)),datos.get(3));
                             return "OK";
                         } catch (Exception e) {
-                            return e.toString();
+                            return "ERR:" + e.getMessage();
                         }
                     }
                     case "todasPersonas" -> {

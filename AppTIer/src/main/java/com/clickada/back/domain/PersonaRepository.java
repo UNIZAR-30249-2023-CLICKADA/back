@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface PersonaRepository extends JpaRepository<Persona, UUID> {
 
     Persona findByeMail(String email);
+    boolean existsByeMail(String email);
 }

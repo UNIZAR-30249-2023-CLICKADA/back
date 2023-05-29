@@ -9,6 +9,7 @@ import com.clickada.back.domain.entity.auxClasses.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,24 @@ public class PersonaService {
 
     @Autowired
     public PersonaService(PersonaRepository personaRepository){ this.personaRepository = personaRepository;}
+
+    @Transactional
+    public Persona agregarPersona(UUID idGerente, String email,String pass, String nombre) throws Exception {
+        Rol rolEnum = Rol.getRolByString("Estudiante");
+        if(email.equals("") || pass.equals("") || nombre.equals("")) {
+            throw new Exception("Faltan datos del nuevo usuario");
+        }
+        if(!personaRepository.existsById(idGerente) || personaRepository.getById(idGerente).rolPrincipal().toString().equals("Gerente")) {
+            throw new Exception("No se permite el registro de nuevas personas");
+        }
+        if(personaRepository.existsByeMail(email)) {
+            throw new Exception("Ya hay una persona registrada con ese email");
+        }
+        Persona persona = new Persona(nombre,email,pass,rolEnum,null);
+        personaRepository.save(persona);
+        return persona;
+    }
+
     @Transactional
     public Persona cambiarRol(UUID idPersona, String rol, String departamentoString) throws Exception {
         Rol rolEnum = Rol.getRolByString(rol);

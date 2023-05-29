@@ -53,13 +53,14 @@ public class PersonaController {
     }
 
     @PutMapping("/agregarPersona")
-    String agregarPersona(@RequestParam UUID idGerente,@RequestParam UUID idPersona, @RequestParam String nuevoDpto) throws TimeoutException {
+    String agregarPersona(@RequestParam UUID idGerente,@RequestParam String email, @RequestParam String pass,@RequestParam String nombre) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
-        datos.add("cambiarDpto"); //Operación
+        datos.add("agregarPersona"); //Operación
         datos.add(idGerente.toString());
-        datos.add(idPersona.toString());
-        datos.add(nuevoDpto);
+        datos.add(email.toString());
+        datos.add(pass);
+        datos.add(nombre);
         String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
         if (response == null) {
