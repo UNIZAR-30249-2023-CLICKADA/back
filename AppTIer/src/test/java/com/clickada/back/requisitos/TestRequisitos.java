@@ -564,7 +564,7 @@ public class TestRequisitos {
         });
 
         assertEquals("Los tecnicos de laboratorio, investigador contratado y docente investigador solo pueden reservar " +
-                "laboratiorios que esten adscritos a un departamento",thrown.getMessage());
+                "laboratorios que esten adscritos a un departamento",thrown.getMessage());
 
         laboratorio.asignarAEspacio(new PropietarioEspacio(Departamento.INFORMATICA_E_INGENIERIA_DE_SISTEMAS));
         thrown = assertThrows(Exception.class,()->{
