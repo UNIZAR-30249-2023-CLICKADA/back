@@ -78,12 +78,12 @@ public class AmqpReservas {
                     LocalDate fecha = LocalDate.parse(datos.get(4), formatterDay);
                     LocalTime horaInicio = LocalTime.parse(datos.get(5), formatterTime);
                     LocalTime horaFinal = LocalTime.parse(datos.get(6), formatterTime);
+                    String detalles = datos.get(7);
 
                     try {
-                        Persona p = personaService.getPersonaById(UUID.fromString(datos.get(1)));
-                        List<UUID> listEspacios = espacioService.buscarEspacios(p, new ArrayList<>(),
-                                Integer.parseInt(datos.get(2)), horaInicio, horaFinal, Integer.parseInt(datos.get(3)));
-
+                        List<UUID> listEspacios = dominioService.reservaAutomaticaEspacio(UUID.fromString(datos.get(1))
+                                ,Integer.parseInt(datos.get(2))
+                                ,fecha, horaInicio, horaFinal, Integer.parseInt(datos.get(3)),tipoUso,detalles);
                         JSONArray jsonEspacios = new JSONArray();
                         for (UUID listEspacio : listEspacios) {
                             jsonEspacios.put(listEspacio);
