@@ -6,13 +6,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EspacioController {
 
     private final RabbitTemplate rabbitTemplate;
