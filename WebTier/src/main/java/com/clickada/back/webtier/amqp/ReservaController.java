@@ -22,7 +22,7 @@ public class ReservaController {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @PutMapping("/reservasVivas")
+    @GetMapping("/reservasVivas")
         /* Temp - habrá que decidir si unicamente del día actual  o de todos los dias posteriores */
     ResponseEntity<String> obtenerReservasVivas(@RequestParam UUID idPersona) {
 

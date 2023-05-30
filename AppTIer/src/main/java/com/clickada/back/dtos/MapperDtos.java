@@ -25,6 +25,7 @@ public class MapperDtos {
 
     public ReservaDto deReservaAReservaDto(Reserva reserva){
         return ReservaDto.builder()
+                .idReserva(reserva.getIdReserva())
                 .idPersona(reserva.getIdPersona())
                 .idEspacios(reserva.getIdEspacios())
                 .stringTipoUso(reserva.getTipoDeUso().toString())

@@ -11,6 +11,7 @@ import java.util.UUID;
 @Builder
 @Getter
 public class ReservaDto {
+    UUID idReserva;
     UUID idPersona;
     ArrayList<UUID> idEspacios;
     String stringTipoUso;
