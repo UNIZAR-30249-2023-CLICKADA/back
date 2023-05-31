@@ -22,9 +22,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -458,6 +456,7 @@ public class TestRequisitos {
         idEspacios.add(sala_comun.getIdEspacio());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2).thenReturn(sala_comun);
         when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
+        when(espacioRepository.findAllById(any())).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
         List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente,new ArrayList<>(),3,
                 LocalTime.of(9,0),LocalTime.of(10,0),100);
@@ -633,6 +632,7 @@ public class TestRequisitos {
         idEspacios.add(sala_comun.getIdEspacio());
         when(espacioRepository.getById(any())).thenReturn(laboratorio).thenReturn(laboratorio2).thenReturn(sala_comun);
         when(espacioRepository.findAll()).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
+        when(espacioRepository.findAllById(any())).thenReturn(List.of(laboratorio,laboratorio2,sala_comun));
         //Ahoras la reserva con menos parametros semi-automatica
         List<UUID> listaBusqueda = espacioService.buscarEspacios(gerente,new ArrayList<>(),3,
                 LocalTime.of(9,0),LocalTime.of(10,0),100);

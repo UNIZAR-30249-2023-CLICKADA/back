@@ -22,7 +22,8 @@ public class PeriodoReserva implements Serializable {
                 periodoReserva.getHoraInicio().isAfter(horaInicio)) ||
                 (periodoReserva.getHoraFin().isBefore(horaFin) &&
                 periodoReserva.getHoraFin().isAfter(horaInicio)) || (
-                periodoReserva.equals(this)
+                periodoReserva.getHoraFin().equals(horaFin) &&
+                periodoReserva.getHoraInicio().equals(horaInicio)
                 ));
     }
 }

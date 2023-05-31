@@ -110,12 +110,13 @@ public class EspacioService {
         }
         List<Espacio> listaEspacios = espacioRepository.findAll();
         List<UUID> espaciosFiltrados = new ArrayList<>();
-        int totalAsistentesPermitidos = 0;
-            for(Espacio espacio: listaEspacios) {
-                if ((espacio != null && espacio.getReservabilidad() != null) && (espacio.aptoCambioRol_Y_Reservabilidad(persona))){
-                    espaciosFiltrados.add(espacio.getIdEspacio());
-                }
+        //Se añaden los espacios que son reservables y que la persona puede reservar por su Rol
+        for(Espacio espacio: listaEspacios) {
+            if ((espacio != null && espacio.getReservabilidad() != null) && (espacio.aptoCambioRol_Y_Reservabilidad(persona))){
+                espaciosFiltrados.add(espacio.getIdEspacio());
             }
+        }
+        //Espacios que tienen reserva el mismo dia
         List<Reserva> contienenEspacio = reservasTodas.stream()
                 .filter(reserva1 -> reserva1.getIdEspacios().stream().anyMatch(espaciosFiltrados::contains))
                 .toList();
@@ -135,13 +136,13 @@ public class EspacioService {
                 return n2.compareTo(n1);
             }
         };
-
-        Collections.sort(espaciosCorrectos, comparador);
-
+        List<Espacio> espaciosCorrectos2 = new ArrayList<>();
+        espaciosCorrectos2.addAll(espaciosCorrectos);
+        espaciosCorrectos2.sort(comparador);
         int suma = 0;
         for (int i = 0; i < numEspacios; i++) {
-            suma += espaciosCorrectos.get(i).getNumMaxOcupantes();
-            listaAdevolver.add(espaciosCorrectos.get(i).getIdEspacio());
+            suma += espaciosCorrectos2.get(i).getNumMaxOcupantes();
+            listaAdevolver.add(espaciosCorrectos2.get(i).getIdEspacio());
         }
         if(suma<numMaxPersonas){
             throw new Exception("La cantidad de personas para la reserva es demasiado grande para la cantidad de espacios que se proporcionan");
@@ -152,17 +153,18 @@ public class EspacioService {
     @Transactional
     private List<Espacio> espaciosDisponibles(List<Reserva> reservaList,List<UUID> espacioList, PeriodoReserva periodoReserva){
         List<Espacio> espacioListDisponible = new ArrayList<>();
-        if(reservaList!=null) {
+        List<UUID> idDisponibles = new ArrayList<>(espacioList.stream().toList());
+        if(reservaList!=null && reservaList.size()>0) {
             for (UUID idEspacio : espacioList) {
-                espacioListDisponible.add(espacioRepository.getById(idEspacio));
                 for (Reserva reserva : reservaList) {
-                    if (reserva.getIdEspacios().contains(idEspacio)) {//si esteidEspacio espacio esta reservado ese mismo dia tambien
-                        if (!reserva.getPeriodoReserva().periodosCompatibles(periodoReserva)) {
-                            espacioListDisponible.remove(espacioList.indexOf(idEspacio));
+                    if (reserva.getIdEspacios().contains(idEspacio)) {//si este idEspacio espacio esta reservado ese mismo dia tambien
+                        if (!reserva.getPeriodoReserva().periodosCompatibles(periodoReserva)) { // si no son periodos compatibles para esta reserva se elimina de los
+                            idDisponibles.remove(idEspacio);
                         }
                     }
                 }
             }
+            espacioListDisponible = espacioRepository.findAllById(idDisponibles);
         }else{
             espacioListDisponible = espacioRepository.findAllById(espacioList);
         }
