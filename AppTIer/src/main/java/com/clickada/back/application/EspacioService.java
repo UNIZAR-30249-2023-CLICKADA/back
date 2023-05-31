@@ -21,16 +21,14 @@ import java.util.*;
 @Service
 public class EspacioService {
     EspacioRepository espacioRepository;
-    PersonaRepository personaRepository;
     EdificioRepository edificioRepository;
     EnviaMail servicioCorreo;
 
     @Autowired
-    public EspacioService(EspacioRepository espacioRepository, PersonaRepository personaRepository,
+    public EspacioService(EspacioRepository espacioRepository,
                           EdificioRepository edificioRepository,
                           EnviaMail servicioCorreo){
         this.espacioRepository = espacioRepository;
-        this.personaRepository = personaRepository;
         this.edificioRepository = edificioRepository;
         this.servicioCorreo = servicioCorreo;
     }
@@ -97,11 +95,6 @@ public class EspacioService {
             }
         }
         return true;
-    }
-    @Transactional
-    public void eliminarTodos() {
-        this.espacioRepository.deleteAll();
-        this.personaRepository.deleteAll();
     }
     @Transactional
     public ArrayList<UUID> buscarEspacios(Persona persona,List<Reserva> reservasTodas, int numEspacios, LocalTime horaInicio, LocalTime horaFinal, int numMaxPersonas) throws Exception {
