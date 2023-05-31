@@ -22,7 +22,7 @@ public class PersonaController {
 
 
     @PutMapping("/cambiarRol")
-    String cambiarRolPersona(@RequestParam UUID idPersona, @RequestParam String rol) throws TimeoutException {
+    ResponseEntity<String> cambiarRolPersona(@RequestParam UUID idPersona, @RequestParam String rol) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("cambiarRol"); //Operación
@@ -30,14 +30,15 @@ public class PersonaController {
         datos.add(rol);
         String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (response == null) {
-            throw new TimeoutException();
+        if (response == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (response.contains("ERR:")) {
+            return new ResponseEntity<>(response.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return response;
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PutMapping("/cambiarDepartamento")
-    String cambiarDepartamentoPersona(@RequestParam UUID idGerente,@RequestParam UUID idPersona, @RequestParam String nuevoDpto) throws TimeoutException {
+    ResponseEntity<String> cambiarDepartamentoPersona(@RequestParam UUID idGerente,@RequestParam UUID idPersona, @RequestParam String nuevoDpto) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("cambiarDpto"); //Operación
@@ -46,14 +47,15 @@ public class PersonaController {
         datos.add(nuevoDpto);
         String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (response == null) {
-            throw new TimeoutException();
+        if (response == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (response.contains("ERR:")) {
+            return new ResponseEntity<>(response.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return response;
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PutMapping("/agregarPersona")
-    String agregarPersona(@RequestParam UUID idGerente,@RequestParam String email, @RequestParam String pass,@RequestParam String nombre) throws TimeoutException {
+    ResponseEntity<String> agregarPersona(@RequestParam UUID idGerente,@RequestParam String email, @RequestParam String pass,@RequestParam String nombre) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("agregarPersona"); //Operación
@@ -63,10 +65,11 @@ public class PersonaController {
         datos.add(nombre);
         String response = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (response == null) {
-            throw new TimeoutException();
+        if (response == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (response.contains("ERR:")) {
+            return new ResponseEntity<>(response.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return response;
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
@@ -99,17 +102,18 @@ public class PersonaController {
     }
 
     @PutMapping("/permisosReserva")
-    String permisosDeReserva(@RequestParam UUID id) throws TimeoutException {
+    ResponseEntity<?> permisosDeReserva(@RequestParam UUID id) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("permisosReserva"); //Operación
         datos.add(id.toString());
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("personas", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
+        if (resp == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return resp;
+        return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
 

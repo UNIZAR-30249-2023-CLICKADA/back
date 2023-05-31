@@ -64,7 +64,7 @@ public class AmqpReservas {
                                 fecha, horaInicio, horaFinal,
                                 tipoUso, Integer.parseInt(datos.get(8)), datos.get(7));
                     } catch (Exception e) {
-                        return e.toString();
+                        return "ERR:" + e.getMessage();
                     }
 
                     return ("Reserva realizada correctamente");
@@ -90,7 +90,7 @@ public class AmqpReservas {
                         }
                         return jsonEspacios.toString();
                     } catch (Exception e) {
-                        return e.toString();
+                        return "ERR:" + e.getMessage();
                     }
                 }
                 case "reservasVivas" -> {

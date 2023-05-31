@@ -52,7 +52,7 @@ public class ReservaController {
     }
 
     @PostMapping("/reservarEspacio")
-    String reservar(@RequestBody ReservaDto reservaDto) throws TimeoutException {
+    ResponseEntity<?> reservar(@RequestBody ReservaDto reservaDto) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("reservarEspacio"); //Operación
@@ -67,14 +67,15 @@ public class ReservaController {
 
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
+        if (resp == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return resp;
+        return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
     @PostMapping("/reservarAutomatica")
-    String reservarAutomatica(@RequestBody ReservaAutomaticaDto reserva) throws TimeoutException {
+    ResponseEntity<?> reservarAutomatica(@RequestBody ReservaAutomaticaDto reserva) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("reservarAutomatica"); //Operación
@@ -89,14 +90,15 @@ public class ReservaController {
 
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
+        if (resp == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return resp;
+        return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
     @DeleteMapping("/eliminarReserva")
-    String reservarAutomatica(@RequestParam UUID idPersona, @RequestParam UUID idReserva) throws TimeoutException {
+    ResponseEntity<?> reservarAutomatica(@RequestParam UUID idPersona, @RequestParam UUID idReserva) throws TimeoutException {
 
         ArrayList<String> datos = new ArrayList<>();
         datos.add("eliminarReserva"); //Operación
@@ -105,9 +107,10 @@ public class ReservaController {
 
         String resp = (String) this.rabbitTemplate.convertSendAndReceive("reservas", datos);
 
-        if (resp == null) {
-            throw new TimeoutException();
+        if (resp == null) {return new ResponseEntity<>("Error en la petición",HttpStatus.BAD_REQUEST);}
+        if (resp.contains("ERR:")) {
+            return new ResponseEntity<>(resp.substring(4),HttpStatus.BAD_REQUEST);
         }
-        return resp;
+        return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 }
