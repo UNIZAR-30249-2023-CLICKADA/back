@@ -23,9 +23,6 @@ public class AmqpPersonas {
     @Autowired
     PersonaService personaService;
 
-    @Autowired
-    EspacioService espacioService;
-
         @RabbitListener(queues="personas")
         public String receive(ArrayList<String> datos) {
             if(!datos.isEmpty()){

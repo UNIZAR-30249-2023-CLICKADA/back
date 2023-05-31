@@ -20,8 +20,6 @@ import java.util.UUID;
 
 @Component
 public class AmqpEspacios {
-    @Autowired
-    PersonaService personaService;
 
     @Autowired
     DominioService dominioService;

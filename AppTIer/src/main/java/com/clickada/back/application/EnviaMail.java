@@ -1,4 +1,4 @@
-package com.clickada.back.infrastructure;
+package com.clickada.back.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

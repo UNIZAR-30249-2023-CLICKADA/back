@@ -2,13 +2,10 @@ package com.clickada.back.application;
 
 import com.clickada.back.domain.EdificioRepository;
 import com.clickada.back.domain.EspacioRepository;
-import com.clickada.back.domain.PersonaRepository;
-import com.clickada.back.domain.ReservaRepository;
 import com.clickada.back.domain.entity.Espacio;
 import com.clickada.back.domain.entity.Persona;
 import com.clickada.back.domain.entity.Reserva;
 import com.clickada.back.domain.entity.auxClasses.*;
-import com.clickada.back.infrastructure.EnviaMail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
