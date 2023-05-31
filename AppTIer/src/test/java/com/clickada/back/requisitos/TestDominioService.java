@@ -143,7 +143,7 @@ public class TestDominioService {
         personaRepository.save(gerente);
     }
     @Test
-    public void requisito14_cambiarPorcentajeEdificio_modificarTodos() throws Exception{
+    public void requisito17_cambiarPorcentajeEdificio_modificarTodos() throws Exception{
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo = 80;
 
@@ -156,7 +156,7 @@ public class TestDominioService {
 
     }
     @Test
-    public void requisito14_cambiarPorcentajeEdificio_modificarNoPersonalizados() throws Exception{
+    public void requisito17_cambiarPorcentajeEdificio_modificarNoPersonalizados() throws Exception{
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo_Espacio = 80;
         double porcentajeNuevo_Edificio = 50;
@@ -177,7 +177,7 @@ public class TestDominioService {
         todosEspacios.forEach(espacio -> assertEquals(porcentajeNuevo_Edificio,espacio.getPorcentajeUsoPermitido(),epsilon));
     }
     @Test
-    public void requisito14_buscarEspacio() throws Exception{
+    public void requisito18_buscarEspacio() throws Exception{
         //DEMASIADOS ESPACIOS PARA LOS QUE HAY DISPONIBLES
 
         Exception thrown = assertThrows(Exception.class,()->{
@@ -221,7 +221,7 @@ public class TestDominioService {
         assertEquals("No existen esapcios suficientes disponibles con esas caracteristicas",thrown.getMessage());
     }
     @Test
-    public void requisito14_CambioRolYPropietarioEspacio() throws Exception{
+    public void requisito16_CambioRolYPropietarioEspacio() throws Exception{
         Departamento departamentoDocente = docente.getDepartamento();
         //asignamos al despacho como propietario un investigador
         assertTrue(despacho.getPropietarioEspacio().esDepartamento());
@@ -259,7 +259,7 @@ public class TestDominioService {
         assertEquals(departamentoDocente,despacho.getPropietarioEspacio().getDepartamento());
     }
     @Test
-    public void requisito15_sinReservasImplicadas() throws Exception{
+    public void requisito19_sinReservasImplicadas() throws Exception{
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo = 80;
 
@@ -276,7 +276,7 @@ public class TestDominioService {
     }
 
     @Test
-    public void requisito15_conReservasImplicadas() throws Exception{
+    public void requisito19_Y_32_conReservasImplicadas() throws Exception{
         //cambio que no afecta ninguna reserva
         double porcentajeNuevo = 80;
 
@@ -374,7 +374,7 @@ public class TestDominioService {
     }
     //creamos reserva y la eliminamos siendo gerente
     @Test
-    public void eliminarReserva() throws Exception {
+    public void requisito_31_eliminarReserva() throws Exception {
         dominioService.reservarEspacio(estudiante.getIdPersona(),
                 new ArrayList<>(List.of(sala_comun.getIdEspacio())),LocalDate.now().plusDays(1),
                 LocalTime.of(18,0),LocalTime.of(19,0),TipoUso.DOCENCIA,40,

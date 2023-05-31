@@ -53,7 +53,7 @@ public class TestServicios {
 
     }
     @Test
-    void loginPersona() throws Exception {
+    void requisito_1_loginPersona() throws Exception {
         Persona gerente = new Persona("Señor Tst","unico@mail.com", "123",
                 Rol.GERENTE,null) ;
         Persona estudiante = new Persona("Señor Tst","unico@mail.com", "1232",

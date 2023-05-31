@@ -49,14 +49,18 @@ public class TestRequisitos {
     EdificioRepository edificioRepository;
 
     @Test
-    void requisito2() throws Exception {
+    void requisito4() throws Exception {
         Persona persona = new Persona("Pepe","pepe@gmail.com","123", Rol.CONSERJE,null);
 
-        Assert.state(persona.getEMail().equals("pepe@gmail.com"),"Conserje");
+        assertEquals("Pepe",persona.getNombre());
+        assertEquals("pepe@gmail.com",persona.getEMail());
+        assertEquals(Rol.CONSERJE,persona.rolPrincipal());
+        assertNull(persona.getDepartamento());
+
     }
 
     @Test
-    public void requisito3() throws Exception {
+    public void requisito5() throws Exception {
         Persona per = new Persona("Señor Tst","unico@mail.com", "123",
                 Rol.getRolByString("Estudiante"),null) ;
         assertEquals(Rol.ESTUDIANTE,per.rolPrincipal());
@@ -110,7 +114,7 @@ public class TestRequisitos {
     }
 
     @Test
-    void requisito4_5_6() throws Exception {
+    void requisito6_7_8() throws Exception {
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
         Rol rol_docente = Rol.DOCENTE_INVESTIGADOR;
@@ -135,7 +139,7 @@ public class TestRequisitos {
 
     }
     @Test
-    void requisito7() throws Exception {
+    void requisito9() throws Exception {
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
 
@@ -151,7 +155,7 @@ public class TestRequisitos {
 
     }
     @Test
-    void requisito8_9() throws Exception {
+    void requisito10_11() throws Exception {
         String nombre = "Juan";
         String eMail = "juan@clickada.com";
 
@@ -173,7 +177,7 @@ public class TestRequisitos {
 
     }
     @Test
-    public void requisito10() throws Exception {
+    public void requisito12() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -261,7 +265,7 @@ public class TestRequisitos {
     }
 
     @Test
-    void requisito11() throws Exception{
+    void requisito13() throws Exception{
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -310,7 +314,7 @@ public class TestRequisitos {
     }
 
     @Test
-    void requisito12() throws Exception {
+    void requisito14() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -320,7 +324,7 @@ public class TestRequisitos {
         assertEquals(CategoriaEspacio.SALA_COMUN,sala_comun.getCategoriaEspacio());
     }
     @Test
-    void requisito13() throws Exception {
+    void requisito15() throws Exception {
 
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
@@ -336,7 +340,7 @@ public class TestRequisitos {
     }
     //Test 14 y 15 son de porcentaje de uso maximo
     @Test
-    void requisito14() throws Exception {
+    void requisito16() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -416,11 +420,7 @@ public class TestRequisitos {
 
     }
     @Test
-    void requisito15(){
-
-    }
-    @Test
-    void requisito16() throws Exception{
+    void requisito20_22() throws Exception{
         //yyyy-mm-dd
         //hh:mm
         Edificio edificio = new Edificio(
@@ -474,11 +474,11 @@ public class TestRequisitos {
 
     }
     @Test
-    void requisito17() throws Exception{
+    void requisito21() throws Exception{
         //Reservas puntuales y empiezan un dia y acaban el mismo dia
     }
     @Test
-    void requisito18() throws Exception{
+    void requisito23() throws Exception{
         //true reservar AULA perona no estuiante ni tecnico de laboratiorio
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
@@ -513,7 +513,7 @@ public class TestRequisitos {
     }
 
     @Test
-    void requisito19() throws Exception{
+    void requisito24() throws Exception{
         //true reservar LABORATORIOS cualqueira menos estudiantes
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
@@ -576,7 +576,7 @@ public class TestRequisitos {
         assertDoesNotThrow(()->espacioService.reservarEspacio(tecnico_laboratorio,new ArrayList<>(),reserva));
     }
     @Test
-    void requisito20() throws Exception{
+    void requisito25() throws Exception{
         // despachos no pueden ser reservables
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
@@ -599,7 +599,7 @@ public class TestRequisitos {
         assertFalse(despacho.getReservabilidad().reservable);
     }
     @Test
-    void requisito21() throws Exception{
+    void requisito26() throws Exception{
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -650,7 +650,7 @@ public class TestRequisitos {
 
     }
     @Test
-    void requisito22() throws Exception {
+    void requisito27_29() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -682,7 +682,7 @@ public class TestRequisitos {
         assertEquals("Ya existe una reserva en el horario introducido",thrown.getMessage());
     }
     @Test
-    void requisito23() throws Exception {
+    void requisito28() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
@@ -726,7 +726,7 @@ public class TestRequisitos {
     }
     //RF-24 se cumple en los requisitos de reservas
     @Test
-    void requisito25() throws Exception {
+    void requisito30() throws Exception {
         Edificio edificio = new Edificio(
                 LocalTime.of(8,0),
                 LocalTime.of(20,0),
