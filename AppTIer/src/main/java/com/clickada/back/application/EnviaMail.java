@@ -34,14 +34,14 @@ public class EnviaMail {
         message.setSubject("Reserva cancelada");
         if (tipo==1){
             message.setText("Hola, una de sus reservas ha sido cancelada por cambios en la ocupación " +
-                    "del espacio.<br> Su reserva en el espacio "+ nombre+ " , del " + fecha.toString() + " a las " +
+                    "del espacio. Su reserva del " + fecha.toString() + " a las " +
                     hora.toString() + " ha sido cancelada porque ha cambiado la ocupación máxima del espacio y " +
                     "su reserva ya no cumple las condiciones de uso.");
         }
         else if (tipo==2){
             message.setText("Hola, una de sus reservas ha sido cancelada." +
-                    "<br> Su reserva en el espacio "+ nombre+ ", del " + fecha.toString() + " a las " +
-                    hora.toString() + "ha sido cancelada porque un gerente ha eliminado la reserva.");
+                    " Su reserva del " + fecha.toString() + " a las " +
+                    hora.toString() + " ha sido cancelada porque un gerente ha eliminado la reserva.");
         }
         emailSender.send(message);
     }
