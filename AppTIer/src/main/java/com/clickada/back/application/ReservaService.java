@@ -138,7 +138,7 @@ public class ReservaService {
         String mail = gerente.getEMail();
 
         Executors.newSingleThreadExecutor()
-                .execute(() -> servicioCorreo.enviarCorreo(mail,1,gerente.getNombre(),reserva.getFecha(),
+                .execute(() -> servicioCorreo.enviarCorreo(mail,2,gerente.getNombre(),reserva.getFecha(),
                         reserva.getPeriodoReserva().getHoraInicio()));
     }
 }
