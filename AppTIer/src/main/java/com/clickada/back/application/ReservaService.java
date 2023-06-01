@@ -134,8 +134,9 @@ public class ReservaService {
             throw new Exception("La reserva que se quiere eliminar no existe");
         }
         Reserva reserva = reservaRepository.getById(idReserva);
+        Persona p = personaRepository.getById(reserva.getIdPersona());
         reservaRepository.deleteById(idReserva);
-        String mail = gerente.getEMail();
+        String mail = p.getEMail();
 
         Executors.newSingleThreadExecutor()
                 .execute(() -> servicioCorreo.enviarCorreo(mail,2,gerente.getNombre(),reserva.getFecha(),
